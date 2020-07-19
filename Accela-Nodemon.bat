@@ -1,1 +1,0 @@
-nodemon run ./index.js
