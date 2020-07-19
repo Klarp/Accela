@@ -1,5 +1,8 @@
 node_modules
 config.json
+osuUsers.sqlite
+Accela-Nodemon.bat
+pm2  monitor.bat
 *.sqlite
 *.bat
 List of Things.txt
