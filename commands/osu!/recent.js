@@ -96,10 +96,6 @@ module.exports = {
 				const max_combo = pMap.max_combo();
 				combo = combo || max_combo;
 
-				console.log(pp.computed_accuracy.toString());
-
-				console.log(pp.toString());
-
 				const ppFix = pp.toString().split(' ');
 				const maxFix = maxPP.toString().split(' ');
 

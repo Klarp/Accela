@@ -30,7 +30,7 @@ module.exports = (rank) => {
 		e = emoji.get('734198887858044998');
 		break;
 	default:
-		e = 'F';
+		e = emoji.get('734450801346347018');
 		break;
 	}
 
