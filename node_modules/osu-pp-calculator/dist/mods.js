@@ -1,0 +1,22 @@
+"use strict";
+var BeatmapModifier;
+(function (BeatmapModifier) {
+    BeatmapModifier[BeatmapModifier["None"] = 0] = "None";
+    BeatmapModifier[BeatmapModifier["NoFail"] = 1] = "NoFail";
+    BeatmapModifier[BeatmapModifier["Easy"] = 2] = "Easy";
+    BeatmapModifier[BeatmapModifier["NoVideo"] = 4] = "NoVideo";
+    BeatmapModifier[BeatmapModifier["Hidden"] = 8] = "Hidden";
+    BeatmapModifier[BeatmapModifier["HardRock"] = 16] = "HardRock";
+    BeatmapModifier[BeatmapModifier["SuddenDeath"] = 32] = "SuddenDeath";
+    BeatmapModifier[BeatmapModifier["DoubleTime"] = 64] = "DoubleTime";
+    BeatmapModifier[BeatmapModifier["Relax"] = 128] = "Relax";
+    BeatmapModifier[BeatmapModifier["HalfTime"] = 128] = "HalfTime";
+    BeatmapModifier[BeatmapModifier["Nightcore"] = 512] = "Nightcore";
+    BeatmapModifier[BeatmapModifier["Flashlight"] = 1024] = "Flashlight";
+    BeatmapModifier[BeatmapModifier["Autoplay"] = 2048] = "Autoplay";
+    BeatmapModifier[BeatmapModifier["SpunOut"] = 4096] = "SpunOut";
+    BeatmapModifier[BeatmapModifier["Relax2"] = 8192] = "Relax2";
+    BeatmapModifier[BeatmapModifier["Perfect"] = 16384] = "Perfect";
+})(BeatmapModifier || (BeatmapModifier = {}));
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = BeatmapModifier;
