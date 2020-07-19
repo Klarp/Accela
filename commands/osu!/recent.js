@@ -23,8 +23,8 @@ module.exports = {
 			parseNumeric: true,
 		});
 
-		// Access the db
-		const findUser = await Users.findOne({ where: { user_id: message.author.id } });
+		let findUser;
+		const menUser = message.mentions.users.first();
 
 		let name;
 		let mods = oj.modbits.none;
@@ -32,7 +32,18 @@ module.exports = {
 		let combo;
 		let nmiss;
 
-		// Find the user in db
+		// Access database
+		if (menUser) {
+			findUser = await Users.findOne({ where: { user_id: menUser.id } });
+		} else {
+			findUser = await Users.findOne({ where: { user_id: message.author.id } });
+		}
+
+		if (menUser) {
+			name = menUser.username;
+		}
+
+		// Find the user in the database
 		if (findUser) {
 			name = findUser.get('user_osu');
 		} else {
@@ -40,7 +51,7 @@ module.exports = {
 		}
 
 		// Use arguments if applicable
-		if (args[0]) {
+		if (!menUser && args[0]) {
 			name = args[0];
 		}
 

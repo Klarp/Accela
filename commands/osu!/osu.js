@@ -23,10 +23,21 @@ module.exports = {
 		// Access the api
 		const osuApi = new osu.Api(osu_key);
 
+		let findUser;
+		const menUser = message.mentions.users.first();
+
 		// Access database
-		const findUser = await Users.findOne({ where: { user_id: message.author.id } });
+		if (menUser) {
+			findUser = await Users.findOne({ where: { user_id: menUser.id } });
+		} else {
+			findUser = await Users.findOne({ where: { user_id: message.author.id } });
+		}
 
 		let name;
+
+		if (menUser) {
+			name = menUser.username;
+		}
 
 		// Find the user in the database
 		if (findUser) {
@@ -36,7 +47,7 @@ module.exports = {
 		}
 
 		// Use arguments if applicable
-		if (args[0]) {
+		if (!menUser && args[0]) {
 			name = args[0];
 		}
 
