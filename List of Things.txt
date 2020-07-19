@@ -11,4 +11,5 @@ Finished:
 To Do:
 
 - Add emojis for score ranks
+- Add mentionable osu and recent commands
 
