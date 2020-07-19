@@ -1,0 +1,34 @@
+{
+  "name": "accela",
+  "version": "0.0.3",
+  "description": "osu! and moderation bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "startmon": "nodemon .",
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "bot",
+    "osu",
+    "discord",
+    "discord.js",
+    "mod",
+    "moderation"
+  ],
+  "author": "Karp",
+  "license": "ISC",
+  "dependencies": {
+    "3": "^2.1.0",
+    "curl": "^0.1.4",
+    "discord.js": "^12.2.0",
+    "git": "^0.1.5",
+    "log-symbols": "^4.0.0",
+    "node-libcurl": "^2.2.0",
+    "node-osu": "^2.2.0",
+    "ojsama": "^1.2.5",
+    "osu-pp-calculator": "^0.1.7",
+    "sequelize": "^6.2.4",
+    "sqlite": "^4.0.11"
+  }
+}
