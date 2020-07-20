@@ -12,6 +12,7 @@ module.exports = {
 	execute(message, args) {
 		if (!message.mentions.members.first()) return message.reply('Please mention a user.');
 		const tag = message.mentions.members.first();
+		if (message.member === tag) return message.reply('You can not use this on yourself');
 		args.shift();
 		let reason = args.join(' ');
 		if (!reason) reason = 'No Reason Given';

@@ -13,6 +13,7 @@ module.exports = {
 	async execute(message, args) {
 		if (!message.mentions.members.first()) return message.reply('Please mention a user.');
 		const tag = message.mentions.members.first();
+		if (message.author === tag) return message.reply('You can not use this on yourself');s
 		args.shift();
 		const muteTime = args.shift();
 		let reason = args.join(' ');
