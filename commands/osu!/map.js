@@ -18,8 +18,6 @@ module.exports = {
 		// Use arguments if applicable
 		const bMap = args[0].split('/').pop();
 
-		console.log(bMap);
-
 		// Find user through the api
 		osuApi.getBeatmaps({ b: bMap }).then(beatmap => {
 			const map = beatmap[0];
