@@ -39,7 +39,7 @@ client.once('ready', async () => {
 
 client.on('message', message => {
 
-	const filter = m => m.content.includes('https://osu.ppy.sh/b/' || 'https://osu.ppy.sh/beatmapsets/');
+	const filter = m => m.content.includes('https://osu.ppy.sh/b/') || m.content.includes('https://osu.ppy.sh/beatmapsets/');
 	const collector = message.channel.createMessageCollector(filter, { time: 15000 });
 	collector.on('collect', m => mapDetect(m));
 
