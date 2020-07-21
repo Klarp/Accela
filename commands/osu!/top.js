@@ -127,8 +127,7 @@ module.exports = {
 					.addField('Accuracy', `${acc}%`, true)
 					.addField('Mods', oj.modbits.string(mods) || 'NoMod', true)
 					*/
-					.setFooter('Placeholder for something')
-					.setTimestamp(recent.date);
+					.setFooter(`Completed ${recent.date.toLocaleDateString()}`);
 
 				message.channel.send({ embed: osuEmbed });
 			});
