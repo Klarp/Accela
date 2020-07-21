@@ -7,6 +7,7 @@ const { osu_key } = require('../../config.json');
 const { Users } = require('../../dbObjects');
 const getShortMods = require('../../utils/getShortMods.js');
 const getRank = require('../../utils/getRank.js');
+const timeSince = require('../../utils/timeSince');
 
 module.exports = {
 	name: 'recent',
@@ -110,6 +111,8 @@ module.exports = {
 				const ppFix = pp.toString().split(' ');
 				const maxFix = maxPP.toString().split(' ');
 
+				const rDate = timeSince(recent.date);
+
 				// Create embed (Need to stlye this better)
 				const osuEmbed = new discord.MessageEmbed()
 					.setAuthor(name, `http://a.ppy.sh/${recent.user.id}`)
@@ -122,7 +125,9 @@ module.exports = {
 					${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 					`)
 					.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
-					/*
+					.setFooter(`Completed ${rDate}`);
+
+				/*
 					.addField('300', recent.counts['300'], true)
 					.addField('100', recent.counts['100'], true)
 					.addField('50', recent.counts['50'], true)
@@ -131,9 +136,7 @@ module.exports = {
 					.addField('PP Gained', `**${recent.pp || ppFix[0]}**${maxFix[0]}`, true)
 					.addField('Accuracy', `${acc}%`, true)
 					.addField('Mods', oj.modbits.string(mods) || 'NoMod', true)
-					*/
-					.setFooter('Placeholder for something')
-					.setTimestamp(recent.date);
+				*/
 
 				message.channel.send({ embed: osuEmbed });
 			});
