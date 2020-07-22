@@ -57,20 +57,27 @@ module.exports = {
 			let d = user.raw_joinDate;
 			d = d.split(' ')[0];
 
+			const rank = user.pp.rank.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+			const crank = user.pp.countryRank.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
 			// Create the embed
 			const osuEmbed = new Discord.MessageEmbed()
 				.setAuthor(user.name, `http://a.ppy.sh/${user.id}`)
 				.setColor('0xff69b4')
 				.setTitle(`Information On ${user.name}`)
-				.setDescription(`https://osu.ppy.sh/u/${user.id}`)
-				.addField('Level', Math.floor(user.level), true)
+				.setURL(`https://osu.ppy.sh/u/${user.id}`)
+				.setDescription(`**Level** ${Math.floor(user.level)} | **Rank** ${rank} | **${user.country} Rank** ${crank}
+				
+				**PP** ${Math.round(user.pp.raw)} | **Accuracy** ${user.accuracyFormatted} | **Play Count** ${user.counts.plays}`)
+				.setFooter(`Joined ${d}`);
+				/*
 				.addField('Accuracy', user.accuracyFormatted, true)
 				.addField('Play Count', user.counts.plays, true)
-				.addField('Rank', user.pp.rank, true)
-				.addField(`Country Rank (${user.country})`, user.pp.countryRank, true)
+				.addField('Rank', rank, true)
+				.addField(`Country Rank (${user.country})`, crank, true)
 				.addField('PP', Math.round(user.pp.raw), true)
-				.addField('Join Date', d, true)
-				.setFooter('Accela (Made by Karp)');
+				*/
+
 
 			message.channel.send({ embed: osuEmbed });
 		}).catch(e => {

@@ -3,6 +3,7 @@ const Discord = require('discord.js');
 const { prefix, token } = require('./config.json');
 const { Users } = require('./dbObjects');
 const checkPerm = require('./utils/checkPerm.js');
+const mapDetect = require('./utils/mapDetect');
 const osuUsers = new Discord.Collection();
 const client = new Discord.Client();
 
@@ -33,10 +34,15 @@ client.once('ready', async () => {
 	client.user.setPresence({ activity: { name: 'lets all love lain' }, status: 'online' })
 		.catch(console.error);
 
-	console.log('Accela has entered The Wired');
+	console.log(`${client.user.tag} has entered The Wired`);
 });
 
 client.on('message', message => {
+
+	const filter = m => m.content.includes('https://osu.ppy.sh/b/') || m.content.includes('https://osu.ppy.sh/beatmapsets/');
+	const collector = message.channel.createMessageCollector(filter, { time: 15000 });
+	collector.on('collect', m => mapDetect(m));
+
 	const konCha = client.emojis.cache.get('688169982223319072');
 	const yepPride = client.emojis.cache.get('706929594028130304');
 	const YEP = client.emojis.cache.get('734159200564936714');
