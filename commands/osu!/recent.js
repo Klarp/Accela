@@ -79,7 +79,7 @@ module.exports = {
 			const rank = getRank(recent.rank);
 
 			// PP calculation starts
-			curl.get(`https://osu.ppy.sh/osu/${recent.beatmapId}`, function(err, response, body) {
+			curl.get(`https://osu.ppy.sh/osu/${recent.beatmapId}`, async function(err, response, body) {
 				mods = oj.modbits.from_string(shortMods);
 				acc_percent = parseFloat(acc);
 				combo = parseInt(recent.maxCombo);
@@ -137,7 +137,6 @@ module.exports = {
 					.addField('Accuracy', `${acc}%`, true)
 					.addField('Mods', oj.modbits.string(mods) || 'NoMod', true)
 				*/
-
 				message.channel.send({ embed: osuEmbed });
 			});
 		}).catch(e => {

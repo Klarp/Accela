@@ -35,15 +35,15 @@ module.exports = {
 
 		let name;
 
-		if (menUser) {
-			name = menUser.username;
-		}
-
 		// Find the user in the database
 		if (findUser) {
 			name = findUser.get('user_osu');
 		} else {
 			name = message.author.username;
+		}
+
+		if (menUser && !findUser) {
+			name = menUser.username;
 		}
 
 		// Use arguments if applicable

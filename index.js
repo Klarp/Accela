@@ -38,19 +38,27 @@ client.once('ready', async () => {
 });
 
 client.on('message', message => {
+	if (message.embeds[0]) {
+		if (message.embeds[0].url.includes('https://osu.ppy.sh/b/')) {
+			const mapId = message.embeds[0].url;
+			exports.mapID = mapId;
+		}
+	}
 
-	const filter = m => m.content.includes('https://osu.ppy.sh/b/') || m.content.includes('https://osu.ppy.sh/beatmapsets/');
-	const collector = message.channel.createMessageCollector(filter, { time: 15000 });
-	collector.on('collect', m => mapDetect(m));
+	if (!message.author.bot) {
+		const filter = m => m.content.includes('https://osu.ppy.sh/b/') || m.content.includes('https://osu.ppy.sh/beatmapsets/');
+		const collector = message.channel.createMessageCollector(filter, { time: 15000 });
+		collector.on('collect', m => mapDetect(m));
 
-	const konCha = client.emojis.cache.get('688169982223319072');
-	const yepPride = client.emojis.cache.get('706929594028130304');
-	const YEP = client.emojis.cache.get('734159200564936714');
-	const lowMsg = message.content.toLowerCase();
+		const konCha = client.emojis.cache.get('688169982223319072');
+		const yepPride = client.emojis.cache.get('706929594028130304');
+		const YEP = client.emojis.cache.get('734159200564936714');
+		const lowMsg = message.content.toLowerCase();
 
-	if (lowMsg == 'hey accela') message.reply(`Hey there! ${konCha}`);
-	if (lowMsg.includes('gay')) message.react(yepPride.id);
-	if (lowMsg.includes('cock')) message.channel.send(`${YEP}`);
+		if (lowMsg == 'hey accela') message.reply(`Hey there! ${konCha}`);
+		if (lowMsg.includes('gay')) message.react(yepPride.id);
+		if (lowMsg.includes('cock')) message.channel.send(`${YEP}`);
+	}
 
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
