@@ -8,14 +8,19 @@ const { Users } = require('../../dbObjects');
 const getShortMods = require('../../utils/getShortMods.js');
 const getRank = require('../../utils/getRank.js');
 const timeSince = require('../../utils/timeSince');
+const idGrab = require('../../index.js');
 
 module.exports = {
-	name: 'top',
-	aliases: 'osutop',
-	description: 'Gets the top score of the user',
+	name: 'compare',
+	aliases: 'c',
+	description: 'Compares with last score sent.',
 	module: 'osu!',
-	usage: '<user>',
+	perms: '',
 	async execute(message, args) {
+		if (!idGrab) return message.reply('No score to compare.');
+
+		const beatmap = idGrab.mapID.toString().split('/').pop();
+
 		// Access the api
 		const osuApi = new osu.Api(osu_key, {
 			notFoundAsError: true,
@@ -56,7 +61,7 @@ module.exports = {
 		}
 
 		// Find user through the api
-		osuApi.getUserBest({ u: name, limit: 1 }).then(async r => {
+		osuApi.getScores({ u: name, b: beatmap }).then(async r => {
 			const recent = r[0];
 			Number.prototype.toFixedDown = function(digits) {
 				const re = new RegExp('(\\d+\\.\\d{' + digits + '})(\\d)'),
@@ -73,12 +78,12 @@ module.exports = {
 
 			const score = recent.score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-			// Get the short version of mods (HD, HR etc.)
+			// Get the short version of mods (HD, HR etc.) and get emojis for score rank
 			const shortMods = getShortMods(recent.mods);
 			const rank = getRank(recent.rank);
 
 			// PP calculation starts
-			curl.get(`https://osu.ppy.sh/osu/${recent.beatmapId}`, function(err, response, body) {
+			curl.get(`https://osu.ppy.sh/osu/${recent.beatmapId}`, async function(err, response, body) {
 				mods = oj.modbits.from_string(shortMods);
 				acc_percent = parseFloat(acc);
 				combo = parseInt(recent.maxCombo);
@@ -87,6 +92,10 @@ module.exports = {
 				const parser = new oj.parser().feed(body);
 
 				const pMap = parser.map;
+
+				if (mods) {
+					console.log('+' + oj.modbits.string(mods));
+				}
 
 				const stars = new oj.diff().calc({ map: pMap, mods: mods });
 				const star = stars.toString().split(' ');
@@ -113,13 +122,13 @@ module.exports = {
 					.setAuthor(name, `http://a.ppy.sh/${recent.user.id}`)
 					.setColor('0xff69b4')
 					.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
-					.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
 					.setDescription(`${rank} ${star[0]}★ | ${score} | {${recent.counts['300']}/${recent.counts['100']}/${recent.counts['50']}/${recent.counts.miss}}
 
-					**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${ppFix[0]}pp**/${maxFix[0]}PP
+					**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${recent.pp || ppFix[0]}pp**/${maxFix[0]}PP
 
 					${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 					`)
+					.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
 					.setFooter(`Completed ${rDate}`);
 
 				/*
@@ -132,12 +141,11 @@ module.exports = {
 					.addField('Accuracy', `${acc}%`, true)
 					.addField('Mods', oj.modbits.string(mods) || 'NoMod', true)
 				*/
-
 				message.channel.send({ embed: osuEmbed });
 			});
 		}).catch(e => {
 			if (e.name == 'Error') {
-				return message.reply('No recent play was found!');
+				return message.reply('No score was found!');
 			}
 			console.error(e);
 			return message.reply('An error has occured!');
