@@ -1,4 +1,5 @@
 const modAction = require('../../utils/modAction.js');
+const { Muted } = require('../../dbObjects');
 
 module.exports = {
 	name: 'mute',
@@ -49,6 +50,19 @@ module.exports = {
 			});
 			message.channel.send(`Muted: ${tag.user}`);
 			modAction(message.author, tag, 'Mute', reason);
+			try {
+				await Muted.create({
+					user_id: tag.id,
+					guild_id: message.guild.id,
+				});
+			} catch(e) {
+				if (e.name === 'SequelizeUniqueConstraintError') {
+					console.log(`${tag.username} has been tried to be muted.`);
+				} else {
+					console.error(e);
+					return message.reply('Error: "Something" wen\'t wrong.');
+				}
+			}
 		}
 
 
