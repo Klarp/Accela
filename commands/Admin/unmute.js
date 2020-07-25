@@ -1,4 +1,5 @@
 const modAction = require('../../utils/modAction.js');
+const { Muted } = require('../../dbObjects');
 
 module.exports = {
 	name: 'unmute',
@@ -28,6 +29,13 @@ module.exports = {
 			});
 			message.channel.send(`Unmuted: ${tag.user}`);
 			modAction(message.author, tag, 'Unmute', reason);
+			try {
+				const unMuted = await Muted.destroy({ where: { user_id: tag.id } });
+				if (!unMuted) return console.log(`Failed to unmute ${tag.username}`);
+			}catch(e) {
+				console.error(e);
+				return message.reply('An error has occurred');
+			}
 		} else {
 			message.reply('Member is not muted.');
 		}

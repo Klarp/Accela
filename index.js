@@ -4,6 +4,8 @@ const { prefix, token } = require('./config.json');
 const { Users } = require('./dbObjects');
 const checkPerm = require('./utils/checkPerm.js');
 const mapDetect = require('./utils/mapDetect');
+const { Muted } = require('./dbObjects');
+const modAction = require('./utils/modAction');
 const osuUsers = new Discord.Collection();
 const client = new Discord.Client();
 
@@ -39,7 +41,9 @@ client.once('ready', async () => {
 
 client.on('message', message => {
 	if (message.embeds[0]) {
-		if (message.embeds[0].url.includes('https://osu.ppy.sh/b/')) {
+		if (!message.embeds[0].url) {
+			return;
+		} else if (message.embeds[0].url.includes('https://osu.ppy.sh/b/')) {
 			const mapId = message.embeds[0].url;
 			exports.mapID = mapId;
 		}
@@ -155,7 +159,7 @@ client.on('guildBanAdd', (guild, user) => {
 	}
 });
 
-client.on('guildBanRemove', (guild, user) => {
+client.on('guildBanRemove', async (guild, user) => {
 	if (guild.id === '687858540425117755') {
 		const unbanEmbed = new Discord.MessageEmbed()
 			.setThumbnail(user.displayAvatarURL())
@@ -163,6 +167,27 @@ client.on('guildBanRemove', (guild, user) => {
 			.setDescription(`${user.tag} (${user.id})`);
 		guild.channels.cache.get('688417816818483211').send(unbanEmbed);
 	}
+	const muteUser = await Muted.findOne({ where: { user_id: user.id } });
+	if (!muteUser) return;
+	try {
+		const unMuted = await Muted.destroy({ where: { user_id: user.id } });
+		if (!unMuted) return console.log(`Failed to unmute ${user.username}`);
+	}catch(e) {
+		console.error(e);
+	}
+});
+
+client.on('guildMemberAdd', async (member) => {
+	const muteUser = await Muted.findOne({ where: { user_id: member.id } });
+	if (!muteUser) return;
+	if (member.bannable) {
+		member.send(`You have been banned from ${member.guild.name}! Reason: Mute Evasion`).then (() => {
+			member.ban({ days: 1, reason: 'Mute Evasion' }).catch(err => console.log(err));
+		});
+	} else {
+		return console.log(`Could not ban ${member.displayName}.`);
+	}
+	modAction(client.user, member, 'Ban', 'Mute Evasion');
 });
 
 process.on('unhandledRejection', error => {
