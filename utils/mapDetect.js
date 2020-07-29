@@ -29,22 +29,22 @@ module.exports = (msg) => {
 
 				if (s < 2) {
 					// Easy
-					diff = emoji.get('737881216812056636');
+					diff = emoji.get('738125708802654322');
 				} else if (s < 2.7) {
 					// Normal
-					diff = emoji.get('737881216467861607');
+					diff = emoji.get('738125709180010557');
 				} else if (s < 4) {
 					// Hard
-					diff = emoji.get('737881216832766012');
+					diff = emoji.get('738125709113032716');
 				} else if (s < 5.3) {
 					// Insane
-					diff = emoji.get('737881216518193273');
+					diff = emoji.get('738125709129547947');
 				} else if (s < 6.5) {
 					// Expert
-					diff = emoji.get('737881216815988738');
+					diff = emoji.get('738125708810780744');
 				} else {
 					// Expert+
-					diff = emoji.get('737881216409272425');
+					diff = emoji.get('738125708781682719');
 				}
 
 				const lenMinutes = Math.floor(map.length.total / 60);
