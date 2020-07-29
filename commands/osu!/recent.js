@@ -8,6 +8,7 @@ const { Users } = require('../../dbObjects');
 const getShortMods = require('../../utils/getShortMods.js');
 const getRank = require('../../utils/getRank.js');
 const timeSince = require('../../utils/timeSince');
+const getDiff = require('../../utils/getDiff.js');
 
 module.exports = {
 	name: 'recent',
@@ -96,6 +97,8 @@ module.exports = {
 				const stars = new oj.diff().calc({ map: pMap, mods: mods });
 				const star = stars.toString().split(' ');
 
+				const diff = getDiff(star[0]);
+
 				const pp = oj.ppv2({
 					stars: stars,
 					combo: combo,
@@ -118,7 +121,7 @@ module.exports = {
 					.setAuthor(name, `http://a.ppy.sh/${recent.user.id}`)
 					.setColor('0xff69b4')
 					.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
-					.setDescription(`${rank} ${star[0]}★ | ${score} | {${recent.counts['300']}/${recent.counts['100']}/${recent.counts['50']}/${recent.counts.miss}}
+					.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${recent.counts['300']}/${recent.counts['100']}/${recent.counts['50']}/${recent.counts.miss}}
 
 					**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${recent.pp || ppFix[0]}pp**/${maxFix[0]}PP
 
