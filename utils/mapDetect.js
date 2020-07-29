@@ -8,6 +8,7 @@ module.exports = (msg) => {
 	const osuApi = new osu.Api(osu_key);
 
 	const bMap = msg.content.split('/').pop();
+	const client = msg.client;
 
 	osuApi.getBeatmaps({ b: bMap }).then(beatmap => {
 		const map = beatmap[0];
@@ -20,6 +21,31 @@ module.exports = (msg) => {
 				const ppFix = maxPP.split(' ');
 				const stars = new oj.diff().calc({ map: pMap });
 				const star = stars.toString().split(' ');
+				const s = star[0];
+
+				const emoji = client.emojis.cache;
+
+				let diff;
+
+				if (s < 2) {
+					// Easy
+					diff = emoji.get('738125708802654322');
+				} else if (s < 2.7) {
+					// Normal
+					diff = emoji.get('738125709180010557');
+				} else if (s < 4) {
+					// Hard
+					diff = emoji.get('738125709113032716');
+				} else if (s < 5.3) {
+					// Insane
+					diff = emoji.get('738125709129547947');
+				} else if (s < 6.5) {
+					// Expert
+					diff = emoji.get('738125708810780744');
+				} else {
+					// Expert+
+					diff = emoji.get('738125708781682719');
+				}
 
 				const lenMinutes = Math.floor(map.length.total / 60);
 				const lenSeconds = map.length.total - lenMinutes * 60;
@@ -39,7 +65,7 @@ module.exports = (msg) => {
 					.setTitle(`${map.artist} - ${map.title} (${map.version})`)
 					.setThumbnail(`https://b.ppy.sh/thumb/${map.beatmapSetId}l.jpg`)
 					.setURL(`https://osu.ppy.sh/b/${map.id}`)
-					.setDescription(`${star[0]}★ | Length: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds})
+					.setDescription(`${diff} ${star[0]}★ | Length: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds})
 					BPM: ${map.bpm} | Combo: ${map.maxCombo}x | Max PP: ${ppFix[0]}pp
 					Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${map.objects.spinner}`)
 					.setFooter(`${map.approvalStatus} on ${aday}-${amonth}-${ayear} | Last Updated: ${uday}-${umonth}-${uyear}`);
