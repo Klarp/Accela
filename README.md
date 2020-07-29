@@ -12,7 +12,7 @@ npm install
 
 ## Config File
 
-To use Accela create a config.json file with the following information
+To use Accela create a config.json inside the file directory with the following code
 
 ```json
 {
