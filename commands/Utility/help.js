@@ -21,9 +21,10 @@ module.exports = {
 						data.push(`**${c.name}**: ${c.description}`);
 					}
 				});
+				data.push('');
 			});
 			// data.push(commands.map(command => command.name).join(', '));
-			data.push(`\nYou can send \`${prefix}help [command name]\` to get info on a specific command!`);
+			data.push(`You can send \`${prefix}help [command name]\` to get info on a specific command!`);
 			return message.author.send(data, { split: true })
 				.then(() => {
 					if (message.channel.type === 'dm') return;
