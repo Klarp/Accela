@@ -5,7 +5,6 @@ const osu = require('node-osu');
 const { osu_key } = require('../config.json');
 
 module.exports = (msg) => {
-	console.log('dong');
 	const osuApi = new osu.Api(osu_key);
 
 	const bMap = msg.content.split('/').pop();

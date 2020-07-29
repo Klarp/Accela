@@ -49,12 +49,11 @@ client.on('message', message => {
 		}
 	}
 
-
-	const filter = m => m.content.includes('https://osu.ppy.sh/b/') || m.content.includes('https://osu.ppy.sh/beatmapsets/');
-	const collector = message.channel.createMessageCollector(filter, { time: 15000 });
-	collector.on('collect', m => mapDetect(m));
-
 	if (!message.author.bot) {
+		if (message.content.includes('https://osu.ppy.sh/b/') || message.content.includes('https://osu.ppy.sh/beatmapsets/')) {
+			mapDetect(message);
+		}
+
 		const konCha = client.emojis.cache.get('688169982223319072');
 		const yepPride = client.emojis.cache.get('706929594028130304');
 		const YEP = client.emojis.cache.get('734159200564936714');
