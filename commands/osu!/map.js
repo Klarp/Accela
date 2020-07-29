@@ -2,7 +2,9 @@ const osu = require('node-osu');
 const oj = require('ojsama');
 const Discord = require('discord.js');
 const curl = require('curl');
+
 const { osu_key } = require('../../config.json');
+const getDiff = require('../../utils/getDiff.js');
 
 module.exports = {
 	name: 'beatmap',
@@ -31,6 +33,8 @@ module.exports = {
 					const stars = new oj.diff().calc({ map: pMap });
 					const star = stars.toString().split(' ');
 
+					const diff = getDiff(star[0]);
+
 					const lenMinutes = Math.floor(map.length.total / 60);
 					const lenSeconds = map.length.total - lenMinutes * 60;
 					const drainMinutes = Math.floor(map.length.drain / 60);
@@ -49,7 +53,7 @@ module.exports = {
 						.setTitle(`${map.artist} - ${map.title} (${map.version})`)
 						.setThumbnail(`https://b.ppy.sh/thumb/${map.beatmapSetId}l.jpg`)
 						.setURL(`https://osu.ppy.sh/b/${map.id}`)
-						.setDescription(`${star[0]}★ | Length: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds})
+						.setDescription(`${diff} ${star[0]}★ | Length: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds})
 					BPM: ${map.bpm} | Combo: ${map.maxCombo}x | Max PP: ${ppFix[0]}pp
 					Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${map.objects.spinner}`)
 						.setFooter(`${map.approvalStatus} on ${aday}-${amonth}-${ayear} | Last Updated: ${uday}-${umonth}-${uyear}`);
