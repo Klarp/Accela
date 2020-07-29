@@ -30,11 +30,20 @@ modules.forEach(c => {
 	});
 });
 
+const activities_list = [
+	`${prefix}help`,
+	'Let\'s All Love Lain',
+	'PHANTOMa',
+	'The Wired',
+];
+
 client.once('ready', async () => {
 	const storedUsers = await Users.findAll();
 	storedUsers.forEach(u => osuUsers.set(u.user_id, u));
-	client.user.setPresence({ activity: { name: 'lets all love lain' }, status: 'online' })
-		.catch(console.error);
+	setInterval(() => {
+		const index = Math.floor(Math.random() * (activities_list.length - 1) + 1);
+		client.user.setActivity(activities_list[index]);
+	}, 30000);
 
 	console.log(`${client.user.tag} has entered The Wired`);
 });
