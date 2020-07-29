@@ -50,7 +50,7 @@ client.on('message', message => {
 	}
 
 	if (!message.author.bot) {
-		if (message.content.includes('https://osu.ppy.sh/b/') || message.content.includes('https://osu.ppy.sh/beatmapsets/')) {
+		if (message.content.startsWith('https://osu.ppy.sh/b/') || message.content.startsWith('https://osu.ppy.sh/beatmapsets/')) {
 			mapDetect(message);
 		}
 
