@@ -60,13 +60,16 @@ module.exports = {
 			const rank = user.pp.rank.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 			const crank = user.pp.countryRank.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
+			const country = user.country.toLowerCase();
+			const countryEmote = `:flag_${country}:`;
+
 			// Create the embed
 			const osuEmbed = new Discord.MessageEmbed()
 				.setAuthor(user.name, `http://a.ppy.sh/${user.id}`)
 				.setColor('0xff69b4')
 				.setTitle(`Information On ${user.name}`)
 				.setURL(`https://osu.ppy.sh/u/${user.id}`)
-				.setDescription(`**Level** ${Math.floor(user.level)} | **Rank** ${rank} | **${user.country} Rank** ${crank}
+				.setDescription(`**Level** ${Math.floor(user.level)} | **Global Rank** ${rank} | **${countryEmote} Rank** ${crank}
 				
 				**PP** ${Math.round(user.pp.raw)} | **Accuracy** ${user.accuracyFormatted} | **Play Count** ${user.counts.plays}`)
 				.setFooter(`Joined ${d}`);
