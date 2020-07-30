@@ -1,19 +1,19 @@
 const fs = require('fs');
 const Discord = require('discord.js');
+
 const { prefix, token } = require('./config.json');
 const { Users } = require('./dbObjects');
 const checkPerm = require('./utils/checkPerm.js');
 const mapDetect = require('./utils/mapDetect');
 const { Muted } = require('./dbObjects');
 const modAction = require('./utils/modAction');
+
 const osuUsers = new Discord.Collection();
 const client = new Discord.Client();
-
 exports.Client = client;
 
 client.commands = new Discord.Collection();
 const modules = ['Admin', 'osu!', 'Utility'];
-
 const cooldowns = new Discord.Collection();
 
 modules.forEach(c => {
