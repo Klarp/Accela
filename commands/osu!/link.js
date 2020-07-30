@@ -10,20 +10,20 @@ module.exports = {
 		try {
 			await Users.create({
 				user_id: message.author.id,
-				user_osu: args[0],
+				user_osu: args.join(' '),
 			});
-			return message.channel.send(`Linked ${message.author} to ${args[0]}!`);
+			return message.channel.send(`Linked ${message.author} to ${args.join(' ')}!`);
 		} catch(e) {
 			if (e.name === 'SequelizeUniqueConstraintError') {
 				try {
 					const upUser = await Users.update({
-						user_osu: args[0],
+						user_osu: args.join(' '),
 					},
 					{
 						where: { user_id: message.author.id },
 					});
 					if (upUser > 0) {
-						return message.reply(`Updated link to ${args[0]}!`);
+						return message.reply(`Updated link to ${args.join(' ')}!`);
 					}
 				} catch(err) {
 					console.error(err);

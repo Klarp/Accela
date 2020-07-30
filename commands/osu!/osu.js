@@ -48,7 +48,7 @@ module.exports = {
 
 		// Use arguments if applicable
 		if (!menUser && args[0]) {
-			name = args[0];
+			name = args.join(' ');
 		}
 
 		// Find user through the api
