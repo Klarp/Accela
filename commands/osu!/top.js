@@ -61,8 +61,10 @@ module.exports = {
 		}
 
 		// Use arguments if applicable
-		if (!menUser && isNaN(args[0])) {
-			name = args[0];
+		if (!menUser && isNaN(args[1])) {
+			args.shift();
+			name = args.join(' ');
+			console.log(name);
 		}
 
 		// Find user through the api
@@ -149,7 +151,6 @@ module.exports = {
 			});
 		}).catch(e => {
 			if (e.name == 'Error') {
-				console.error(e);
 				return message.reply('No top play was found!');
 			}
 			console.error(e);
