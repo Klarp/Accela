@@ -106,7 +106,7 @@ module.exports = {
 					acc_percent: acc_percent,
 				});
 
-				const maxPP = oj.ppv2({ map: pMap });
+				const maxPP = oj.ppv2({ map: pMap, mods: mods });
 
 				const max_combo = pMap.max_combo();
 				combo = combo || max_combo;

@@ -12,7 +12,7 @@ module.exports = {
 				user_id: message.author.id,
 				user_osu: args[0],
 			});
-			return message.reply(`Linked ${message.author.username} to ${args[0]}!`);
+			return message.channel.send(`Linked ${message.author} to ${args[0]}!`);
 		} catch(e) {
 			if (e.name === 'SequelizeUniqueConstraintError') {
 				try {

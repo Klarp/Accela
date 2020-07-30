@@ -24,6 +24,15 @@ module.exports = {
 			parseNumeric: true,
 		});
 
+		let topNum = 0;
+
+		if (!isNaN(args[0])) {
+			topNum = parseInt(args[0]);
+			if (topNum > 10) return message.reply('Only max of 10 scores can be searched');
+			topNum -= 1;
+			console.log(topNum);
+		}
+
 		let findUser;
 		const menUser = message.mentions.users.first();
 
@@ -52,13 +61,13 @@ module.exports = {
 		}
 
 		// Use arguments if applicable
-		if (!menUser && args[0]) {
+		if (!menUser && isNaN(args[0])) {
 			name = args[0];
 		}
 
 		// Find user through the api
-		osuApi.getUserBest({ u: name, limit: 1 }).then(async r => {
-			const recent = r[0];
+		osuApi.getUserBest({ u: name, limit: 10 }).then(async r => {
+			const recent = r[topNum];
 			Number.prototype.toFixedDown = function(digits) {
 				const re = new RegExp('(\\d+\\.\\d{' + digits + '})(\\d)'),
 					m = this.toString().match(re);
@@ -101,7 +110,7 @@ module.exports = {
 					acc_percent: acc_percent,
 				});
 
-				const maxPP = oj.ppv2({ map: pMap });
+				const maxPP = oj.ppv2({ map: pMap, mods: mods });
 
 				const max_combo = pMap.max_combo();
 				combo = combo || max_combo;
@@ -140,7 +149,8 @@ module.exports = {
 			});
 		}).catch(e => {
 			if (e.name == 'Error') {
-				return message.reply('No recent play was found!');
+				console.error(e);
+				return message.reply('No top play was found!');
 			}
 			console.error(e);
 			return message.reply('An error has occured!');
