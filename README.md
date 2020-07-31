@@ -59,7 +59,7 @@ Please make sure to update tests as appropriate.
 ## Special Thanks
 - Phil
 - Peeman69
-
+- Stedoss
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
