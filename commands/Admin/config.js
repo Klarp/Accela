@@ -106,10 +106,8 @@ module.exports = {
 				message.channel.awaitMessages(filter, { max: 1, time: 10000, errors: ['time'] })
 					.then(collected => {
 						if (collected.first().content.toLowerCase() === 'yes') {
-							console.log('true');
 							msgLogging = true;
 						} else if (collected.first().content.toLowerCase() === 'no') {
-							console.log('false');
 							msgLogging = false;
 						} else {
 							return message.reply('that is not a valid reply');
@@ -157,7 +155,6 @@ module.exports = {
 					mod_logging: modLogging,
 					msg_logging: msgLogging,
 				});
-				console.log('ping1');
 			} catch(e) {
 				if (e.name === 'SequelizeUniqueConstraintError') {
 					try {
