@@ -81,8 +81,13 @@ client.on('message', async message => {
 
 	const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
 
-	const prefix = serverConfig.get('prefix');
-	const modFlag = serverConfig.get('mod_commands');
+	let prefix = '>>';
+	let modFlag;
+
+	if (serverConfig) {
+		prefix = serverConfig.get('prefix');
+		modFlag = serverConfig.get('mod_commands');
+	}
 
 	if (!message.content.startsWith(prefix)) return;
 
