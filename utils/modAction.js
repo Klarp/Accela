@@ -1,8 +1,14 @@
 /* eslint-disable no-case-declarations */
 const Discord = require('discord.js');
+const { sConfig } = require('../dbObjects');
 
-module.exports = (mod, member, action, reason, length) => {
-	const modC = member.guild.channels.cache.get('688417816818483211');
+module.exports = async (mod, member, action, reason, length) => {
+	const serverConfig = await sConfig.findOne({ where: { guild_id: member.guild.id } });
+	const modLog = serverConfig.get('mod_logging');
+	const modChannel = serverConfig.get('mod_channel');
+	const modC = member.guild.channels.cache.get(modChannel);
+
+	if (!modLog) return;
 
 	if (modC) {
 		if (!reason) reason = 'No Reason Given';

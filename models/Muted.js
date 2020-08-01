@@ -3,7 +3,7 @@ module.exports = (seqMute, DataTypes) => {
 		user_id: {
 			type: DataTypes.STRING,
 			primaryKey: true,
-			unqiue: false,
+			unique: false,
 		},
 		guild_id: {
 			type: DataTypes.STRING,

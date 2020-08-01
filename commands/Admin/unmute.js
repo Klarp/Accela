@@ -9,6 +9,7 @@ module.exports = {
 	guildOnly: true,
 	perms: 'MANAGE_ROLES',
 	args: true,
+	modCmd: true,
 	usage: '<user>',
 	async execute(message, args) {
 		if (!message.mentions.members.first()) return message.reply('Please mention a user.');

@@ -7,6 +7,7 @@ module.exports = {
 	guildOnly: true,
 	perms: 'KICK_MEMBERS',
 	args: true,
+	modCmd: true,
 	usage: '<user>',
 	execute(message, args) {
 		if (!message.mentions.members.first()) return message.reply('Please mention a user.');
