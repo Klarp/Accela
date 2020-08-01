@@ -1,14 +1,14 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 
-const { prefix, token } = require('./config.json');
-const { Users } = require('./dbObjects');
+const { token } = require('./config.json');
+const { Users, Muted, sConfig } = require('./dbObjects');
 const checkPerm = require('./utils/checkPerm.js');
 const mapDetect = require('./utils/mapDetect');
-const { Muted } = require('./dbObjects');
 const modAction = require('./utils/modAction');
 
 const osuUsers = new Discord.Collection();
+const configs = new Discord.Collection();
 const client = new Discord.Client();
 exports.Client = client;
 
@@ -31,7 +31,7 @@ modules.forEach(c => {
 });
 
 const activities_list = [
-	`${prefix}help`,
+	'osu!',
 	'Let\'s All Love Lain',
 	'PHANTOMa',
 	'The Wired',
@@ -40,6 +40,10 @@ const activities_list = [
 client.once('ready', async () => {
 	const storedUsers = await Users.findAll();
 	storedUsers.forEach(u => osuUsers.set(u.user_id, u));
+
+	const serverConfigs = await sConfig.findAll();
+	serverConfigs.forEach(s => configs.set(s.guild_id, s));
+
 	setInterval(() => {
 		const index = Math.floor(Math.random() * (activities_list.length - 1) + 1);
 		client.user.setActivity(activities_list[index]);
@@ -48,7 +52,7 @@ client.once('ready', async () => {
 	console.log(`${client.user.tag} has entered The Wired`);
 });
 
-client.on('message', message => {
+client.on('message', async message => {
 	if (message.embeds[0]) {
 		if (!message.embeds[0].url) {
 			return;
@@ -73,7 +77,14 @@ client.on('message', message => {
 		if (lowMsg.includes('cock')) message.channel.send(`${YEP}`);
 	}
 
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
+	if (message.author.bot) return;
+
+	const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
+
+	const prefix = serverConfig.get('prefix');
+	const modFlag = serverConfig.get('mod_commands');
+
+	if (!message.content.startsWith(prefix)) return;
 
 	const args = message.content.slice(prefix.length).split(/ +/);
 	const commandName = args.shift().toLowerCase();
@@ -82,6 +93,10 @@ client.on('message', message => {
 		|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 	if (!command) return;
+
+	if (command.modCmd) {
+		if (!modFlag) return;
+	}
 
 	if (command.perms) {
 		if (!checkPerm(message.member, command.perms)) return message.reply('Insufficient permissions.');
@@ -129,52 +144,67 @@ client.on('message', message => {
 	}
 });
 
-client.on('messageDelete', message => {
-	if (client.channels.cache.get('734216663054024734')) {
+client.on('messageDelete', async message => {
+	const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
+	const logFlag = serverConfig.get('msg_logging');
+	const logChannel = serverConfig.get('msgLog_channel');
+
+	if (logFlag) {
 		const delEmbed = new Discord.MessageEmbed()
 			.setAuthor(`${message.author.tag} (${message.author.id})`, message.author.displayAvatarURL())
 			.setColor('RED')
 			.setTitle('Message Deleted')
 			.setDescription(message)
 			.setTimestamp();
-		client.channels.cache.get('734216663054024734').send(delEmbed);
+		client.channels.cache.get(logChannel).send(delEmbed);
 	}
 });
 
-
-/*
-client.on('messageUpdate', async (oldMsg, newMsg) => {
-	console.log(oldMsg.content);
-	console.log(newMsg.content);
-	const editEmbed = new Discord.MessageEmbed()
-		.setAuthor(`${newMsg.author.tag} (${newMsg.author.id})`, newMsg.author.displayAvatarURL())
-		.setColor('BLUE')
-		.setTitle('Message Edited')
-		.addField('Old Message', oldMsg.content)
-		.addField('New Message', newMsg.content)
-		.setTimestamp();
-	client.channels.cache.get('734216663054024734').send(editEmbed);
+client.on('guildCreate', async (guild) => {
+	try {
+		await sConfig.create({
+			guild_id: guild.id,
+			prefix: '>>',
+			mod_channel: '',
+			msgLog_channel: '',
+			mod_commands: false,
+			mod_logging: false,
+			msg_logging: false,
+		});
+		console.log(`Default config made for ${guild.name}`);
+	} catch(e) {
+		if (e.name === 'SequelizeUniqueConstraintError') {
+			console.log(`Using old config for ${guild.name}`);
+		}
+		console.error(e);
+	}
 });
-*/
 
+client.on('guildBanAdd', async (guild, user) => {
+	const serverConfig = await sConfig.findOne({ where: { guild_id: guild.id } });
+	const logFlag = serverConfig.get('mod_logging');
+	const modChannel = serverConfig.get('mod_channel');
 
-client.on('guildBanAdd', (guild, user) => {
-	if (guild.id === '687858540425117755') {
+	if (logFlag) {
 		const banEmbed = new Discord.MessageEmbed()
 			.setThumbnail(user.displayAvatarURL())
 			.setTitle('User Banned')
 			.setDescription(`${user.tag} (${user.id})`);
-		guild.channels.cache.get('688417816818483211').send(banEmbed);
+		guild.channels.cache.get(modChannel).send(banEmbed);
 	}
 });
 
 client.on('guildBanRemove', async (guild, user) => {
-	if (guild.id === '687858540425117755') {
+	const serverConfig = await sConfig.findOne({ where: { guild_id: guild.id } });
+	const logFlag = serverConfig.get('mod_logging');
+	const modChannel = serverConfig.get('mod_channel');
+
+	if (logFlag) {
 		const unbanEmbed = new Discord.MessageEmbed()
 			.setThumbnail(user.displayAvatarURL())
 			.setTitle('User Unbanned')
 			.setDescription(`${user.tag} (${user.id})`);
-		guild.channels.cache.get('688417816818483211').send(unbanEmbed);
+		guild.channels.cache.get(modChannel).send(unbanEmbed);
 	}
 	const muteUser = await Muted.findOne({ where: { user_id: user.id } });
 	if (!muteUser) return;
@@ -189,14 +219,11 @@ client.on('guildBanRemove', async (guild, user) => {
 client.on('guildMemberAdd', async (member) => {
 	const muteUser = await Muted.findOne({ where: { user_id: member.id } });
 	if (!muteUser) return;
-	if (member.bannable) {
-		member.send(`You have been banned from ${member.guild.name}! Reason: Mute Evasion`).then (() => {
-			member.ban({ days: 1, reason: 'Mute Evasion' }).catch(err => console.log(err));
-		});
-	} else {
-		return console.log(`Could not ban ${member.displayName}.`);
-	}
-	modAction(client.user, member, 'Ban', 'Mute Evasion');
+	const muteRole = member.guild.roles.cache.find(r => r.name === 'muted');
+	member.roles.add(muteRole.id).then(() => {
+		member.send(`You have been muted in ${member.guild.name}! Reason: Mute Evasion`);
+	});
+	modAction(client.user, member, 'Mute', 'Mute Evasion');
 });
 
 process.on('unhandledRejection', error => {
