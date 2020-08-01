@@ -7,7 +7,7 @@ module.exports = {
 	name: 'botinfo',
 	description: 'Get information about the bot',
 	module: 'Utility',
-	aliases: ['binfo', 'info'],
+	aliases: ['botinfo', 'binfo', 'info'],
 	async execute(message) {
 		const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
 		const prefix = serverConfig.get('prefix');
