@@ -9,8 +9,11 @@ module.exports = {
 	module: 'Utility',
 	aliases: ['botinfo', 'binfo', 'info'],
 	async execute(message) {
+		let prefix = '>>';
 		const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
-		const prefix = serverConfig.get('prefix');
+		if (serverConfig) {
+			prefix = serverConfig.get('prefix');
+		}
 		const bot = Client.user;
 		const me = message.guild.me;
 		const roles = me.roles.cache.map(r => `${r}`).join(' | ');

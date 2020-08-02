@@ -155,7 +155,10 @@ client.on('message', async message => {
 
 client.on('messageDelete', async message => {
 	const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
-	const logFlag = serverConfig.get('msg_logging');
+	let logFlag = false;
+	if (serverConfig.get('msg_logging')) {
+		logFlag = serverConfig.get('msg_logging');
+	}
 	const logChannel = serverConfig.get('msgLog_channel');
 
 	if (logFlag) {
