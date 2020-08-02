@@ -31,7 +31,9 @@ module.exports = {
 		const [{ value: jmonth },, { value: jday },, { value: jyear }] = dateTimeFormat.formatToParts(joined);
 		const [{ value: cmonth },, { value: cday },, { value: cyear }] = dateTimeFormat.formatToParts(created);
 
-		const roles = member.roles.cache.map(r => `${r}`).join(' | ');
+		const roles = member.roles.cache
+			.filter(r => r.name !== '@everyone')
+			.map(r => `${r}`).join(' | ');
 		const name = member.nickname || 'None';
 
 		let game = 'None';

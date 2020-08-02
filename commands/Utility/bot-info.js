@@ -16,7 +16,9 @@ module.exports = {
 		}
 		const bot = Client.user;
 		const me = message.guild.me;
-		const roles = me.roles.cache.map(r => `${r}`).join(' | ');
+		const roles = me.roles.cache
+			.filter(r => r.name !== '@everyone')
+			.map(r => `${r}`).join(' | ');
 		let userCount = 0;
 
 		Client.guilds.cache
