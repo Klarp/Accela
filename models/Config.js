@@ -29,6 +29,10 @@ module.exports = (serverConfig, DataTypes) => {
 			type: DataTypes.BOOLEAN,
 			unique: false,
 		},
+		noprefix_commands: {
+			type: DataTypes.BOOLEAN,
+			unique: false,
+		},
 	},	{
 		timestamps: false,
 	});

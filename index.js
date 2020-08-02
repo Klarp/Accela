@@ -62,32 +62,36 @@ client.on('message', async message => {
 		}
 	}
 
+	const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
+
+	let prefix = '>>';
+	let modFlag;
+	let noPrefixFlag;
+
+	if (serverConfig) {
+		prefix = serverConfig.get('prefix');
+		modFlag = serverConfig.get('mod_commands');
+		noPrefixFlag = serverConfig.get('noPrefix_commands');
+	}
+
 	if (!message.author.bot) {
 		if (message.content.startsWith('https://osu.ppy.sh/b/') || message.content.startsWith('https://osu.ppy.sh/beatmapsets/')) {
 			mapDetect(message);
 		}
 
-		const konCha = client.emojis.cache.get('688169982223319072');
-		const yepPride = client.emojis.cache.get('706929594028130304');
-		const YEP = client.emojis.cache.get('734159200564936714');
-		const lowMsg = message.content.toLowerCase();
+		if (noPrefixFlag) {
+			const konCha = client.emojis.cache.get('688169982223319072');
+			const yepPride = client.emojis.cache.get('706929594028130304');
+			const YEP = client.emojis.cache.get('734159200564936714');
+			const lowMsg = message.content.toLowerCase();
 
-		if (lowMsg == 'hey accela') message.reply(`Hey there! ${konCha}`);
-		if (lowMsg.includes('gay')) message.react(yepPride.id);
-		if (lowMsg.includes('cock')) message.channel.send(`${YEP}`);
+			if (lowMsg == 'hey accela') message.reply(`Hey there! ${konCha}`);
+			if (lowMsg.includes('gay')) message.react(yepPride.id);
+			if (lowMsg.includes('cock')) message.channel.send(`${YEP}`);
+		}
 	}
 
 	if (message.author.bot) return;
-
-	const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
-
-	let prefix = '>>';
-	let modFlag;
-
-	if (serverConfig) {
-		prefix = serverConfig.get('prefix');
-		modFlag = serverConfig.get('mod_commands');
-	}
 
 	if (!message.content.startsWith(prefix)) return;
 
