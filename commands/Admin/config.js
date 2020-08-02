@@ -17,6 +17,7 @@ module.exports = {
 		let modCommands = false;
 		let modLogging = false;
 		let msgLogging = false;
+		let noPrefix = false;
 		const filter = m => m.author === message.author;
 		await message.channel.send('What would you like the prefix to be?').then(() => {
 			message.channel.awaitMessages(filter, { max: 1, time: 10000, errors: ['time'] })
@@ -130,7 +131,7 @@ module.exports = {
 						.then(collected => {
 							msgLogChannel = collected.first().content.match(/\d+/)[0];
 							logChannelClean = collected.first().content;
-							configFunc();
+							noPrefixFunc();
 						})
 						.catch(collected => {
 							if (collected.size == 0) {
@@ -141,8 +142,30 @@ module.exports = {
 						});
 				});
 			} else {
-				configFunc();
+				noPrefixFunc();
 			}
+		}
+		async function noPrefixFunc() {
+			await message.channel.send('Would you like the commands with no prefix? (Yes or No)').then(() => {
+				message.channel.awaitMessages(filter, { max: 1, time: 10000, errors: ['time'] })
+					.then(collected => {
+						if (collected.first().content.toLowerCase() === 'yes') {
+							noPrefix = true;
+						} else if (collected.first().content.toLowerCase() === 'no') {
+							noPrefix = false;
+						} else {
+							return message.reply('that is not a valid reply');
+						}
+						configFunc();
+					})
+					.catch(collected => {
+						if (collected.size == 0) {
+							return message.reply('you did not answer in time');
+						} else {
+							console.log(collected.size);
+						}
+					});
+			});
 		}
 		async function configFunc() {
 			try {
@@ -154,6 +177,7 @@ module.exports = {
 					mod_commands: modCommands,
 					mod_logging: modLogging,
 					msg_logging: msgLogging,
+					noPrefix_commands: noPrefix,
 				});
 			} catch(e) {
 				if (e.name === 'SequelizeUniqueConstraintError') {
@@ -165,6 +189,7 @@ module.exports = {
 							mod_commands: modCommands,
 							mod_logging: modLogging,
 							msg_logging: msgLogging,
+							noPrefix_commands: noPrefix,
 						},
 						{
 							where: { guild_id: message.guild.id },
@@ -190,7 +215,9 @@ module.exports = {
 
 				Mod Logging: ${modLogging}
 
-				Message Logging: ${msgLogging}`);
+				Message Logging: ${msgLogging}
+				
+				No Prefix Commands ${noPrefix}`);
 			message.channel.send(configEmbed);
 		}
 	},
