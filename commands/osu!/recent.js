@@ -12,7 +12,7 @@ const getDiff = require('../../utils/getDiff.js');
 
 module.exports = {
 	name: 'recent',
-	aliases: 'r',
+	aliases: ['r', 'rs'],
 	description: 'Gets the recently completed score on osu!',
 	module: 'osu!',
 	perms: '',

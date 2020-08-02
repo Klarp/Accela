@@ -31,7 +31,7 @@ module.exports = {
 			**Emoji Count:** ${server.emojis.cache.size}
 			**Number of Boosts:** ${server.premiumSubscriptionCount}
 			**Boost Level:** ${server.premiumTier}`)
-			.setFooter(`Created On: ${day} ${month} ${year} ${server.createdAt.toLocaleTimeString()}`);
+			.setFooter(`Created On: ${day} ${month} ${year}`);
 		message.channel.send(infoEmbed);
 	},
 };
