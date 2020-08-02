@@ -40,6 +40,7 @@ module.exports = {
 			name = findUser.get('user_osu');
 		} else {
 			name = message.author.username;
+			message.channel.send('No link found: use >>link to link your osu! account!');
 		}
 
 		if (menUser && !findUser) {
