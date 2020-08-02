@@ -18,11 +18,10 @@ module.exports = {
 
 		const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' });
 		let lastSeen;
-		let lmonth, lday, lyear, ltime;
+		let lmonth, lday, lyear;
 		if (member.lastMessage) {
 			lastSeen = member.lastMessage.createdAt;
 			[{ value: lmonth },, { value: lday },, { value: lyear }] = dateTimeFormat.formatToParts(lastSeen);
-			ltime = lastSeen.toLocaleTimeString();
 		} else {
 			lastSeen = 'Unknown';
 		}
@@ -53,7 +52,7 @@ module.exports = {
 		let lastDate;
 
 		if (lday) {
-			lastDate = `${lday} ${lmonth} ${lyear} ${ltime}`;
+			lastDate = `${lday} ${lmonth} ${lyear}`;
 		} else {
 			lastDate = 'Unknown';
 		}
@@ -66,11 +65,11 @@ module.exports = {
 			**Activity:** ${activity}
 			**Playing:** ${game} (${gameState})
 			
-			**Joined On:** ${jday} ${jmonth} ${jyear} ${joined.toLocaleTimeString()}
+			**Joined On:** ${jday} ${jmonth} ${jyear}
 			**Last Seen:** ${lastDate}
 			
 			**Roles:** ${roles}`)
-			.setFooter(`Joined Discord: ${cday} ${cmonth} ${cyear} ${created.toLocaleTimeString()}`);
+			.setFooter(`Joined Discord: ${cday} ${cmonth} ${cyear}`);
 
 		message.channel.send(infoEmbed);
 	},
