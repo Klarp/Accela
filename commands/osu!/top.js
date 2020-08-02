@@ -30,7 +30,6 @@ module.exports = {
 			topNum = parseInt(args[0]);
 			if (topNum > 10) return message.reply('Only max of 10 scores can be searched');
 			topNum -= 1;
-			console.log(topNum);
 		}
 
 		let findUser;
