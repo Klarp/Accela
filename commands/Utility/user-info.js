@@ -33,6 +33,7 @@ module.exports = {
 
 		const roles = member.roles.cache
 			.filter(r => r.name !== '@everyone')
+			.sort((a, b) => b.position - a.position)
 			.map(r => `${r}`).join(' | ');
 		const name = member.nickname || 'None';
 
