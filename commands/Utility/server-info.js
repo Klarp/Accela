@@ -47,6 +47,6 @@ Emoji Count
 # of Boosts
 Boost Level
 
-Footer: 
+Footer:
 Created At
 */

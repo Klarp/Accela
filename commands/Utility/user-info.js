@@ -28,7 +28,7 @@ module.exports = {
 		const name = member.nickname || 'None';
 
 		let game = 'None';
-		let gameState;
+		let gameState = 'None';
 
 		if (target.presence.activities[1]) {
 			game = target.presence.activities[1].name;
