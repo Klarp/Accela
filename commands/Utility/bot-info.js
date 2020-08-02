@@ -18,6 +18,7 @@ module.exports = {
 		const me = message.guild.me;
 		const roles = me.roles.cache
 			.filter(r => r.name !== '@everyone')
+			.sort((a, b) => b.position - a.position)
 			.map(r => `${r}`).join(' | ');
 		let userCount = 0;
 
