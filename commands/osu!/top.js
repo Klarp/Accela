@@ -41,6 +41,7 @@ module.exports = {
 		let acc_percent;
 		let combo;
 		let nmiss;
+		let nameCheck = false;
 
 		// Access database
 		if (menUser) {
@@ -52,8 +53,11 @@ module.exports = {
 		// Find the user in the database
 		if (findUser) {
 			name = findUser.get('user_osu');
+			nameCheck = true;
 		} else {
 			name = message.author.username;
+			message.channel.send('No link found: use >>link to link your osu! account!');
+			nameCheck = true;
 		}
 
 		if (menUser && !findUser) {
@@ -61,10 +65,9 @@ module.exports = {
 		}
 
 		// Use arguments if applicable
-		if (!menUser && isNaN(args[1])) {
+		if (!menUser && isNaN(args[1]) && !nameCheck) {
 			args.shift();
 			name = args.join(' ');
-			console.log(name);
 		}
 
 		// Find user through the api
