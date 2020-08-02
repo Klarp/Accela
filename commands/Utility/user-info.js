@@ -17,10 +17,17 @@ module.exports = {
 		const target = message.mentions.users.first() || message.author;
 
 		const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' });
-		const lastSeen = member.lastMessage.createdAt;
+		let lastSeen;
+		let lmonth, lday, lyear, ltime;
+		if (member.lastMessage) {
+			lastSeen = member.lastMessage.createdAt;
+			[{ value: lmonth },, { value: lday },, { value: lyear }] = dateTimeFormat.formatToParts(lastSeen);
+			ltime = lastSeen.toLocaleTimeString();
+		} else {
+			lastSeen = 'Unknown';
+		}
 		const joined = member.joinedAt;
 		const created = target.createdAt;
-		const [{ value: lmonth },, { value: lday },, { value: lyear }] = dateTimeFormat.formatToParts(lastSeen);
 		const [{ value: jmonth },, { value: jday },, { value: jyear }] = dateTimeFormat.formatToParts(joined);
 		const [{ value: cmonth },, { value: cday },, { value: cyear }] = dateTimeFormat.formatToParts(created);
 
@@ -29,10 +36,23 @@ module.exports = {
 
 		let game = 'None';
 		let gameState = 'None';
+		let activity = 'None';
+
+		if (target.presence.activities[0]) {
+			activity = target.presence.activities[0].state;
+		}
 
 		if (target.presence.activities[1]) {
 			game = target.presence.activities[1].name;
 			gameState = target.presence.activities[1].state;
+		}
+
+		let lastDate;
+
+		if (lday) {
+			lastDate = `${lday} ${lmonth} ${lyear} ${ltime}`;
+		} else {
+			lastDate = 'Unknown';
 		}
 
 		const infoEmbed = new Discord.MessageEmbed()
@@ -40,11 +60,11 @@ module.exports = {
 			.setColor('BLUE')
 			.setDescription(`**Nickname:** ${name} 
 			**Status:** ${status[target.presence.status]}
-			**Activity:** ${target.presence.activities[0].state}
+			**Activity:** ${activity}
 			**Playing:** ${game} (${gameState})
 			
 			**Joined On:** ${jday} ${jmonth} ${jyear} ${joined.toLocaleTimeString()}
-			**Last Seen:** ${lday} ${lmonth} ${lyear} ${lastSeen.toLocaleTimeString()}
+			**Last Seen:** ${lastDate}
 			
 			**Roles:** ${roles}`)
 			.setFooter(`Joined Discord: ${cday} ${cmonth} ${cyear} ${created.toLocaleTimeString()}`);
