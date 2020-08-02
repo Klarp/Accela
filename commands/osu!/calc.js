@@ -25,18 +25,16 @@ module.exports = {
 		osuApi.getBeatmaps({ b: bMap }).then(beatmap => {
 			const map = beatmap[0];
 			curl.get(`https://osu.ppy.sh/osu/${map.id}`, function(err, response, body) {
-				mods = oj.modbits.from_string(args[1] || '');
+				mods = oj.modbits.from_string(args[1]);
+				if (!mods) {
+					mods = oj.modbits.none;
+				}
 				acc_percent = parseFloat(args[2]);
 				combo = parseInt(args[3]);
 				miss = parseInt(args[4]);
-
 				const parser = new oj.parser().feed(body);
 
 				const pMap = parser.map;
-
-				if (mods) {
-					console.log('+' + oj.modbits.string(mods));
-				}
 
 				const stars = new oj.diff().calc({ map: pMap, mods: mods });
 
@@ -50,10 +48,6 @@ module.exports = {
 				const max_combo = pMap.max_combo();
 				combo = combo || max_combo;
 
-				console.log(pp.computed_accuracy.toString());
-
-				console.log(pp.toString());
-
 				const ppFix = pp.toString().split(' ');
 
 				const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' });
@@ -65,7 +59,7 @@ module.exports = {
 					.setURL(`https://osu.ppy.sh/b/${map.id}`)
 					.setTitle(`${map.artist} - ${map.title} (${map.version})`)
 					.setDescription(`Mapped by ${map.creator}`)
-					.addField('Mods', oj.modbits.string(mods))
+					.addField('Mods', oj.modbits.string(mods) || 'NoMod')
 					.addField('Accuracy', `${acc_percent}%` || '100%')
 					.addField('Missed', miss)
 					.addField('Combo', `**${combo}x**/${map.maxCombo}`)
