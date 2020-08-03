@@ -42,7 +42,10 @@ module.exports = {
 		let combo;
 		let nmiss;
 		let nameFlag = true;
-		const prefix = serverConfig.get('prefix');
+		let prefix = '>>';
+		if (serverConfig) {
+			prefix = serverConfig.get('prefix');
+		}
 
 		// Access database
 		if (menUser) {
