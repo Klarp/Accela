@@ -4,7 +4,7 @@ const oj = require('ojsama');
 const curl = require('curl');
 
 const { osu_key } = require('../../config.json');
-const { Users } = require('../../dbObjects');
+const { Users, sConfig } = require('../../dbObjects');
 const getShortMods = require('../../utils/getShortMods.js');
 const getRank = require('../../utils/getRank.js');
 const timeSince = require('../../utils/timeSince');
@@ -12,7 +12,7 @@ const getDiff = require('../../utils/getDiff.js');
 
 module.exports = {
 	name: 'top',
-	aliases: 'osutop',
+	aliases: 't',
 	description: 'Gets the top score of the user',
 	module: 'osu!',
 	usage: '<user>',
@@ -34,13 +34,15 @@ module.exports = {
 
 		let findUser;
 		const menUser = message.mentions.users.first();
+		const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
 
 		let name;
 		let mods = oj.modbits.none;
 		let acc_percent;
 		let combo;
 		let nmiss;
-		let nameCheck = false;
+		let nameFlag = true;
+		const prefix = serverConfig.get('prefix');
 
 		// Access database
 		if (menUser) {
@@ -49,24 +51,35 @@ module.exports = {
 			findUser = await Users.findOne({ where: { user_id: message.author.id } });
 		}
 
+		if (!menUser && isNaN(args[0]) && args[0]) {
+			name = args.join(' ');
+			nameFlag = false;
+		}
+
+		if (!menUser && !isNaN(args[0])) {
+			if (args[1]) {
+				nameFlag = false;
+			} else {
+				nameFlag = true;
+			}
+			args.shift();
+			name = args.join(' ');
+		}
+
+		console.log(nameFlag);
+
 		// Find the user in the database
-		if (findUser) {
-			name = findUser.get('user_osu');
-			nameCheck = true;
-		} else {
-			name = message.author.username;
-			message.channel.send('No link found: use >>link to link your osu! account!');
-			nameCheck = true;
+		if (nameFlag) {
+			if (findUser) {
+				name = findUser.get('user_osu');
+			} else {
+				name = message.author.username;
+				message.channel.send(`No link found: use ${prefix}link to link your osu! account!`);
+			}
 		}
 
 		if (menUser && !findUser) {
 			name = menUser.username;
-		}
-
-		// Use arguments if applicable
-		if (!menUser && isNaN(args[1]) && !nameCheck) {
-			args.shift();
-			name = args.join(' ');
 		}
 
 		// Find user through the api

@@ -6,7 +6,7 @@ module.exports = {
 	description: 'Set\'s configuration for the server',
 	module: 'Admin',
 	guildOnly: true,
-	perms: 'MANAGE_SERVER',
+	perms: 'MANAGE_GUILD',
 	usage: '<user>',
 	async execute(message) {
 		let prefix = '>>';

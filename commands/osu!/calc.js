@@ -9,7 +9,7 @@ module.exports = {
 	description: 'Calculates pp',
 	module: 'osu!',
 	args: true,
-	usage: '<beatmap> <mods> <acc> <combo> <missed>',
+	usage: '<beatmap> <acc> <combo> <missed> <mods>',
 	execute(message, args) {
 		// Access the api
 		const osuApi = new osu.Api(osu_key);
@@ -25,13 +25,13 @@ module.exports = {
 		osuApi.getBeatmaps({ b: bMap }).then(beatmap => {
 			const map = beatmap[0];
 			curl.get(`https://osu.ppy.sh/osu/${map.id}`, function(err, response, body) {
-				mods = oj.modbits.from_string(args[1]);
+				mods = oj.modbits.from_string(args[4]);
 				if (!mods) {
 					mods = oj.modbits.none;
 				}
-				acc_percent = parseFloat(args[2]);
-				combo = parseInt(args[3]);
-				miss = parseInt(args[4]);
+				acc_percent = parseFloat(args[1]);
+				combo = parseInt(args[2]);
+				miss = parseInt(args[3]);
 				const parser = new oj.parser().feed(body);
 
 				const pMap = parser.map;

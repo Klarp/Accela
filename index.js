@@ -75,11 +75,10 @@ client.on('message', async message => {
 	}
 
 	if (!message.author.bot) {
-		if (message.content.startsWith('https://osu.ppy.sh/b/') || message.content.startsWith('https://osu.ppy.sh/beatmapsets/')) {
-			mapDetect(message);
-		}
-
 		if (noPrefixFlag) {
+			if (message.content.startsWith('https://osu.ppy.sh/b/') || message.content.startsWith('https://osu.ppy.sh/beatmapsets/')) {
+				mapDetect(message);
+			}
 			const konCha = client.emojis.cache.get('688169982223319072');
 			const yepPride = client.emojis.cache.get('706929594028130304');
 			const YEP = client.emojis.cache.get('734159200564936714');
