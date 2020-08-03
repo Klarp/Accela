@@ -4,7 +4,7 @@ const oj = require('ojsama');
 const curl = require('curl');
 
 const { osu_key } = require('../../config.json');
-const { Users } = require('../../dbObjects');
+const { Users, sConfig } = require('../../dbObjects');
 const getShortMods = require('../../utils/getShortMods.js');
 const getRank = require('../../utils/getRank.js');
 const timeSince = require('../../utils/timeSince');
@@ -27,12 +27,14 @@ module.exports = {
 
 		let findUser;
 		const menUser = message.mentions.users.first();
+		const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
 
 		let name;
 		let mods = oj.modbits.none;
 		let acc_percent;
 		let combo;
 		let nmiss;
+		const prefix = serverConfig.get('prefix');
 
 		// Access database
 		if (menUser) {
@@ -50,7 +52,7 @@ module.exports = {
 			name = findUser.get('user_osu');
 		} else {
 			name = message.author.username;
-			message.channel.send('No link found: use >>link to link your osu! account!');
+			message.channel.send(`No link found: use ${prefix}link to link your osu! account!`);
 		}
 
 		// Use arguments if applicable
@@ -107,6 +109,12 @@ module.exports = {
 					acc_percent: acc_percent,
 				});
 
+				const fcPP = oj.ppv2({
+					stars: stars,
+					combo: pMap.max_combo(),
+					acc_percent: acc_percent,
+				});
+
 				const maxPP = oj.ppv2({ map: pMap, mods: mods });
 
 				const max_combo = pMap.max_combo();
@@ -114,6 +122,7 @@ module.exports = {
 
 				const ppFix = pp.toString().split(' ');
 				const maxFix = maxPP.toString().split(' ');
+				const fcPPFix = pp.toString().split(' ');
 
 				const rDate = timeSince(recent.date);
 
@@ -124,7 +133,7 @@ module.exports = {
 					.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
 					.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${recent.counts['300']}/${recent.counts['100']}/${recent.counts['50']}/${recent.counts.miss}}
 
-					**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${recent.pp || ppFix[0]}pp**/${maxFix[0]}PP
+					**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${recent.pp || ppFix[0]}pp (${fcPPFix[0]} on FC)**/${maxFix[0]}PP
 
 					${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 					`)

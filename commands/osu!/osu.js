@@ -1,7 +1,7 @@
 const osu = require('node-osu');
 const Discord = require('discord.js');
 const { osu_key } = require('../../config.json');
-const { Users } = require('../../dbObjects');
+const { Users, sConfig } = require('../../dbObjects');
 
 /*
 To Do:
@@ -25,6 +25,7 @@ module.exports = {
 
 		let findUser;
 		const menUser = message.mentions.users.first();
+		const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
 
 		// Access database
 		if (menUser) {
@@ -34,13 +35,14 @@ module.exports = {
 		}
 
 		let name;
+		const prefix = serverConfig.get('prefix');
 
 		// Find the user in the database
 		if (findUser) {
 			name = findUser.get('user_osu');
 		} else {
 			name = message.author.username;
-			message.channel.send('No link found: use >>link to link your osu! account!');
+			message.channel.send(`No link found: use ${prefix}link to link your osu! account!`);
 		}
 
 		if (menUser && !findUser) {
