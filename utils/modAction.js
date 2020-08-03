@@ -18,8 +18,8 @@ module.exports = async (mod, member, action, reason, length) => {
 			const kickEmbed = new Discord.MessageEmbed()
 				.setAuthor(`${mod.tag} (${mod.id})`, mod.displayAvatarURL())
 				.setDescription(`**Action**: Kick
-					**User**: ${member.user.tag} (${member.user.id})
-					**Reason**: ${reason}`)
+**User**: ${member.user.tag} (${member.user.id})
+**Reason**: ${reason}`)
 				.setTimestamp();
 			modC.send({ embed: kickEmbed });
 			break;
@@ -27,8 +27,8 @@ module.exports = async (mod, member, action, reason, length) => {
 			const banEmbed = new Discord.MessageEmbed()
 				.setAuthor(`${mod.tag} (${mod.id})`, mod.displayAvatarURL())
 				.setDescription(`**Action**: ${action}
-					**User**: ${member.user.tag} (${member.user.id})
-					**Reason**: ${reason}`)
+**User**: ${member.user.tag} (${member.user.id})
+**Reason**: ${reason}`)
 				.setTimestamp();
 			modC.send({ embed: banEmbed });
 			break;
@@ -36,8 +36,8 @@ module.exports = async (mod, member, action, reason, length) => {
 			const softBanEmbed = new Discord.MessageEmbed()
 				.setAuthor(`${mod.tag} (${mod.id})`, mod.displayAvatarURL())
 				.setDescription(`**Action**: ${action}
-					**User**: ${member.user.tag} (${member.user.id})
-					**Reason**: ${reason}`)
+**User**: ${member.user.tag} (${member.user.id})
+**Reason**: ${reason}`)
 				.setTimestamp();
 			modC.send({ embed: softBanEmbed });
 			break;
@@ -45,8 +45,8 @@ module.exports = async (mod, member, action, reason, length) => {
 			const muteEmbed = new Discord.MessageEmbed()
 				.setAuthor(`${mod.tag} (${mod.id})`, mod.displayAvatarURL())
 				.setDescription(`**Action**: ${action}
-					**User**: ${member.user.tag} (${member.user.id})
-					**Reason**: ${reason}`)
+**User**: ${member.user.tag} (${member.user.id})
+**Reason**: ${reason}`)
 				.setTimestamp();
 			modC.send({ embed: muteEmbed });
 			break;
@@ -54,9 +54,9 @@ module.exports = async (mod, member, action, reason, length) => {
 			const tempMuteEmbed = new Discord.MessageEmbed()
 				.setAuthor(`${mod.tag} (${mod.id})`, mod.displayAvatarURL())
 				.setDescription(`**Action**: ${action}
-				**User**: ${member.user.tag} (${member.user.id})
-				**Length**: ${length}
-				**Reason**: ${reason}`)
+**User**: ${member.user.tag} (${member.user.id})
+**Length**: ${length}
+**Reason**: ${reason}`)
 				.setTimestamp();
 			modC.send({ embed: tempMuteEmbed });
 			break;
@@ -64,8 +64,8 @@ module.exports = async (mod, member, action, reason, length) => {
 			const unmuteEmbed = new Discord.MessageEmbed()
 				.setAuthor(`${mod.tag} (${mod.id})`, mod.displayAvatarURL())
 				.setDescription(`**Action**: ${action}
-					**User**: ${member.user.tag} (${member.user.id})
-					**Reason**: ${reason}`)
+**User**: ${member.user.tag} (${member.user.id})
+**Reason**: ${reason}`)
 				.setTimestamp();
 			modC.send({ embed: unmuteEmbed });
 			break;

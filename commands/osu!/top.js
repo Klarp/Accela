@@ -148,9 +148,9 @@ module.exports = {
 					.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
 					.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${recent.counts['300']}/${recent.counts['100']}/${recent.counts['50']}/${recent.counts.miss}}
 
-					**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${ppFix[0]}pp**/${maxFix[0]}PP
+**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${ppFix[0]}pp**/${maxFix[0]}PP
 
-					${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
+${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 					`)
 					.setFooter(`Completed ${rDate}`);
 

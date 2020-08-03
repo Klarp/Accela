@@ -107,7 +107,7 @@ client.on('message', async message => {
 	}
 
 	if (command.perms) {
-		if (!checkPerm(message.member, command.perms)) return message.reply('Insufficient permissions.');
+		if (!checkPerm(message.member, command.perms)) return;
 	}
 
 	if (command.guildOnly && message.channel.type !== 'text') {
