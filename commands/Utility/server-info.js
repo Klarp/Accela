@@ -24,6 +24,7 @@ module.exports = {
 			.setColor('BLUE')
 			.setDescription(`**Description:** ${desc}
 			**Owner:** ${server.owner.user.tag} (${server.ownerID})
+			**Members:** ${server.memberCount}
 			**Vanity URL:** ${vanity}
 			**Region:** ${server.region}
 			**Verification Level:** ${server.verificationLevel}
