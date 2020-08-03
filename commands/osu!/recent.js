@@ -109,12 +109,6 @@ module.exports = {
 					acc_percent: acc_percent,
 				});
 
-				const fcPP = oj.ppv2({
-					stars: stars,
-					combo: pMap.max_combo(),
-					acc_percent: acc_percent,
-				});
-
 				const maxPP = oj.ppv2({ map: pMap, mods: mods });
 
 				const max_combo = pMap.max_combo();
@@ -133,7 +127,7 @@ module.exports = {
 					.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
 					.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${recent.counts['300']}/${recent.counts['100']}/${recent.counts['50']}/${recent.counts.miss}}
 
-					**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${recent.pp || ppFix[0]}pp (${fcPPFix[0]} on FC)**/${maxFix[0]}PP
+					**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${recent.pp || ppFix[0]}pp**/${maxFix[0]}PP
 
 					${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 					`)
