@@ -77,7 +77,7 @@ module.exports = {
 				.setURL(`https://osu.ppy.sh/u/${user.id}`)
 				.setDescription(`**Level** ${Math.floor(user.level)} | **Global Rank** ${rank} | **[${countryEmote}](https://osu.ppy.sh/rankings/osu/performance?country=${user.country} 'Country Rankings') Rank** ${crank}
 				
-				**PP** ${Math.round(user.pp.raw)} | **Accuracy** ${user.accuracyFormatted} | **Play Count** ${user.counts.plays}`)
+**PP** ${Math.round(user.pp.raw)} | **Accuracy** ${user.accuracyFormatted} | **Play Count** ${user.counts.plays}`)
 				.setFooter(`Joined ${d}`);
 				/*
 				.addField('Accuracy', user.accuracyFormatted, true)

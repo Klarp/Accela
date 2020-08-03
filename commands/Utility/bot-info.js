@@ -43,12 +43,12 @@ module.exports = {
 			.setAuthor(bot.username, bot.displayAvatarURL())
 			.setColor('BLUE')
 			.setDescription(`**Prefix:** ${prefix}
-			**Help Command:** ${prefix}help
-			**Total Servers:** ${Client.guilds.cache.size} (${userCount} users)
+**Help Command:** ${prefix}help
+**Total Servers:** ${Client.guilds.cache.size} (${userCount} users)
 			
-			**Uptime:** ${uptime}
+**Uptime:** ${uptime}
 			
-			**Roles:** ${roles}`)
+**Roles:** ${roles}`)
 			.setFooter(`Created by: Karp#0001 | Version: ${version} | Framework: discord.js`);
 		message.channel.send(infoEmbed);
 	},

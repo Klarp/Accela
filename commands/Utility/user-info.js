@@ -61,14 +61,14 @@ module.exports = {
 			.setAuthor(`${target.tag} (${target.id})`, target.displayAvatarURL({ dynamic : true }))
 			.setColor('BLUE')
 			.setDescription(`**Nickname:** ${name} 
-			**Status:** ${status[target.presence.status]}
-			**Activity:** ${activity}
-			**Playing:** ${game} (${gameState})
+**Status:** ${status[target.presence.status]}
+**Activity:** ${activity}
+**Playing:** ${game} (${gameState})
 			
-			**Joined On:** ${jday} ${jmonth} ${jyear}
-			**Last Seen:** ${lastDate}
+**Joined On:** ${jday} ${jmonth} ${jyear}
+**Last Seen:** ${lastDate}
 			
-			**Roles:** ${roles}`)
+**Roles:** ${roles}`)
 			.setFooter(`Joined Discord: ${cday} ${cmonth} ${cyear}`);
 
 		message.channel.send(infoEmbed);

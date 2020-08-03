@@ -66,8 +66,8 @@ module.exports = (msg) => {
 					.setThumbnail(`https://b.ppy.sh/thumb/${map.beatmapSetId}l.jpg`)
 					.setURL(`https://osu.ppy.sh/b/${map.id}`)
 					.setDescription(`${diff} ${star[0]}★ | Length: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds})
-					BPM: ${map.bpm} | Combo: ${map.maxCombo}x | Max PP: ${ppFix[0]}pp
-					Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${map.objects.spinner}`)
+BPM: ${map.bpm} | Combo: ${map.maxCombo}x | Max PP: ${ppFix[0]}pp
+Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${map.objects.spinner}`)
 					.setFooter(`${map.approvalStatus} on ${aday}-${amonth}-${ayear} | Last Updated: ${uday}-${umonth}-${uyear}`);
 
 				msg.channel.send({ embed: osuEmbed });

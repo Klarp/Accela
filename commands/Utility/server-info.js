@@ -23,15 +23,15 @@ module.exports = {
 			.setThumbnail(server.bannerURL())
 			.setColor('BLUE')
 			.setDescription(`**Description:** ${desc}
-			**Owner:** ${server.owner.user.tag} (${server.ownerID})
-			**Members:** ${server.memberCount}
-			**Vanity URL:** ${vanity}
-			**Region:** ${server.region}
-			**Verification Level:** ${server.verificationLevel}
-			**Channels:** ${totalSize} (Text: ${textSize} | Voice: ${voiceSize})
-			**Emoji Count:** ${server.emojis.cache.size}
-			**Number of Boosts:** ${server.premiumSubscriptionCount}
-			**Boost Level:** ${server.premiumTier}`)
+**Owner:** ${server.owner.user.tag} (${server.ownerID})
+**Members:** ${server.memberCount}
+**Vanity URL:** ${vanity}
+**Region:** ${server.region}
+**Verification Level:** ${server.verificationLevel}
+**Channels:** ${totalSize} (Text: ${textSize} | Voice: ${voiceSize})
+**Emoji Count:** ${server.emojis.cache.size}
+**Number of Boosts:** ${server.premiumSubscriptionCount}
+**Boost Level:** ${server.premiumTier}`)
 			.setFooter(`Created On: ${day} ${month} ${year}`);
 		message.channel.send(infoEmbed);
 	},

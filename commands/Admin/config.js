@@ -207,17 +207,17 @@ module.exports = {
 				.setTitle('Server Config')
 				.setDescription(`Prefix: ${prefix}
 
-				Mod Channel: ${modChannelClean}
+Mod Channel: ${modChannelClean}
 
-				Log Channel: ${logChannelClean}
+Log Channel: ${logChannelClean}
 
-				Mod Commands: ${modCommands}
+Mod Commands: ${modCommands}
 
-				Mod Logging: ${modLogging}
+Mod Logging: ${modLogging}
 
-				Message Logging: ${msgLogging}
+Message Logging: ${msgLogging}
 				
-				No Prefix Commands ${noPrefix}`);
+No Prefix Commands ${noPrefix}`);
 			message.channel.send(configEmbed);
 		}
 	},
