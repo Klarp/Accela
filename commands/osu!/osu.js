@@ -35,7 +35,10 @@ module.exports = {
 		}
 
 		let name;
-		const prefix = serverConfig.get('prefix');
+		let prefix = '>>';
+		if (serverConfig) {
+			prefix = serverConfig.get('prefix');
+		}
 
 		// Find the user in the database
 		if (findUser) {

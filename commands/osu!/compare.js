@@ -38,7 +38,10 @@ module.exports = {
 		let acc_percent;
 		let combo;
 		let nmiss;
-		const prefix = serverConfig.get('prefix');
+		let prefix = '>>';
+		if (serverConfig) {
+			prefix = serverConfig.get('prefix');
+		}
 
 		// Access database
 		if (menUser) {
