@@ -69,8 +69,6 @@ module.exports = {
 			name = args.join(' ');
 		}
 
-		console.log(nameFlag);
-
 		// Find the user in the database
 		if (nameFlag) {
 			if (findUser) {
