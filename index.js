@@ -115,7 +115,6 @@ client.on('message', async message => {
 		owners.forEach(owner => {
 			if (owner == message.author.id) ownerCheck = true;
 		});
-		console.log(ownerCheck);
 		if (!ownerCheck) return;
 	}
 
