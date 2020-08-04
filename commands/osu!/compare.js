@@ -99,10 +99,6 @@ module.exports = {
 
 				const pMap = parser.map;
 
-				if (mods) {
-					console.log('+' + oj.modbits.string(mods));
-				}
-
 				const stars = new oj.diff().calc({ map: pMap, mods: mods });
 				const star = stars.toString().split(' ');
 
