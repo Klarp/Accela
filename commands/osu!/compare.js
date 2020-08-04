@@ -16,7 +16,6 @@ module.exports = {
 	aliases: 'cs',
 	description: 'Compares with last score sent.',
 	module: 'osu!',
-	perms: '',
 	async execute(message, args) {
 		if (!idGrab) return message.reply('No score to compare.');
 		if (!idGrab.mapID) return message.reply('No score to compare.');
