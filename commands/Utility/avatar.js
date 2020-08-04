@@ -6,6 +6,12 @@ module.exports = {
 	args: false,
 	usage: '<user>',
 	execute(message) {
-		message.channel.send('Your avatar: ' + message.author.displayAvatarURL());
+		const menUser = message.mentions.users.first();
+
+		if(menUser) {
+			message.channel.send(menUser.displayAvatarURL({ dynamic: true }));
+		} else {
+			message.channel.send(message.author.displayAvatarURL({ dynamic: true }));
+		}
 	},
 };
