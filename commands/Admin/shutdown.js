@@ -7,6 +7,7 @@ module.exports = {
 	aliases: 'sd',
 	description: 'Emergancy shutdown for the bot',
 	module: 'Admin',
+	owner: true,
 	async execute(message) {
 		let owner = false;
 		function ownerCheck(id) {

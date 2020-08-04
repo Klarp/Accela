@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 
-const { token } = require('./config.json');
+const { token, owners } = require('./config.json');
 const { Users, Muted, sConfig } = require('./dbObjects');
 const checkPerm = require('./utils/checkPerm.js');
 const mapDetect = require('./utils/mapDetect');
@@ -108,6 +108,15 @@ client.on('message', async message => {
 
 	if (command.modCmd) {
 		if (!modFlag) return;
+	}
+
+	if (command.owner) {
+		let ownerCheck = false;
+		owners.forEach(owner => {
+			if (owner == message.author.id) ownerCheck = true;
+		});
+		console.log(ownerCheck);
+		if (!ownerCheck) return;
 	}
 
 	if (command.perms) {
