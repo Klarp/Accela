@@ -4,7 +4,7 @@ const { sConfig } = require('../../dbObjects');
 const { version } = require('../../package.json');
 
 module.exports = {
-	name: 'botinfo',
+	name: 'bot-info',
 	description: 'Get information about the bot',
 	module: 'Utility',
 	aliases: ['botinfo', 'binfo', 'info'],
