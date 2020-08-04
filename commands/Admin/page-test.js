@@ -4,7 +4,7 @@ module.exports = {
 	name: 'page-test',
 	description: 'Reaction based page test',
 	aliases: 'page',
-	perms: 'MANAGE_MEMBERS',
+	owner: true,
 	module: 'Admin',
 	execute(message) {
 		let embed = new Discord.MessageEmbed()

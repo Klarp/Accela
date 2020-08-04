@@ -1,12 +1,11 @@
 module.exports = {
 	name: 'reload',
 	description: 'Reloads a command',
-	perms: 'ADMINISTRATOR',
 	module: 'Admin',
+	owner: true,
 	usage: '[command name]',
 	args: true,
 	execute(message, args) {
-		if (!message.author.id === '186493565445079040') return;
 		const commandName = args[0].toLowerCase();
 		const command = message.client.commands.get(commandName)
 			|| message.client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
