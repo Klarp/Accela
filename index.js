@@ -62,7 +62,11 @@ client.on('message', async message => {
 		}
 	}
 
-	const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
+	let serverConfig;
+
+	if (message.channel.type !== 'dm') {
+		serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
+	}
 
 	let prefix = '>>';
 	let modFlag;
