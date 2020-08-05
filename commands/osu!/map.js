@@ -58,6 +58,10 @@ module.exports = {
 					let drainMinutes = Math.floor(map.length.drain / 60);
 					let drainSeconds = map.length.drain - drainMinutes * 60;
 					let newBPM;
+					let cs = map.difficulty.size;
+					let ar = map.difficulty.approach;
+					let od = map.difficulty.overall;
+					let hp = map.difficulty.drain;
 
 					const adate = map.approvedDate;
 					const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' });
@@ -66,7 +70,6 @@ module.exports = {
 					const [{ value: umonth },, { value: uday },, { value: uyear }] = dateTimeFormat.formatToParts(udate);
 
 					if (oj.modbits.string(mods).includes('DT') || oj.modbits.string(mods).includes('NC')) {
-						console.log(map.length.total);
 						const bpmLength = map.length.total * 0.67;
 						const bpmDrain = map.length.drain * 0.67;
 						lenMinutes = Math.floor(bpmLength / 60);
@@ -83,6 +86,53 @@ module.exports = {
 						}
 					}
 
+					if (oj.modbits.string(mods).includes('HT')) {
+						let bpmLength = (1 / 3) * map.length.total;
+						let bpmDrain = (1 / 3) * map.length.drain;
+						const totalTime = parseInt(map.length.total);
+						const drainTime = parseInt(map.length.drain);
+						bpmLength += totalTime;
+						bpmDrain += drainTime;
+
+						lenMinutes = Math.floor(bpmLength / 60);
+						lenSeconds = Math.floor(bpmLength - lenMinutes * 60);
+						drainMinutes = Math.floor(bpmDrain / 60);
+						drainSeconds = Math.floor(bpmDrain - drainMinutes * 60);
+						newBPM = map.bpm / 4;
+						newBPM = map.bpm - newBPM;
+
+						if (lenSeconds < 10) {
+							lenSeconds = lenSeconds + '0';
+						}
+						if (drainSeconds < 10) {
+							drainSeconds = drainSeconds + '0';
+						}
+					}
+
+					if (oj.modbits.string(mods).includes('EZ')) {
+						cs = map.difficulty.size / 2;
+						ar = map.difficulty.approach / 2;
+						od = map.difficulty.overall / 2;
+						hp = map.difficulty.drain / 2;
+					}
+
+					if (oj.modbits.string(mods).includes('HR')) {
+						cs = map.difficulty.size * 1.3;
+						ar = map.difficulty.approach * 1.4;
+						od = map.difficulty.overall * 1.4;
+						hp = map.difficulty.drain * 1.4;
+
+						cs = cs.toFixed(2);
+						ar = ar.toFixed(2);
+						od = od.toFixed(2);
+						hp = hp.toFixed(2);
+
+						if (cs > 10) cs = 10;
+						if (ar > 10) ar = 10;
+						if (od > 10) od = 10;
+						if (hp > 10) hp = 10;
+					}
+
 					// Create the embed
 					const osuEmbed = new Discord.MessageEmbed()
 						.setColor('0xff69b4')
@@ -93,6 +143,7 @@ module.exports = {
 						.setDescription(`${diff} ${star[0]}★ | **Length**: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds}) | **BPM:** ${newBPM || map.bpm}
 **Combo:** ${map.maxCombo}x | **Max PP:** ${ppFix[0]}pp | **Mods:** ${oj.modbits.string(mods) || 'NoMod'}
 
+CS: ${cs} | AR: ${ar} | OD: ${od} | HP: ${hp}
 Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${map.objects.spinner}`)
 						.setFooter(`${map.approvalStatus} on ${aday}-${amonth}-${ayear} | Last Updated: ${uday}-${umonth}-${uyear}`);
 
