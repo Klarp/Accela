@@ -195,6 +195,7 @@ client.on('guildCreate', async (guild) => {
 			mod_commands: false,
 			mod_logging: false,
 			msg_logging: false,
+			noPrefix_commands: false,
 		});
 		console.log(`Default config made for ${guild.name}`);
 	} catch(e) {
