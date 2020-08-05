@@ -48,15 +48,16 @@ module.exports = {
 					const pMap = parser.map;
 					const maxPP = oj.ppv2({ map: pMap, mods: mods }).toString();
 					const ppFix = maxPP.split(' ');
-					const stars = new oj.diff().calc({ map: pMap });
+					const stars = new oj.diff().calc({ map: pMap, mods: mods });
 					const star = stars.toString().split(' ');
 
 					const diff = getDiff(star[0]);
 
-					const lenMinutes = Math.floor(map.length.total / 60);
-					const lenSeconds = map.length.total - lenMinutes * 60;
-					const drainMinutes = Math.floor(map.length.drain / 60);
-					const drainSeconds = map.length.drain - drainMinutes * 60;
+					let lenMinutes = Math.floor(map.length.total / 60);
+					let lenSeconds = map.length.total - lenMinutes * 60;
+					let drainMinutes = Math.floor(map.length.drain / 60);
+					let drainSeconds = map.length.drain - drainMinutes * 60;
+					let newBPM;
 
 					const adate = map.approvedDate;
 					const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' });
@@ -64,7 +65,25 @@ module.exports = {
 					const udate = map.lastUpdate;
 					const [{ value: umonth },, { value: uday },, { value: uyear }] = dateTimeFormat.formatToParts(udate);
 
-					console.log(mods);
+					if (oj.modbits.string(mods).includes('DT')) {
+						console.log(map.length.total);
+						const bpmLength = map.length.total * 0.67;
+						const bpmDrain = map.length.drain * 0.67;
+						lenMinutes = Math.floor(bpmLength / 60);
+						lenSeconds = Math.floor(bpmLength - lenMinutes * 60);
+						drainMinutes = Math.floor(bpmDrain / 60);
+						drainSeconds = Math.floor(bpmDrain - drainMinutes * 60);
+						newBPM = map.bpm * 1.5;
+
+						if (lenSeconds < 10) {
+							console.log('ping');
+							lenSeconds = lenSeconds + '0';
+						}
+						if (drainSeconds < 10) {
+							console.log('oink');
+							drainSeconds = drainSeconds + '0';
+						}
+					}
 
 					// Create the embed
 					const osuEmbed = new Discord.MessageEmbed()
@@ -73,7 +92,7 @@ module.exports = {
 						.setTitle(`${map.artist} - ${map.title} (${map.version})`)
 						.setThumbnail(`https://b.ppy.sh/thumb/${map.beatmapSetId}l.jpg`)
 						.setURL(`https://osu.ppy.sh/b/${map.id}`)
-						.setDescription(`${diff} ${star[0]}★ | **Length**: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds}) | **BPM:** ${map.bpm}
+						.setDescription(`${diff} ${star[0]}★ | **Length**: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds}) | **BPM:** ${newBPM || map.bpm}
 **Combo:** ${map.maxCombo}x | **Max PP:** ${ppFix[0]}pp | **Mods:** ${oj.modbits.string(mods) || 'NoMod'}
 
 Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${map.objects.spinner}`)
