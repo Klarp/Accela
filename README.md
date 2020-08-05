@@ -18,6 +18,7 @@ To use Accela create a config.json inside the file directory with the following 
 {
 	"prefix": "<prefix>",
 	"token": "<discord_token>",
+	"owners": ["owner_id", "co-owner_id"],
 	
 	"osu_key": "<osu_api_key>",
 	"osu_mods": [ 
