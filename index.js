@@ -162,7 +162,7 @@ client.on('message', async message => {
 		command.execute(message, args);
 	} catch (error) {
 		console.error(error);
-		message.reply('Error: unable to execute command!');
+		message.reply('Error: OOPSIE WOOPSIE!! Uwu We made a fucky wucky!! A wittle fucko boingo! The code monkeys at our headquarters are working VEWY HAWD to fix this!');
 	}
 });
 
