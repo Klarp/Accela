@@ -65,7 +65,7 @@ module.exports = {
 					const udate = map.lastUpdate;
 					const [{ value: umonth },, { value: uday },, { value: uyear }] = dateTimeFormat.formatToParts(udate);
 
-					if (oj.modbits.string(mods).includes('DT')) {
+					if (oj.modbits.string(mods).includes('DT') || oj.modbits.string(mods).includes('NC')) {
 						console.log(map.length.total);
 						const bpmLength = map.length.total * 0.67;
 						const bpmDrain = map.length.drain * 0.67;
@@ -76,11 +76,9 @@ module.exports = {
 						newBPM = map.bpm * 1.5;
 
 						if (lenSeconds < 10) {
-							console.log('ping');
 							lenSeconds = lenSeconds + '0';
 						}
 						if (drainSeconds < 10) {
-							console.log('oink');
 							drainSeconds = drainSeconds + '0';
 						}
 					}
