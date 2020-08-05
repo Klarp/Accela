@@ -60,7 +60,11 @@ module.exports = {
 
 		// Use arguments if applicable
 		if (!menUser && args[0]) {
-			name = args[0].join(' ');
+			name = args[0];
+		}
+
+		if (!menUser && args[1]) {
+			name = args.join(' ');
 		}
 
 		// Find user through the api
@@ -118,31 +122,57 @@ module.exports = {
 
 				const rDate = timeSince(recent.date);
 
-				// Create embed (Need to stlye this better)
-				const osuEmbed = new discord.MessageEmbed()
-					.setAuthor(name, `http://a.ppy.sh/${recent.user.id}`)
-					.setColor('0xff69b4')
-					.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
-					.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${recent.counts['300']}/${recent.counts['100']}/${recent.counts['50']}/${recent.counts.miss}}
+				const hitobj = [];
+
+				const hit300 = recent.counts[300];
+				const hit100 = recent.counts[100];
+				const hit50 = recent.counts[50];
+				const hitmiss = recent.counts.miss;
+				const totalhits = hit300 + hit100 + hit50 + hitmiss;
+
+				const numobj = totalhits - 1;
+
+				const num = pMap.objects.length;
+
+				pMap.objects.forEach(obj => {
+					hitobj.push(obj.time);
+				});
+
+				const timing = hitobj[num - 1] - hitobj[0];
+				const point = hitobj[numobj] - hitobj[0];
+
+				const mapCompletion = (point / timing) * 100;
+
+				if (recent.rank == 'F') {
+					const failPercent = mapCompletion.toFixed(2);
+
+					const osuFailEmbed = new discord.MessageEmbed()
+						.setAuthor(name, `http://a.ppy.sh/${recent.user.id}`)
+						.setColor('0xff69b4')
+						.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
+						.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${hit300}/${hit100}/${hit50}/${hitmiss}}
+
+**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${recent.pp || ppFix[0]}pp**/${maxFix[0]}PP
+
+${acc}% | ${oj.modbits.string(mods) || 'NoMod'} | Map Completion: ${failPercent}%`)
+						.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
+						.setFooter(`Completed ${rDate}`);
+					message.channel.send(osuFailEmbed);
+				} else {
+					const osuEmbed = new discord.MessageEmbed()
+						.setAuthor(name, `http://a.ppy.sh/${recent.user.id}`)
+						.setColor('0xff69b4')
+						.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
+						.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${hit300}/${hit100}/${hit50}/${hitmiss}}
 
 **${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${recent.pp || ppFix[0]}pp**/${maxFix[0]}PP
 
 ${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 					`)
-					.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
-					.setFooter(`Completed ${rDate}`);
-
-				/*
-					.addField('300', recent.counts['300'], true)
-					.addField('100', recent.counts['100'], true)
-					.addField('50', recent.counts['50'], true)
-					.addField('Miss', recent.counts.miss, true)
-					.addField('Combo', `**${recent.maxCombo}x**${recent.beatmap.maxCombo}X`, true)
-					.addField('PP Gained', `**${recent.pp || ppFix[0]}**${maxFix[0]}`, true)
-					.addField('Accuracy', `${acc}%`, true)
-					.addField('Mods', oj.modbits.string(mods) || 'NoMod', true)
-				*/
-				message.channel.send({ embed: osuEmbed });
+						.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
+						.setFooter(`Completed ${rDate}`);
+					message.channel.send(osuEmbed);
+				}
 			});
 		}).catch(e => {
 			if (e.name == 'Error') {
