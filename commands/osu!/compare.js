@@ -80,7 +80,7 @@ module.exports = {
 			if (acc < 100) {
 				acc *= 100;
 			}
-			acc = parseFloat(acc.toFixed(4));
+			acc = parseFloat(acc.toFixed(2));
 
 			const score = recent.score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
