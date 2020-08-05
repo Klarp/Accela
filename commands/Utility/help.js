@@ -1,4 +1,6 @@
 const { prefix } = require('../../config.json');
+const checkPerm = require('../../utils/checkPerm.js');
+const { owners } = require('../../config.json');
 
 module.exports = {
 	name: 'help',
@@ -13,11 +15,21 @@ module.exports = {
 		const modules = ['Admin', 'osu!', 'Utility'];
 
 		if (!args.length) {
-			data.push('Here\'s a list of all my commands:');
+			data.push('Here\'s a list of commands you can use:');
 			modules.forEach(m => {
 				data.push(`__${m}__`);
 				commands.forEach(c => {
 					if (c.module == m) {
+						if (c.perms) {
+							if (!checkPerm(message.member, c.perms)) return;
+						}
+						if (c.owner) {
+							let ownerCheck = false;
+							owners.forEach(owner => {
+								if (owner == message.author.id) ownerCheck = true;
+							});
+							if (!ownerCheck) return;
+						}
 						data.push(`**${c.name}**: ${c.description}`);
 					}
 				});
