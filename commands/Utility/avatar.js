@@ -9,9 +9,9 @@ module.exports = {
 		const menUser = message.mentions.users.first();
 
 		if(menUser) {
-			message.channel.send(menUser.displayAvatarURL({ dynamic: true }));
+			message.channel.send(menUser.displayAvatarURL({ size:4096, dynamic:true }));
 		} else {
-			message.channel.send(message.author.displayAvatarURL({ dynamic: true }));
+			message.channel.send(message.author.displayAvatarURL({ size:4096, dynamic:true }));
 		}
 	},
 };
