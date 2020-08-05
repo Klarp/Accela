@@ -13,7 +13,7 @@ const getDiff = require('../../utils/getDiff.js');
 
 module.exports = {
 	name: 'compare',
-	aliases: 'cs',
+	aliases: ['cs', 'c'],
 	description: 'Compares with last score sent.',
 	module: 'osu!',
 	async execute(message, args) {
