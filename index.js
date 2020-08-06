@@ -1,6 +1,6 @@
 const fs = require('fs');
 const Discord = require('discord.js');
-const request = require('request');
+const got = require('got');
 
 const { token, owners, AuthToken } = require('./config.json');
 const { Users, Muted, sConfig } = require('./dbObjects');
@@ -60,21 +60,27 @@ client.once('ready', async () => {
 	client.guilds.cache
 		.each(guild => userCount += guild.memberCount);
 
-	request.post(`https://discordbotlist.com/api/v1/bots/${client.user.id}`, {
-		json: {
-			headers: { 'Authorization':  AuthToken },
-			body: {
-				users: userCount,
-				guilds: client.guilds.cache.size
-			},
+	const options = {
+		json: true,
+		headers: {
+			'Content-type': 'application/json',
+			'Authorization': AuthToken,
 		},
-	}, (error, res) => {
-		if (error) {
-			console.error(error);
-			return;
-		}
-		console.log(`statusCode: ${res.statusCode}`);
-	});
+		body: JSON.stringify({
+			users: userCount,
+			guilds: client.guild.cache.size,
+			description: 'Hello World',
+		}),
+	};
+
+	got.post(`https://discordbotlist.com/api/v1/bots/${client.user.id}`, options)
+		.then((error, res) => {
+			if (error) {
+				console.error(error);
+				return;
+			}
+			console.log(res.statusCode);
+		});
 
 	console.log(`${client.user.tag} has entered The Wired`);
 });
