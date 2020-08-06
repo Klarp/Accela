@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Discord = require('discord.js');
+const request = require('request');
 
 const { token, owners } = require('./config.json');
 const { Users, Muted, sConfig } = require('./dbObjects');
@@ -53,6 +54,25 @@ client.once('ready', async () => {
 		const index = Math.floor(Math.random() * (activities_list.length - 1) + 1);
 		client.user.setActivity(activities_list[index]);
 	}, 30000);
+
+	let userCount = 0;
+
+	client.guilds.cache
+		.each(guild => userCount += guild.memberCount);
+
+	request.post(`https://discordbotlist.com/api/v1/bots/${client.user.id}`, {
+		json: {
+			headers: { 'authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxLCJpZCI6IjM2NTk3NTY1NTYwODc0NTk4NSIsImlhdCI6MTU5MDI3NjEwOH0.UESu-Jm9kA_FCpRPSMjVwMGYJmLPxg44g_I7eDz5ZmQ' },
+			users: userCount,
+			guilds: client.guilds.cache.size,
+		},
+	}, (error, res) => {
+		if (error) {
+			console.error(error);
+			return;
+		}
+		console.log(`statusCode: ${res.statusCode}`);
+	});
 
 	console.log(`${client.user.tag} has entered The Wired`);
 });
