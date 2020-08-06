@@ -23,6 +23,7 @@
     "curl": "^0.1.4",
     "discord.js": "^12.2.0",
     "git": "^0.1.5",
+    "got": "^11.5.1",
     "log-symbols": "^4.0.0",
     "node-libcurl": "^2.2.0",
     "node-osu": "^2.2.0",
