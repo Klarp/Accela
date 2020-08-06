@@ -39,6 +39,7 @@ const activities_list = [
 	'osu! lazer',
 	'at Cyberia',
 	'h-help im trapped here',
+	'vote @ https://discord.ly/accela',
 ];
 
 client.once('ready', async () => {
