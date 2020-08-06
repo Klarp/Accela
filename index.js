@@ -1,6 +1,5 @@
 const fs = require('fs');
 const Discord = require('discord.js');
-const got = require('got');
 
 const { token, owners, AuthToken } = require('./config.json');
 const { Users, Muted, sConfig } = require('./dbObjects');
