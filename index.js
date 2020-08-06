@@ -2,7 +2,7 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const request = require('request');
 
-const { token, owners } = require('./config.json');
+const { token, owners, AuthToken } = require('./config.json');
 const { Users, Muted, sConfig } = require('./dbObjects');
 const checkPerm = require('./utils/checkPerm.js');
 const mapDetect = require('./utils/mapDetect');
@@ -62,7 +62,7 @@ client.once('ready', async () => {
 
 	request.post(`https://discordbotlist.com/api/v1/bots/${client.user.id}`, {
 		json: {
-			headers: { 'authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxLCJpZCI6IjM2NTk3NTY1NTYwODc0NTk4NSIsImlhdCI6MTU5MDI3NjEwOH0.UESu-Jm9kA_FCpRPSMjVwMGYJmLPxg44g_I7eDz5ZmQ' },
+			headers: { 'authorization': AuthToken },
 			users: userCount,
 			guilds: client.guilds.cache.size,
 		},
