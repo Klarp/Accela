@@ -35,6 +35,10 @@ const activities_list = [
 	'Let\'s All Love Lain',
 	'PHANTOMa',
 	'The Wired',
+	'at Phil\'s house',
+	'osu! lazer',
+	'at Cyberia',
+	'h-help im trapped here',
 ];
 
 client.once('ready', async () => {
