@@ -60,28 +60,6 @@ client.once('ready', async () => {
 	client.guilds.cache
 		.each(guild => userCount += guild.memberCount);
 
-	const options = {
-		json: true,
-		headers: {
-			'Content-type': 'application/json',
-			'Authorization': AuthToken,
-		},
-		body: JSON.stringify({
-			users: userCount,
-			guilds: client.guild.cache.size,
-			description: 'Hello World',
-		}),
-	};
-
-	got.post(`https://discordbotlist.com/api/v1/bots/${client.user.id}`, options)
-		.then((error, res) => {
-			if (error) {
-				console.error(error);
-				return;
-			}
-			console.log(res.statusCode);
-		});
-
 	console.log(`${client.user.tag} has entered The Wired`);
 });
 
