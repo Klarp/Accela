@@ -62,9 +62,11 @@ client.once('ready', async () => {
 
 	request.post(`https://discordbotlist.com/api/v1/bots/${client.user.id}`, {
 		json: {
-			headers: { 'authorization': AuthToken },
-			users: userCount,
-			guilds: client.guilds.cache.size,
+			headers: { 'Authorization':  AuthToken },
+			body: {
+				users: userCount,
+				guilds: client.guilds.cache.size
+			},
 		},
 	}, (error, res) => {
 		if (error) {
