@@ -61,12 +61,10 @@ client.once('ready', async () => {
 		.each(guild => userCount += guild.memberCount);
 
 	axios.post(
-		`https://discordbotlist.com/api/v1/bots/${client.user.id}`,
+		`https://discordbotlist.com/api/v1/bots/${client.user.id}/stats`,
 		{
-			stats: {
-				'users': userCount,
-				'guilds': client.guilds.cache.size,
-			},
+			'users': userCount,
+			'guilds': client.guilds.cache.size,
 		},
 		{
 			'Authentication': AuthToken,
