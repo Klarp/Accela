@@ -202,7 +202,11 @@ client.on('message', async message => {
 		command.execute(message, args);
 	} catch (error) {
 		console.error(error);
-		message.reply('Error: OOPSIE WOOPSIE!! Uwu We made a fucky wucky!! A wittle fucko boingo! The code monkeys at our headquarters are working VEWY HAWD to fix this!');
+		const errorEmbed = new Discord.MessageEmbed()
+			.setTitle('An Error Has Occurred')
+			.setColor('RED')
+			.setDescription('OOPSIE WOOPSIE!! Uwu We made a fucky wucky!! A wittle fucko boingo! The code monkeys at our headquarters are working VEWY HAWD to fix this!');
+		message.channel.send(errorEmbed);
 	}
 });
 
