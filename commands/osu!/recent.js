@@ -167,7 +167,7 @@ ${acc}% | ${oj.modbits.string(mods) || 'NoMod'} | Map Completion: ${failPercent}
 						.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
 						.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${hit300}/${hit100}/${hit50}/${hitmiss}}
 
-**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${recent.pp || parseInt(ppFix[0].toFixed(2))}pp**/${parseInt(maxFix[0].toFixed(2))}PP
+**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${recent.pp || ppNum.toFixed(2)}pp**/${maxNum.toFixed(2)}PP
 
 ${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 					`)
