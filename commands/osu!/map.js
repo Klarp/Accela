@@ -134,8 +134,11 @@ module.exports = {
 						if (hp > 10) hp = 10;
 					}
 
-					const bpmNum = parseFloat(newBPM);
+					let bpmNum = parseFloat(newBPM);
 
+					if (isNaN(bpmNum)) {
+						bpmNum = parseFloat(map.bpm);
+					}
 
 					// Create the embed
 					const osuEmbed = new Discord.MessageEmbed()
@@ -144,7 +147,7 @@ module.exports = {
 						.setTitle(`${map.artist} - ${map.title} (${map.version})`)
 						.setThumbnail(`https://b.ppy.sh/thumb/${map.beatmapSetId}l.jpg`)
 						.setURL(`https://osu.ppy.sh/b/${map.id}`)
-						.setDescription(`${diff} ${star[0]}★ | **Length**: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds}) | **BPM:** ${map.bpm || bpmNum.toFixed(2)}
+						.setDescription(`${diff} ${star[0]}★ | **Length**: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds}) | **BPM:** ${bpmNum.toFixed(2)}
 **Combo:** ${map.maxCombo}x | **Max PP:** ${ppNum.toFixed(2)}pp | **Mods:** ${oj.modbits.string(mods) || 'NoMod'}
 
 CS: ${cs} | AR: ${ar} | OD: ${od} | HP: ${hp}
