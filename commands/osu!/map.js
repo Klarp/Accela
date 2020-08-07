@@ -48,6 +48,7 @@ module.exports = {
 					const pMap = parser.map;
 					const maxPP = oj.ppv2({ map: pMap, mods: mods }).toString();
 					const ppFix = maxPP.split(' ');
+					const ppNum = parseInt(ppFix[0]);
 					const stars = new oj.diff().calc({ map: pMap, mods: mods });
 					const star = stars.toString().split(' ');
 
@@ -133,6 +134,8 @@ module.exports = {
 						if (hp > 10) hp = 10;
 					}
 
+					const bpmNum = parseInt(newBPM);
+
 					// Create the embed
 					const osuEmbed = new Discord.MessageEmbed()
 						.setColor('0xff69b4')
@@ -140,8 +143,8 @@ module.exports = {
 						.setTitle(`${map.artist} - ${map.title} (${map.version})`)
 						.setThumbnail(`https://b.ppy.sh/thumb/${map.beatmapSetId}l.jpg`)
 						.setURL(`https://osu.ppy.sh/b/${map.id}`)
-						.setDescription(`${diff} ${star[0]}★ | **Length**: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds}) | **BPM:** ${newBPM || map.bpm}
-**Combo:** ${map.maxCombo}x | **Max PP:** ${ppFix[0]}pp | **Mods:** ${oj.modbits.string(mods) || 'NoMod'}
+						.setDescription(`${diff} ${star[0]}★ | **Length**: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds}) | **BPM:** ${bpmNum.toFixed(2) || map.bpm}
+**Combo:** ${map.maxCombo}x | **Max PP:** ${ppNum.toFixed(2)}pp | **Mods:** ${oj.modbits.string(mods) || 'NoMod'}
 
 CS: ${cs} | AR: ${ar} | OD: ${od} | HP: ${hp}
 Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${map.objects.spinner}`)

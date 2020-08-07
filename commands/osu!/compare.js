@@ -118,6 +118,8 @@ module.exports = {
 
 				const ppFix = pp.toString().split(' ');
 				const maxFix = maxPP.toString().split(' ');
+				const ppNum = parseInt(ppFix[0]);
+				const maxNum = parseInt(maxFix[0]);
 
 				const rDate = timeSince(recent.date);
 
@@ -128,7 +130,7 @@ module.exports = {
 					.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
 					.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${recent.counts['300']}/${recent.counts['100']}/${recent.counts['50']}/${recent.counts.miss}}
 
-**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${recent.pp || ppFix[0]}pp**/${maxFix[0]}PP
+**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${recent.pp || ppNum.toFixed(2)}pp**/${maxNum.toFixed(2)}PP
 
 ${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 					`)

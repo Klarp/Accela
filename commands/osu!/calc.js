@@ -49,6 +49,7 @@ module.exports = {
 				combo = combo || max_combo;
 
 				const ppFix = pp.toString().split(' ');
+				const ppNum = parseInt(ppFix[0]);
 
 				const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' });
 				const [{ value: amonth },, { value: aday },, { value: ayear }] = dateTimeFormat.formatToParts(map.approvedDate);
@@ -63,7 +64,7 @@ module.exports = {
 					.addField('Accuracy', `${acc_percent}%` || '100%')
 					.addField('Missed', miss)
 					.addField('Combo', `**${combo}x**/${map.maxCombo}`)
-					.addField('PP', ppFix[0])
+					.addField('PP', ppNum.toFixed(2))
 					.setFooter(`${map.approvalStatus} on ${amonth} ${aday} ${ayear}`);
 
 				message.channel.send({ embed: osuEmbed });

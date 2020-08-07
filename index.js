@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Discord = require('discord.js');
+const axios = require('axios');
 
 const { token, owners, AuthToken } = require('./config.json');
 const { Users, Muted, sConfig } = require('./dbObjects');
@@ -58,6 +59,35 @@ client.once('ready', async () => {
 
 	client.guilds.cache
 		.each(guild => userCount += guild.memberCount);
+
+	axios.post(
+		`https://discordbotlist.com/api/v1/bots/${client.user.id}`,
+		{
+			'users': userCount,
+			'guilds': client.guilds.cache.size,
+		},
+		{
+			'Authentication': AuthToken,
+		},
+	)
+		.then((err, res) => {
+			if (err) {
+				console.error(err);
+				return;
+			}
+			console.log(res.status);
+			console.log(res.statusText);
+		})
+		.catch(function(error) {
+			if (error.response) {
+				console.log(error.response.status);
+			} else if (error.request) {
+				console.log(error.request);
+			} else {
+				console.log('Error', error.message);
+			}
+			console.log(error.config);
+		});
 
 	console.log(`${client.user.tag} has entered The Wired`);
 });
