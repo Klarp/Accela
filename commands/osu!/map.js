@@ -48,7 +48,7 @@ module.exports = {
 					const pMap = parser.map;
 					const maxPP = oj.ppv2({ map: pMap, mods: mods }).toString();
 					const ppFix = maxPP.split(' ');
-					const ppNum = parseInt(ppFix[0]);
+					const ppNum = parseFloat(ppFix[0]);
 					const stars = new oj.diff().calc({ map: pMap, mods: mods });
 					const star = stars.toString().split(' ');
 

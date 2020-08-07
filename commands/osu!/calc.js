@@ -49,7 +49,7 @@ module.exports = {
 				combo = combo || max_combo;
 
 				const ppFix = pp.toString().split(' ');
-				const ppNum = parseInt(ppFix[0]);
+				const ppNum = parseFloat(ppFix[0]);
 
 				const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' });
 				const [{ value: amonth },, { value: aday },, { value: ayear }] = dateTimeFormat.formatToParts(map.approvedDate);
