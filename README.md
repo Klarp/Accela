@@ -1,6 +1,8 @@
 # Accela
 
 Accela is a new osu! and moderation bot
+ 
+ [![Bots for Discord](https://botsfordiscord.com/api/bot/687856844848234502/widget)](https://botsfordiscord.com/bots/687856844848234502)
 
 ## Installation
 
