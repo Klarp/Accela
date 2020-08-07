@@ -119,8 +119,8 @@ module.exports = {
 
 				const ppFix = pp.toString().split(' ');
 				const maxFix = maxPP.toString().split(' ');
-				const ppNum = parseInt(ppFix);
-				const maxNum = parseInt(maxFix);
+				const ppNum = parseFloat(ppFix);
+				const maxNum = parseFloat(maxFix);
 
 				const rDate = timeSince(recent.date);
 
