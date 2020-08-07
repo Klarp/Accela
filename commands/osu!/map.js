@@ -134,10 +134,10 @@ module.exports = {
 						if (hp > 10) hp = 10;
 					}
 
-					let bpmNum = parseFloat(newBPM);
+					let bpmNum = parseInt(newBPM);
 
 					if (isNaN(bpmNum)) {
-						bpmNum = parseFloat(map.bpm);
+						bpmNum = parseInt(map.bpm);
 					}
 
 					// Create the embed
@@ -147,7 +147,7 @@ module.exports = {
 						.setTitle(`${map.artist} - ${map.title} (${map.version})`)
 						.setThumbnail(`https://b.ppy.sh/thumb/${map.beatmapSetId}l.jpg`)
 						.setURL(`https://osu.ppy.sh/b/${map.id}`)
-						.setDescription(`${diff} ${star[0]}★ | **Length**: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds}) | **BPM:** ${bpmNum.toFixed(2)}
+						.setDescription(`${diff} ${star[0]}★ | **Length**: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds}) | **BPM:** ${bpmNum}
 **Combo:** ${map.maxCombo}x | **Max PP:** ${ppNum.toFixed(2)}pp | **Mods:** ${oj.modbits.string(mods) || 'NoMod'}
 
 CS: ${cs} | AR: ${ar} | OD: ${od} | HP: ${hp}
