@@ -67,7 +67,7 @@ client.once('ready', async () => {
 			'guilds': client.guilds.cache.size,
 		},
 		{
-			'Authentication': AuthToken,
+			'Authentication': `Bot ${AuthToken}`,
 		},
 	)
 		.then((err, res) => {
