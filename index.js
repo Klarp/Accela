@@ -60,6 +60,11 @@ client.once('ready', async () => {
 	client.guilds.cache
 		.each(guild => userCount += guild.memberCount);
 
+	const headers = {
+		'Content-Type': 'application/json',
+		'Authorization': AuthToken,
+	};
+
 	axios.post(
 		`https://discordbotlist.com/api/v1/bots/${client.user.id}/stats`,
 		{
@@ -67,7 +72,7 @@ client.once('ready', async () => {
 			'guilds': client.guilds.cache.size,
 		},
 		{
-			'Authentication': AuthToken,
+			headers: headers,
 		},
 	)
 		.then((err, res) => {
