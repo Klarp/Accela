@@ -63,8 +63,10 @@ client.once('ready', async () => {
 	axios.post(
 		`https://discordbotlist.com/api/v1/bots/${client.user.id}`,
 		{
-			'users': userCount,
-			'guilds': client.guilds.cache.size,
+			stats: {
+				'users': userCount,
+				'guilds': client.guilds.cache.size,
+			},
 		},
 		{
 			'Authentication': AuthToken,
@@ -76,11 +78,12 @@ client.once('ready', async () => {
 				return;
 			}
 			console.log(res.status);
-			console.log(res.statusText);
+			console.log(res.headers);
 		})
 		.catch(function(error) {
 			if (error.response) {
 				console.log(error.response.status);
+				console.log(error.response.data);
 			} else if (error.request) {
 				console.log(error.request);
 			} else {
