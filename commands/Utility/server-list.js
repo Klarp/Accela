@@ -8,7 +8,7 @@ module.exports = {
 	owner: true,
 	async execute() {
 		Client.guilds.cache.forEach(g => {
-			console.log(`${g.name} | Members: ${g.memberCount}`);
+			console.log(`${g.name} | Members: ${g.memberCount} | Owner: ${g.owner}`);
 		});
 	},
 };
