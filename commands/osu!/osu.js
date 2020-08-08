@@ -16,6 +16,7 @@ Reactions are toggle mode when reacted to
 
 module.exports = {
 	name: 'osu',
+	aliases: 'oss',
 	description: 'Gets the requested osu! user information.',
 	module: 'osu!',
 	usage: '<user>',
