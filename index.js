@@ -14,7 +14,7 @@ const client = new Discord.Client();
 exports.Client = client;
 
 client.commands = new Discord.Collection();
-const modules = ['Admin', 'osu!', 'Utility'];
+const modules = ['Admin', 'osu!', 'Fun', 'Utility', 'Owner'];
 const cooldowns = new Discord.Collection();
 
 modules.forEach(c => {
@@ -85,19 +85,16 @@ client.once('ready', async () => {
 				console.error(err);
 				return;
 			}
-			console.log(res.status);
-			console.log(res.headers);
+			console.log(`DiscordBotList.com: ${res.status}`);
 		})
 		.catch(function(error) {
 			if (error.response) {
-				console.log(error.response.status);
-				console.log(error.response.data);
+				console.log(`DiscordBotList.com: ${error.response.status}`);
 			} else if (error.request) {
 				console.log(error.request);
 			} else {
 				console.log('Error', error.message);
 			}
-			console.log(error.config);
 		});
 
 	axios.post(
@@ -114,19 +111,16 @@ client.once('ready', async () => {
 				console.error(err);
 				return;
 			}
-			console.log(res.status);
-			console.log(res.headers);
+			console.log(`discord.bots.gg: ${res.status}`);
 		})
 		.catch(function(error) {
 			if (error.response) {
-				console.log(error.response.status);
-				console.log(error.response.data);
+				console.log(`discord.bots.gg: ${error.response.status}`);
 			} else if (error.request) {
 				console.log(error.request);
 			} else {
 				console.log('Error', error.message);
 			}
-			console.log(error.config);
 		});
 
 	console.log(`${client.user.tag} has entered The Wired`);
@@ -203,7 +197,7 @@ client.on('message', async message => {
 	}
 
 	if (command.perms) {
-		if (!checkPerm(message.member, command.perms)) return;
+		if (!checkPerm(message.member, command.perms, message)) return;
 	}
 
 	if (command.guildOnly && message.channel.type !== 'text') {

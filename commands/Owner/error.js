@@ -4,6 +4,7 @@ module.exports = {
 	module: 'Admin',
 	owner: true,
 	execute() {
-		a
+		// eslint-disable-next-line no-undef
+		a;
 	},
 };
