@@ -12,7 +12,7 @@ module.exports = {
 	name: 'osutop-test',
 	aliases: 'osu-test',
 	description: 'Gets the 3 top scores of the user [development]',
-	module: 'osu!',
+	module: 'Owner',
 	owner: true,
 	usage: '<user>',
 	async execute(message, args) {

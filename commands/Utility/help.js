@@ -17,6 +17,13 @@ module.exports = {
 		if (!args.length) {
 			data.push('Here\'s a list of commands you can use:');
 			modules.forEach(m => {
+				if(m === 'Owner') {
+					let ownerCheck = false;
+					owners.forEach(owner => {
+						if (owner == message.author.id) ownerCheck = true;
+					});
+					if (!ownerCheck) return;
+				}
 				data.push(`__${m}__`);
 				commands.forEach(c => {
 					if (c.module == m) {

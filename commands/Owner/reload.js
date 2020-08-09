@@ -1,7 +1,7 @@
 module.exports = {
 	name: 'reload',
 	description: 'Reloads a command',
-	module: 'Admin',
+	module: 'Owner',
 	owner: true,
 	usage: '[command name]',
 	args: true,
