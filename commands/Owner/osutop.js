@@ -12,7 +12,7 @@ module.exports = {
 	name: 'osutop',
 	aliases: ['ot', 'osstop'],
 	description: 'Gets the 3 top scores of the user [development]',
-	module: 'osu!',
+	module: 'Owner',
 	owner: true,
 	usage: '<user>',
 	async execute(message, args) {
@@ -195,6 +195,8 @@ module.exports = {
 					r1_pp = ppNum.toFixed(2);
 					r1_maxpp = maxNum.toFixed(2);
 					r1_mod = oj.modbits.string(mods);
+
+					console.log(`Curl Function: ${r1_artist}`);
 				});
 
 				// PP calculation starts
@@ -241,6 +243,8 @@ module.exports = {
 					r2_pp = ppNum.toFixed(2);
 					r2_maxpp = maxNum.toFixed(2);
 					r2_mod = oj.modbits.string(mods);
+
+					console.log(`Curl Function: ${r2_artist}`);
 				});
 
 				// PP calculation starts
@@ -288,26 +292,26 @@ module.exports = {
 					r3_maxpp = maxNum.toFixed(2);
 					r3_mod = oj.modbits.string(mods);
 
-					console.log(r3_artist);
-
-					callback();
+					console.log(`Curl Function: ${r3_artist}`);
 				});
+
+				callback();
 			}
 
 			osuStat(function() {
-				console.log(r1_artist);
-				console.log(r3_artist);
+				console.log(`Callback Function: ${r1_artist}`);
+				console.log(`Callback Function: ${r3_artist}`);
 
 				const osuTopEmbed = new discord.MessageEmbed()
 					.setTitle(`Top 3 Plays of ${name}`)
 					.setDescription(`**1.** ${r1_rank} [${r1_artist} - ${r1_mapName} [${r1_diff}]](${r1_url} 'Map Link') 
-{${r1_count300}/${r1_count100}/${r1_count50}/${r1_miss}} | **${r1_combo}x**/${r1_maxCombo}X | ${r_acc[0]} | **${r1_pp}pp**/${r1_maxpp}PP | ${r1_mod || 'NoMod'}
+{${r1_count300}/${r1_count100}/${r1_count50}/${r1_miss}} | **${r1_combo}x**/${r1_maxCombo}X | ${r_acc[0]}% | **${r1_pp}pp**/${r1_maxpp}PP | ${r1_mod || 'NoMod'}
 
 **2.** ${r2_rank} [${r2_artist} - ${r2_mapName} [${r2_diff}]](${r2_url} 'Map Link') 
-{${r2_count300}/${r2_count100}/${r2_count50}/${r2_miss}} | **${r2_combo}x**/${r2_maxCombo}X | ${r_acc[1]} | **${r2_pp}pp**/${r2_maxpp}PP | ${r2_mod || 'NoMod'}
+{${r2_count300}/${r2_count100}/${r2_count50}/${r2_miss}} | **${r2_combo}x**/${r2_maxCombo}X | ${r_acc[1]}% | **${r2_pp}pp**/${r2_maxpp}PP | ${r2_mod || 'NoMod'}
 
 **3.** ${r3_rank} [${r3_artist} - ${r3_mapName} [${r3_diff}]](${r3_url} 'Map Link') 
-{${r3_count300}/${r3_count100}/${r3_count50}/${r3_miss}} | **${r3_combo}x**/${r3_maxCombo}X | ${r_acc[2]} | **${r3_pp}pp**/${r3_maxpp}PP | ${r3_mod || 'NoMod'}`);
+{${r3_count300}/${r3_count100}/${r3_count50}/${r3_miss}} | **${r3_combo}x**/${r3_maxCombo}X | ${r_acc[2]}% | **${r3_pp}pp**/${r3_maxpp}PP | ${r3_mod || 'NoMod'}`);
 
 				message.channel.send(osuTopEmbed);
 			});

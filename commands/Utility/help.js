@@ -12,16 +12,23 @@ module.exports = {
 	execute(message, args) {
 		const data = [];
 		const { commands } = message.client;
-		const modules = ['Admin', 'osu!', 'Utility'];
+		const modules = ['Admin', 'osu!', 'Fun', 'Utility', 'Owner'];
 
 		if (!args.length) {
 			data.push('Here\'s a list of commands you can use:');
 			modules.forEach(m => {
+				if(m === 'Owner') {
+					let ownerCheck = false;
+					owners.forEach(owner => {
+						if (owner == message.author.id) ownerCheck = true;
+					});
+					if (!ownerCheck) return;
+				}
 				data.push(`__${m}__`);
 				commands.forEach(c => {
 					if (c.module == m) {
 						if (c.perms) {
-							if (!checkPerm(message.member, c.perms)) return;
+							if (!checkPerm(message.member, c.perms, message)) return;
 						}
 						if (c.owner) {
 							let ownerCheck = false;
