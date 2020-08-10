@@ -25,10 +25,10 @@ module.exports = {
 		osuApi.getBeatmaps({ b: bMap }).then(beatmap => {
 			const map = beatmap[0];
 			curl.get(`https://osu.ppy.sh/osu/${map.id}`, function(err, response, body) {
-				mods = oj.modbits.from_string(args[4]);
-				if (!mods) {
-					mods = oj.modbits.none;
+				if (args[4]) {
+					mods = oj.modbits.from_string(args[4]);
 				}
+
 				acc_percent = parseFloat(args[1]);
 				combo = parseInt(args[2]);
 				miss = parseInt(args[3]);
@@ -45,11 +45,17 @@ module.exports = {
 					acc_percent: acc_percent,
 				});
 
+				const maxPP = oj.ppv2({
+					map: pMap,
+				})
+
 				const max_combo = pMap.max_combo();
 				combo = combo || max_combo;
 
 				const ppFix = pp.toString().split(' ');
 				const ppNum = parseFloat(ppFix[0]);
+				const maxppFix = maxPP.toString().split(' ');
+				const maxppNum = parseFloat(maxppFix[0]);
 
 				const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' });
 				const [{ value: amonth },, { value: aday },, { value: ayear }] = dateTimeFormat.formatToParts(map.approvedDate);
@@ -59,13 +65,11 @@ module.exports = {
 					.setColor('0xff69b4')
 					.setURL(`https://osu.ppy.sh/b/${map.id}`)
 					.setTitle(`${map.artist} - ${map.title} (${map.version})`)
-					.setDescription(`Mapped by ${map.creator}`)
-					.addField('Mods', oj.modbits.string(mods) || 'NoMod')
-					.addField('Accuracy', `${acc_percent}%` || '100%')
-					.addField('Missed', miss)
-					.addField('Combo', `**${combo}x**/${map.maxCombo}`)
-					.addField('PP', ppNum.toFixed(2))
-					.setFooter(`${map.approvalStatus} on ${amonth} ${aday} ${ayear}`);
+					.setDescription(`Combo: ${combo}x | Missed: ${miss}x
+					Mods: ${oj.modbits.string(mods) || 'NoMod'} | Accuracy: ${acc_percent || '100'}%
+					
+					Total PP: **${ppNum.toFixed(2)}pp**/${maxppNum.toFixed(2)}PP`)
+					.setFooter(`${map.approvalStatus} on ${amonth} ${aday} ${ayear} | Mapped by: ${map.creator}`);
 
 				message.channel.send({ embed: osuEmbed });
 			});
