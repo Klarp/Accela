@@ -92,7 +92,7 @@ module.exports = {
 			message.channel.send({ embed: osuEmbed });
 		}).catch(e => {
 			console.error(e);
-			return message.reply('No user was found!');
+			return message.reply(`No user was found named ${name}!`);
 		});
 	},
 };
