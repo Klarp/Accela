@@ -58,9 +58,9 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Please make sure to update tests as appropriate.
 
 ## Special Thanks
-- Phil
-- Peeman69
-- Stedoss
+- Phil#9284
+- Peeman69#3117
+- Stedoss#1309
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
