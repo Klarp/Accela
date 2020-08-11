@@ -170,7 +170,7 @@ ${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 			});
 		}).catch(e => {
 			if (e.name == 'Error') {
-				return message.reply('No top play was found!');
+				return message.reply(`No top play was found for ${name}!`);
 			}
 			console.error(e);
 			return message.reply('An error has occured!');
