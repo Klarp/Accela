@@ -123,6 +123,10 @@ module.exports = {
 
 				const rDate = timeSince(recent.date);
 
+				if (recent.pp) {
+					recent.pp.toFixed(2);
+				}
+
 				// Create embed (Need to stlye this better)
 				const osuEmbed = new discord.MessageEmbed()
 					.setAuthor(name, `http://a.ppy.sh/${recent.user.id}`)
@@ -151,7 +155,7 @@ ${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 			});
 		}).catch(e => {
 			if (e.name == 'Error') {
-				return message.reply('No score was found!');
+				return message.reply(`No score was found for ${name}!`);
 			}
 			console.error(e);
 			return message.reply('An error has occured!');

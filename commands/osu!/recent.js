@@ -18,6 +18,7 @@ module.exports = {
 	perms: '',
 	usage: '<user>',
 	async execute(message, args) {
+		console.time('Recent');
 		// Access the api
 		const osuApi = new osu.Api(osu_key, {
 			notFoundAsError: true,
@@ -145,6 +146,10 @@ module.exports = {
 
 				const mapCompletion = (point / timing) * 100;
 
+				if (recent.pp) {
+					recent.pp.toFixed(2);
+				}
+
 				if (recent.rank == 'F') {
 					const failPercent = mapCompletion.toFixed(2);
 
@@ -160,6 +165,7 @@ ${acc}% | ${oj.modbits.string(mods) || 'NoMod'} | Map Completion: ${failPercent}
 						.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
 						.setFooter(`Completed ${rDate}`);
 					message.channel.send(osuFailEmbed);
+					console.timeEnd('Recent');
 				} else {
 					const osuEmbed = new discord.MessageEmbed()
 						.setAuthor(name, `http://a.ppy.sh/${recent.user.id}`)
@@ -174,11 +180,13 @@ ${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 						.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
 						.setFooter(`Completed ${rDate}`);
 					message.channel.send(osuEmbed);
+					console.timeEnd('Recent');
 				}
 			});
 		}).catch(e => {
 			if (e.name == 'Error') {
-				return message.reply('No recent play was found!');
+				console.timeEnd('Recent');
+				return message.reply(`No recent play was found for ${name}!`);
 			}
 			console.error(e);
 			return message.reply('An error has occured!');
