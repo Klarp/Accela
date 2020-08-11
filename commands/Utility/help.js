@@ -64,7 +64,15 @@ module.exports = {
 
 		data.push(`**Name:** ${command.name}`);
 
-		if (command.aliases) data.push(`**Aliases** ${command.aliases.join(', ')}`);
+		let alias;
+
+		if (command.aliases.isArray) {
+			alias = command.aliases.join(', ');
+		} else {
+			alias = command.aliases;
+		}
+
+		if (command.aliases) data.push(`**Aliases** ${alias}`);
 		if (command.description) data.push(`**Description** ${command.description}`);
 		if (command.module) data.push(`**Category:** ${command.module}`);
 		if (command.usage) data.push(`**Usage:** ${prefix}${command.name} ${command.usage}`);

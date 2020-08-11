@@ -47,7 +47,7 @@ module.exports = {
 
 				const maxPP = oj.ppv2({
 					map: pMap,
-				})
+				});
 
 				const max_combo = pMap.max_combo();
 				combo = combo || max_combo;

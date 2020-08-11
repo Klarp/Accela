@@ -241,7 +241,9 @@ client.on('message', async message => {
 		const errorEmbed = new Discord.MessageEmbed()
 			.setTitle('An Error Has Occurred')
 			.setColor('RED')
-			.setDescription('OOPSIE WOOPSIE!! Uwu We made a fucky wucky!! A wittle fucko boingo! The code monkeys at our headquarters are working VEWY HAWD to fix this!');
+			.setDescription(`OOPSIE WOOPSIE!! Uwu We made a fucky wucky!! A wittle fucko boingo! The code monkeys at our headquarters are working VEWY HAWD to fix this!
+			
+Please contact @Karp#0001 if you see this message`);
 		message.channel.send(errorEmbed);
 	}
 });
