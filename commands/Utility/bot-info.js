@@ -25,19 +25,25 @@ module.exports = {
 		Client.guilds.cache
 			.each(guild => userCount += guild.memberCount);
 
-		function msToTime(duration) {
-			let seconds = Math.floor((duration / 1000) % 60);
-			let minutes = Math.floor((duration / (1000 * 60)) % 60);
-			let hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
-
-			hours = (hours < 10) ? '0' + hours : hours;
-			minutes = (minutes < 10) ? '0' + minutes : minutes;
-			seconds = (seconds < 10) ? '0' + seconds : seconds;
-
-			return hours + ':' + minutes + ':' + seconds;
+		function dhm(t) {
+			const cd = 24 * 60 * 60 * 1000;
+			const ch = 60 * 60 * 1000;
+			let d = Math.floor(t / cd);
+			let h = Math.floor((t - d * cd) / ch);
+			let m = Math.round((t - d * cd - h * ch) / 60000);
+			const pad = function(n) { return n < 10 ? '0' + n : n; };
+			if(m === 60) {
+				h++;
+				m = 0;
+			}
+			if(h === 24) {
+				d++;
+				h = 0;
+			}
+			return [d, pad(h), pad(m)].join(':');
 		}
 
-		const uptime = msToTime(Client.uptime);
+		const uptime = dhm(Client.uptime);
 
 		const infoEmbed = new Discord.MessageEmbed()
 			.setAuthor(bot.username, bot.displayAvatarURL())
