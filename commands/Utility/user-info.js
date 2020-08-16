@@ -46,7 +46,13 @@ module.exports = {
 
 		if (target.presence.activities[1]) {
 			game = target.presence.activities[1].name;
-			gameState = target.presence.activities[1].state;
+			if (target.presence.activities[1].state) {
+				gameState = target.presence.activities[1].state;
+			}
+			if (target.presence.activities[1].name === 'Spotify') {
+				console.log(target.presence.activities[1]);
+				gameState = `${target.presence.activities[1].state} - ${target.presence.activities[1].details}`;
+			}
 		}
 
 		let lastDate;
