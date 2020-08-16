@@ -154,7 +154,7 @@ module.exports = {
 					const failPercent = mapCompletion.toFixed(2);
 
 					const osuFailEmbed = new discord.MessageEmbed()
-						.setAuthor(name, `http://a.ppy.sh/${recent.user.id}`)
+						.setAuthor(name, `http://a.ppy.sh/${recent.user.id}`, `https://osu.ppy.sh/u/${recent.user.id}`)
 						.setColor('0xff69b4')
 						.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
 						.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${hit300}/${hit100}/${hit50}/${hitmiss}}
