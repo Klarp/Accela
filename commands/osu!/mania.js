@@ -8,8 +8,7 @@ module.exports = {
 	name: 'mania',
 	aliases: ['piano'],
 	description: 'Gets the requested osu! user information for mania.',
-	module: 'Owner',
-	owner: true,
+	module: 'osu!',
 	usage: '<user>',
 	async execute(message, args) {
 		// Access the api
@@ -77,7 +76,7 @@ module.exports = {
 				.setColor('0xff69b4')
 				.setTitle(`[Mania] Information On ${user.name}`)
 				.setURL(`https://osu.ppy.sh/u/${user.id}`)
-				.setDescription(`**Level** ${Math.floor(user.level)} | **Global Rank** ${rank} | **[${countryEmote}](https://osu.ppy.sh/rankings/osu/performance?country=${user.country} 'Country Rankings') Rank** ${crank}
+				.setDescription(`**Level** ${Math.floor(user.level)} | **Global Rank** ${rank} | **[${countryEmote}](https://osu.ppy.sh/rankings/mania/performance?country=${user.country} 'Country Rankings') Rank** ${crank}
 				
 **PP** ${Math.round(user.pp.raw)} | **Accuracy** ${user.accuracyFormatted} | **Play Count** ${user.counts.plays}`)
 				.setFooter(`Joined ${d}`);
