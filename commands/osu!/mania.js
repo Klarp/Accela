@@ -72,9 +72,9 @@ module.exports = {
 
 			// Create the embed
 			const osuEmbed = new Discord.MessageEmbed()
-				.setAuthor(user.name, `http://a.ppy.sh/${user.id}`, `https://osu.ppy.sh/u/${user.id}`)
+				.setAuthor(`${user.name} [mania]`, `http://a.ppy.sh/${user.id}`, `https://osu.ppy.sh/u/${user.id}`)
 				.setColor('0xff69b4')
-				.setTitle(`[Mania] Information On ${user.name}`)
+				.setTitle(`Information On ${user.name}`)
 				.setURL(`https://osu.ppy.sh/u/${user.id}`)
 				.setDescription(`**Level** ${Math.floor(user.level)} | **Global Rank** ${rank} | **[${countryEmote}](https://osu.ppy.sh/rankings/mania/performance?country=${user.country} 'Country Rankings') Rank** ${crank}
 				
