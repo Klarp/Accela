@@ -2,7 +2,7 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const axios = require('axios');
 
-const { token, owners, AuthToken_BFD, AuthToken_botgg } = require('./config.json');
+const { token, owners, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL } = require('./config.json');
 const { Users, Muted, sConfig } = require('./dbObjects');
 const checkPerm = require('./utils/checkPerm.js');
 const mapDetect = require('./utils/mapDetect');
@@ -60,14 +60,19 @@ client.once('ready', async () => {
 	client.guilds.cache
 		.each(guild => userCount += guild.memberCount);
 
-	const headers_BFD = {
+	const headers_DBL = {
 		'Content-Type': 'application/json',
-		'Authorization': AuthToken_BFD,
+		'Authorization': AuthToken_DBL,
 	};
 
 	const headers_botgg = {
 		'Content-Type': 'application/json',
 		'Authorization': AuthToken_botgg,
+	};
+
+	const headers_BFD = {
+		'Content-Type': 'application/json',
+		'Authorization': AuthToken_BFD,
 	};
 
 	axios.post(
@@ -77,7 +82,7 @@ client.once('ready', async () => {
 			'guilds': client.guilds.cache.size,
 		},
 		{
-			headers: headers_BFD,
+			headers: headers_DBL,
 		},
 	)
 		.then((err, res) => {
@@ -116,6 +121,32 @@ client.once('ready', async () => {
 		.catch(function(error) {
 			if (error.response) {
 				console.log(`discord.bots.gg: ${error.response.status}`);
+			} else if (error.request) {
+				console.log(error.request);
+			} else {
+				console.log('Error', error.message);
+			}
+		});
+
+	axios.post(
+		`https://botsfordiscord.com/api/bot/${client.user.id}`,
+		{
+			'server_count': client.guilds.cache.size,
+		},
+		{
+			headers: headers_BFD,
+		},
+	)
+		.then((err, res) => {
+			if (err) {
+				console.error(err);
+				return;
+			}
+			console.log(`botsfordiscord.com: ${res.status}`);
+		})
+		.catch(function(error) {
+			if (error.response) {
+				console.log(`botsfordiscord.com: ${error.response.status}`);
 			} else if (error.request) {
 				console.log(error.request);
 			} else {
