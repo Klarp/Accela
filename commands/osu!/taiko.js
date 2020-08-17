@@ -18,15 +18,16 @@ module.exports = {
 			parseNumeric: true,
 		});
 
+		let prefix = '>>';
 		let findUser;
 		const menUser = message.mentions.users.first();
-		const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
-
 		let name;
 
-		let prefix = '>>';
-		if (serverConfig) {
-			prefix = serverConfig.get('prefix');
+		if (message.channel.type !== 'dm') {
+			const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
+			if (serverConfig) {
+				prefix = serverConfig.get('prefix');
+			}
 		}
 
 		// Access database

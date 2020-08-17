@@ -27,10 +27,12 @@
     "git": "^0.1.5",
     "got": "^11.5.1",
     "log-symbols": "^4.0.0",
+    "node-gyp": "^7.1.0",
     "node-libcurl": "^2.2.0",
     "node-osu": "^2.2.0",
     "ojsama": "^1.2.5",
     "osu-pp-calculator": "^0.1.7",
+    "rebuild": "^0.1.2",
     "sequelize": "^6.2.4",
     "sqlite": "^4.0.11"
   }

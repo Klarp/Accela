@@ -20,13 +20,14 @@ module.exports = {
 
 		let findUser;
 		const menUser = message.mentions.users.first();
-		const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
-
+		let prefix = '>>';
 		let name;
 
-		let prefix = '>>';
-		if (serverConfig) {
-			prefix = serverConfig.get('prefix');
+		if (message.channel.type !== 'dm') {
+			const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
+			if (serverConfig) {
+				prefix = serverConfig.get('prefix');
+			}
 		}
 
 		// Access database
@@ -59,7 +60,6 @@ module.exports = {
 
 		// Find user through the api
 		osuApi.getUser({ m: 3, u: name }).then(async user => {
-			console.log(user);
 			// Need to change this to use the date grabber
 			let d = user.raw_joinDate;
 			d = d.split(' ')[0];
