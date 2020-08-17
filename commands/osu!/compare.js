@@ -30,17 +30,20 @@ module.exports = {
 
 		let findUser;
 		const menUser = message.mentions.users.first();
-		const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
+		let prefix = '>>';
+
+		if (message.channel.type !== 'dm') {
+			const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
+			if (serverConfig) {
+				prefix = serverConfig.get('prefix');
+			}
+		}
 
 		let name;
 		let mods = oj.modbits.none;
 		let acc_percent;
 		let combo;
 		let nmiss;
-		let prefix = '>>';
-		if (serverConfig) {
-			prefix = serverConfig.get('prefix');
-		}
 
 		// Access database
 		if (menUser) {
