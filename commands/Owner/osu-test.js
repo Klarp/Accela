@@ -6,7 +6,7 @@ module.exports = {
 	owner: true,
 	args: true,
 	usage: '<beatmap> <acc> <combo> <missed> <mods>',
-	async execute(message, args) {
-		
+	async execute() {
+		console.log('oink');
 	},
 };

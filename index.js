@@ -218,7 +218,6 @@ client.on('message', async message => {
 	if (message.author.bot) return;
 
 	const mentionTest = message.content.split(' ');
-	console.log(mentionTest);
 
 	if (mentionTest[0] === `<@!${client.user.id}>` && !mentionTest[1]) {
 		message.channel.send('Hello, my current prefix is: ' + '`' + prefix + '` ' + 'if you need help use' + ' `' + prefix + 'help` for more information.');
