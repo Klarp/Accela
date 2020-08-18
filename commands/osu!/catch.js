@@ -7,7 +7,7 @@ const { Users, sConfig } = require('../../dbObjects');
 module.exports = {
 	name: 'catch',
 	aliases: ['ctb', 'catchthebeat'],
-	description: 'Gets the requested osu! user information for mania.',
+	description: 'Gets the requested osu! user information for catch the beat',
 	module: 'osu!',
 	usage: '<user>',
 	async execute(message, args) {
@@ -62,7 +62,6 @@ module.exports = {
 
 		// Find user through the api
 		osuApi.getUser({ m: 2, u: name }).then(async user => {
-			console.log(user);
 			// Need to change this to use the date grabber
 			let d = user.raw_joinDate;
 			d = d.split(' ')[0];
