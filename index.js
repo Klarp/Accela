@@ -203,9 +203,6 @@ client.on('message', async message => {
 
 	if (message.author.bot) return;
 
-	console.log(message.content);
-	console.log(`<@!${client.user.id}>`);
-
 	const mentionTest = message.content.split(' ');
 	console.log(mentionTest);
 
