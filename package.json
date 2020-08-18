@@ -21,9 +21,11 @@
   "dependencies": {
     "3": "^2.1.0",
     "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
     "canvas": "^2.6.1",
     "curl": "^0.1.4",
     "discord.js": "^12.2.0",
+    "express": "^4.17.1",
     "git": "^0.1.5",
     "got": "^11.5.1",
     "log-symbols": "^4.0.0",

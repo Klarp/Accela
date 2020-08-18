@@ -1,6 +1,8 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const axios = require('axios');
+const express = require('express');
+const bodyParser = require('body-parser');
 
 const { token, owners, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL } = require('./config.json');
 const { Users, Muted, sConfig } = require('./dbObjects');
@@ -16,6 +18,9 @@ exports.Client = client;
 client.commands = new Discord.Collection();
 const modules = ['Admin', 'osu!', 'Fun', 'Utility', 'Owner'];
 const cooldowns = new Discord.Collection();
+
+const app = express();
+const PORT = 3000;
 
 modules.forEach(c => {
 	fs.readdir(`./commands/${c}`, (err, files) => {
@@ -153,6 +158,15 @@ client.once('ready', async () => {
 				console.log('Error', error.message);
 			}
 		});
+
+	app.use(bodyParser.json());
+
+	app.post('/hook', (req, res) => {
+		console.log(req.body);
+		res.status(200).end();
+	});
+
+	app.listen(PORT, () => console.log(`Server running on ${PORT}`));
 
 	console.log(`${client.user.tag} has entered The Wired`);
 });
