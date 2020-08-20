@@ -83,7 +83,7 @@ module.exports = {
 				.setDescription(`**Level** ${Math.floor(user.level)} | **Global Rank** ${rank} | **[${countryEmote}](https://osu.ppy.sh/rankings/osu/performance?country=${user.country} 'Country Rankings') Rank** ${crank}
 				
 **PP** ${Math.round(user.pp.raw)} | **Accuracy** ${user.accuracyFormatted} | **Play Count** ${user.counts.plays}`)
-				.setFooter(`Joined ${d}`);
+				.setFooter(`Joined ${d} • osu!std`);
 				/*
 				.addField('Accuracy', user.accuracyFormatted, true)
 				.addField('Play Count', user.counts.plays, true)
