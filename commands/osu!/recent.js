@@ -189,6 +189,7 @@ ${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 			});
 		}).catch(e => {
 			if (e.name == 'Error') {
+				console.error(e);
 				console.timeEnd('Recent');
 				return message.reply(`No recent play was found for ${name}!`);
 			}
