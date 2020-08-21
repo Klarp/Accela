@@ -2,17 +2,12 @@ const osu = require('node-osu');
 const Discord = require('discord.js');
 const { osu_key } = require('../../config.json');
 const { Users, sConfig } = require('../../dbObjects');
+const prom_client = require('prom-client');
 
-/*
-To Do:
-
-Honestly, what would be amazing is if the bot
-shows a play and has emote reactions with each mod.
-Clicking on them changes the bot's
-message to show the stats with the new mods.
-Reactions are toggle mode when reacted to
-
-*/
+const counter = new prom_client.Counter({
+	name: 'command_osu_total',
+	help: 'command_osu_help',
+});
 
 module.exports = {
 	name: 'osu',
@@ -21,6 +16,7 @@ module.exports = {
 	module: 'osu!',
 	usage: '<user>',
 	async execute(message, args) {
+		counter.inc();
 		// Access the api
 		const osuApi = new osu.Api(osu_key);
 

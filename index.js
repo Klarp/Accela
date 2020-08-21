@@ -13,11 +13,11 @@ const modAction = require('./utils/modAction');
 const osuUsers = new Discord.Collection();
 const configs = new Discord.Collection();
 const client = new Discord.Client();
+client.commands = new Discord.Collection();
+const cooldowns = new Discord.Collection();
 exports.Client = client;
 
-client.commands = new Discord.Collection();
 const modules = ['Admin', 'osu!', 'Fun', 'Utility', 'Owner'];
-const cooldowns = new Discord.Collection();
 
 const app = express();
 const PORT = 3000;
