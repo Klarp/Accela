@@ -1,5 +1,6 @@
-const jikan = require('jikanjs');
+const anilist_node = require('anilist-node');
 const Discord = require('discord.js');
+const aniList = new anilist_node();
 
 module.exports = {
 	name: 'manga',
@@ -7,87 +8,54 @@ module.exports = {
 	module: 'Fun',
 	cooldown: 5,
 	args: true,
-	usage: '[name] or [name] -2',
+	usage: '[name]',
 	execute(message, args) {
 		const manga = args.join(' ');
-		if (manga.length < 3) return message.reply('The given query must be of minimum 3 letters');
-
-		jikan.search('manga', manga).then((res) => {
-			const mangaResult = res.results[0];
-
-			let ed;
-
-			if (mangaResult.enddate) {
-				ed = mangaResult.end_date.split('T')[0];
-			} else {
-				ed = 'Unknown';
-			}
-
-			const sd = mangaResult.start_date.split('T')[0];
-
-			if (manga.includes('-')) {
-				const numArg = manga.split('-');
-				const num = numArg[1];
-				if (isNaN(num)) return;
-				console.log(num);
-				const newResult = res.results[num];
-				console.log(newResult);
-
-				const newSd = newResult.start_date.split('T')[0];
-				const newEd = newResult.end_date.split('T')[0];
-
-				let status;
-
-				if(newResult.publishing) {
-					status = 'Publishing';
-				} else {
-					status = 'Completed';
+		aniList.search('manga', manga).then(res => {
+			aniList.media.manga(res.media[0].id).then(aniRes => {
+				function truncate(str, n) {
+					return (str.length > n) ? str.substr(0, n - 1) + '...' : str;
 				}
 
+				if (aniRes.isAdult) return message.reply('NSFW searches are not allowed!');
+
+				let descLong = aniRes.description.replace(/<\/?[^>]+(>|$)/g, '').replace(/&lsquo;/g, '').replace(/\n/g, '');
+				const status = aniRes.status || 'Unknown';
+				const type = aniRes.format || 'Unknown';
+				const avgScore = aniRes.averageScore || '0';
+				const volumes = aniRes.volumes || 'Unknown';
+				const chapters = aniRes.chapters || 'Unknown';
+				const genres = aniRes.genres.join(' | ') || 'Unknown';
+				let startDate = `${aniRes.startDate.year}-${aniRes.startDate.month}-${aniRes.startDate.day}`;
+				let endDate = `${aniRes.endDate.year}-${aniRes.endDate.month}-${aniRes.endDate.day}`;
+
+				if (aniRes.startDate.year === null) {
+					startDate = 'Unknown';
+				}
+
+				if (aniRes.endDate.year === null) {
+					endDate = 'Unknown';
+				}
+
+				descLong = truncate(descLong, 300);
+
 				const aniEmbed = new Discord.MessageEmbed()
-					.setAuthor('MAL Search', 'https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png')
+					.setAuthor('AniList', 'https://anilist.co/img/icons/android-chrome-512x512.png')
 					.setColor('BLUE')
-					.setTitle(newResult.title)
-					.setThumbnail(newResult.image_url, 500, 500)
-					.setURL(newResult.url)
-					.setDescription(`**Status** ${status} | **Type** ${newResult.type} | **Score** ${newResult.score}
-**Volumes** ${newResult.episodes || 'Unknown'} | **Chapters** ${newResult.chapters || 'Unknown'}
-
-**Start Date** ${newSd}
-**End Date** ${newEd}
-`)
-					.setFooter('Click on the title for full synopsis');
-				return message.channel.send(aniEmbed);
-			}
-
-			let status;
-
-
-			if(mangaResult.publishing) {
-				status = 'Publishing';
-			} else {
-				status = 'Completed';
-			}
-
-			const aniEmbed = new Discord.MessageEmbed()
-				.setAuthor('MAL Search', 'https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png')
-				.setColor('BLUE')
-				.setTitle(mangaResult.title)
-				.setThumbnail(mangaResult.image_url, 500, 500)
-				.setURL(mangaResult.url)
-				.setDescription(`**Status** ${status} | **Type** ${mangaResult.type} | **Score** ${mangaResult.score}
-**Volumes** ${mangaResult.volumes || 'Unknown'} | **Chapters** ${mangaResult.chapters || 'Unknown'}
-
-**Start Date** ${sd}
-**End Date** ${ed}
-`)
-				.setFooter('Click on the title for full synopsis [You can use -2 to search for the next result]');
-			message.channel.send(aniEmbed);
-		}).catch((e) => {
-			if (e.name === 'null') {
-				console.log('ping');
-			}
-			console.error(e);
+					.setTitle(`${aniRes.title.romaji} [${aniRes.title.native}]`)
+					.setURL(aniRes.siteUrl)
+					.setThumbnail(aniRes.coverImage.large)
+					.setDescription(`**Status** ${status} | **Type** ${type} | **Average Score** ${avgScore}%
+**Volumes** ${volumes} **Chapters** ${chapters}
+**Genres** ${genres}
+					
+**Start Date** ${startDate}
+**End Date** ${endDate}
+					
+**Description**
+${descLong}`);
+				message.channel.send(aniEmbed);
+			});
 		});
 	},
 };
