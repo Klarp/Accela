@@ -17,6 +17,8 @@ module.exports = {
 					return (str.length > n) ? str.substr(0, n - 1) + '...' : str;
 				}
 
+				if (aniRes.isAdult) return message.reply('NSFW searches are not allowed!');
+
 				let descLong = aniRes.description.replace(/<\/?[^>]+(>|$)/g, '').replace(/&lsquo;/g, '').replace(/\n/g, '');
 				const status = aniRes.status || 'Unknown';
 				const type = aniRes.format || 'Unknown';

@@ -18,6 +18,8 @@ module.exports = {
 					return (str.length > n) ? str.substr(0, n - 1) + '...' : str;
 				}
 
+				if (aniRes.isAdult) return message.reply('NSFW searches are not allowed!');
+
 				const status = aniRes.status || 'Unknown';
 				const type = aniRes.format || 'Unknown';
 				const episodes = aniRes.episodes || 'Unknown';
