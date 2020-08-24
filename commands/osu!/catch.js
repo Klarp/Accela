@@ -8,7 +8,7 @@ module.exports = {
 	name: 'catch',
 	aliases: ['ctb', 'catchthebeat'],
 	description: 'Gets the requested osu! user information for catch the beat',
-	module: 'osu!',
+	module: 'Osu!',
 	usage: '<user>',
 	async execute(message, args) {
 		// Access the api

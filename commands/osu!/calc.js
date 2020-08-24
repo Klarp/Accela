@@ -7,7 +7,7 @@ const { osu_key } = require('../../config.json');
 module.exports = {
 	name: 'calc',
 	description: 'Calculates pp',
-	module: 'osu!',
+	module: 'Osu!',
 	args: true,
 	usage: '<beatmap> <acc> <combo> <missed> <mods>',
 	execute(message, args) {

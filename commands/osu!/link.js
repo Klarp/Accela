@@ -3,7 +3,7 @@ const { Users } = require('../../dbObjects');
 module.exports = {
 	name: 'link',
 	description: 'Links osu! account for use with osu commands.',
-	module: 'osu!',
+	module: 'Osu!',
 	usage: '<osu user>',
 	args: true,
 	async execute(message, args) {

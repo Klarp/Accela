@@ -13,7 +13,7 @@ module.exports = {
 	name: 'osu',
 	aliases: 'oss',
 	description: 'Gets the requested osu! user information.',
-	module: 'osu!',
+	module: 'Osu!',
 	usage: '<user>',
 	async execute(message, args) {
 		counter.inc();

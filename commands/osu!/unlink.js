@@ -3,7 +3,7 @@ const { Users } = require('../../dbObjects');
 module.exports = {
 	name: 'unlink',
 	description: 'Unlinks osu! account',
-	module: 'osu!',
+	module: 'Osu!',
 	async execute(message) {
 		try {
 			const unLink = await Users.destroy({ where: { user_id: message.author.id } });
