@@ -10,7 +10,7 @@ module.exports = {
 	name: 'mania-recent',
 	aliases: ['mr', 'maniar', 'maniarecent', 'mrecent', 'mrs'],
 	description: 'Gets the recently completed score on mania!',
-	module: 'osu!',
+	module: 'Osu!',
 	perms: '',
 	owner: true,
 	usage: '<user>',

@@ -1,6 +1,11 @@
 const { prefix } = require('../../config.json');
 const checkPerm = require('../../utils/checkPerm.js');
 const { owners } = require('../../config.json');
+const { MessageEmbed } = require('discord.js');
+
+function ucFirst(string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 module.exports = {
 	name: 'help',
@@ -12,28 +17,45 @@ module.exports = {
 	execute(message, args) {
 		const data = [];
 		const { commands } = message.client;
-		const modules = ['Admin', 'osu!', 'Fun', 'Utility', 'Owner'];
+		const modules = ['admin', 'osu!', 'fun', 'utility', 'owner'];
 
 		if (!args.length) {
-			data.push('Here\'s a list of commands you can use:');
-			modules.forEach(m => {
-				if(m === 'Owner') {
+			const helpEmbed = new MessageEmbed()
+				.setAuthor(message.client.user.tag, message.client.user.displayAvatarURL())
+				.setTitle('Command Directory')
+				.addField('Admin', `\`${prefix}help admin\``, true)
+				.addField('osu!', `\`${prefix}help osu!\``, true)
+				.addField('Fun', `\`${prefix}help fun\``, true)
+				.addField('Utility', `\`${prefix}help utility\``, true)
+				.setFooter(`You can use ${prefix}help [command name] to get info on a specific command!`);
+
+			return message.channel.send(helpEmbed);
+		}
+
+		const name = args[0].toLowerCase();
+		const nameU = ucFirst(name);
+		const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
+
+		if (!command) {
+			if (modules.includes(name)) {
+				if (name === 'owner') {
 					let ownerCheck = false;
 					owners.forEach(owner => {
-						if (owner == message.author.id) ownerCheck = true;
+						if (owner === message.author.id) ownerCheck = true;
 					});
-					if (!ownerCheck) return;
+					if (!ownerCheck) return message.reply('You are not listed as an owner');
 				}
-				data.push(`__${m}__`);
+				data.push(`**__${nameU} Commands__**\n`);
+
 				commands.forEach(c => {
-					if (c.module == m) {
+					if (c.module === nameU) {
 						if (c.perms) {
 							if (!checkPerm(message.member, c.perms, message)) return;
 						}
 						if (c.owner) {
 							let ownerCheck = false;
 							owners.forEach(owner => {
-								if (owner == message.author.id) ownerCheck = true;
+								if (owner === message.author.id) ownerCheck = true;
 							});
 							if (!ownerCheck) return;
 						}
@@ -41,44 +63,38 @@ module.exports = {
 					}
 				});
 				data.push('');
-			});
-			// data.push(commands.map(command => command.name).join(', '));
-			data.push(`You can send \`${prefix}help [command name]\` to get info on a specific command!`);
-			return message.author.send(data, { split: true })
-				.then(() => {
-					if (message.channel.type === 'dm') return;
-					message.reply('I\'ve sent you a DM with all my commands!');
-				})
-				.catch(error => {
-					console.error(`Could not send help DM to ${message.author.tag}.\n`, error);
-					message.reply('it seems like I can\'t DM you! Do you have DMs disabled?');
-				});
-		}
-
-		const name = args[0].toLowerCase();
-		const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
-
-		if(!command) {
-			return message.reply('that\'s not a valid command!');
-		}
-
-		data.push(`**Name:** ${command.name}`);
-
-		let alias;
-
-		if (command.aliases.isArray) {
-			alias = command.aliases.join(', ');
+				data.push(`You can send \`${prefix}help [command name]\` to get info on a specific command!`);
+				return message.author.send(data, { split: true })
+					.then(() => {
+						if (message.channel.type === 'dm') return;
+						message.reply('I\'ve sent you a DM with the commands!');
+					})
+					.catch(error => {
+						console.error(`Could not send help DM to ${message.author.tag}.\n`, error);
+						message.reply('it seems like I can\'t DM you! Do you have DMs disabled?');
+					});
+			}
 		} else {
-			alias = command.aliases;
+			data.push(`**Name:** ${command.name}`);
+
+			let alias;
+
+			if (command.aliases) {
+				if (command.aliases.isArray) {
+					alias = command.aliases.join(', ');
+				} else {
+					alias = command.aliases;
+				}
+			}
+
+			if (command.aliases) data.push(`**Aliases:** ${alias}`);
+			if (command.description) data.push(`**Description:** ${command.description}`);
+			if (command.module) data.push(`**Category:** ${command.module}`);
+			if (command.usage) data.push(`**Usage:** ${prefix}${command.name} ${command.usage}`);
+
+			data.push(`**Cooldown:** ${command.cooldown || 3} second(s)`);
+
+			message.channel.send(data, { split: true });
 		}
-
-		if (command.aliases) data.push(`**Aliases:** ${alias}`);
-		if (command.description) data.push(`**Description:** ${command.description}`);
-		if (command.module) data.push(`**Category:** ${command.module}`);
-		if (command.usage) data.push(`**Usage:** ${prefix}${command.name} ${command.usage}`);
-
-		data.push(`**Cooldown:** ${command.cooldown || 3} second(s)`);
-
-		message.channel.send(data, { split: true });
 	},
 };
