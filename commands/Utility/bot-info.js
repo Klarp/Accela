@@ -40,7 +40,7 @@ module.exports = {
 				d++;
 				h = 0;
 			}
-			return [d, pad(h), pad(m)].join(':');
+			return `${d}d ${pad(h)}h ${pad(m)}m`;
 		}
 
 		const uptime = dhm(Client.uptime);
