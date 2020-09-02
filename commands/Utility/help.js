@@ -77,7 +77,10 @@ module.exports = {
 		} else {
 			data.push(`**Name:** ${command.name}`);
 
-			let alias;
+			let alias = 'None';
+			let description = 'None';
+			let module = 'None';
+			let usage = '';
 
 			if (command.aliases) {
 				if (command.aliases.isArray) {
@@ -87,14 +90,25 @@ module.exports = {
 				}
 			}
 
-			if (command.aliases) data.push(`**Aliases:** ${alias}`);
-			if (command.description) data.push(`**Description:** ${command.description}`);
-			if (command.module) data.push(`**Category:** ${command.module}`);
-			if (command.usage) data.push(`**Usage:** ${prefix}${command.name} ${command.usage}`);
+			if (command.description) description = command.description;
+			if (command.module) module = command.module;
+			if (command.usage) usage = command.usage;
 
 			data.push(`**Cooldown:** ${command.cooldown || 3} second(s)`);
 
-			message.channel.send(data, { split: true });
+			const commandEmbed = new MessageEmbed()
+				.setTitle(`${ucFirst(command.name)} Command`)
+				.setDescription(`**Aliases:** ${alias}
+
+**Description:** ${description}
+
+**Category:** ${module}
+
+**Usage:** ${prefix}${command.name} ${usage}
+
+**Cooldown:** ${command.cooldown || 3} second(s)`);
+
+			message.channel.send(commandEmbed);
 		}
 	},
 };
