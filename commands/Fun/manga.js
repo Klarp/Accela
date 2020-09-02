@@ -20,7 +20,7 @@ module.exports = {
 				if (aniRes.isAdult) return message.reply('NSFW searches are not allowed!');
 
 				let descLong = aniRes.description.replace(/<\/?[^>]+(>|$)/g, '').replace(/&lsquo;/g, '').replace(/\n/g, '');
-				const status = aniRes.status || 'Unknown';
+				const status = getStatus(aniRes.status);
 				const type = aniRes.format || 'Unknown';
 				const avgScore = aniRes.averageScore || '0';
 				const volumes = aniRes.volumes || 'Unknown';
@@ -40,7 +40,7 @@ module.exports = {
 				descLong = truncate(descLong, 300);
 
 				const aniEmbed = new Discord.MessageEmbed()
-					.setAuthor('AniList', 'https://anilist.co/img/icons/android-chrome-512x512.png')
+					.setAuthor('AniList [UNOFFICAL]', 'https://anilist.co/img/icons/android-chrome-512x512.png')
 					.setColor('BLUE')
 					.setTitle(`${aniRes.title.romaji} [${aniRes.title.native}]`)
 					.setURL(aniRes.siteUrl)
@@ -57,5 +57,17 @@ ${descLong}`);
 				message.channel.send(aniEmbed);
 			});
 		});
+
+		function getStatus(status) {
+			const statusRaw = {
+				'FINISHED': 'Finished',
+				'RELEASING': 'Ongoing',
+				'NOT_YET_RELEASED': 'Not Released',
+				'CANCELLED': 'Cancelled',
+				'UNKNOWN': 'Unknown',
+			};
+
+			return statusRaw[status] || statusRaw['UNKNOWN'];
+		}
 	},
 };

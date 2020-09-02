@@ -66,7 +66,6 @@ module.exports = {
 		// Find user through the api
 		osuApi.getUserRecent({ m: 3, u: name }).then(async r => {
 			const recent = r[0];
-			console.log(recent);
 			let acc = recent.accuracy;
 			acc = acc.toFixed(4);
 			// Calculate acc
