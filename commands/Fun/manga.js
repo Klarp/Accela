@@ -40,7 +40,7 @@ module.exports = {
 				descLong = truncate(descLong, 300);
 
 				const aniEmbed = new Discord.MessageEmbed()
-					.setAuthor('AniList [UNOFFICAL]', 'https://anilist.co/img/icons/android-chrome-512x512.png')
+					.setAuthor('AniList [UNOFFICIAL]', 'https://anilist.co/img/icons/android-chrome-512x512.png')
 					.setColor('BLUE')
 					.setTitle(`${aniRes.title.romaji} [${aniRes.title.native}]`)
 					.setURL(aniRes.siteUrl)
