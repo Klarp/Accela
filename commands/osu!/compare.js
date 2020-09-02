@@ -158,6 +158,7 @@ ${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 			});
 		}).catch(e => {
 			if (e.name == 'Error') {
+				console.log(e);
 				return message.reply(`No score was found for ${name}!`);
 			}
 			console.error(e);
