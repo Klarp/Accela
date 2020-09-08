@@ -11,6 +11,7 @@ module.exports = {
 	usage: '<code>',
 	execute(message, args) {
 		const channel = message.channel;
+		const guild = message.guild;
 		const query = args.join(' ');
 		const evalEmbed = new MessageEmbed();
 		const code = (lang, eCode) =>

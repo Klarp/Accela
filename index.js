@@ -270,13 +270,7 @@ client.on('message', async message => {
 
 	// If command is owner only check if user is owner
 	if (command.owner) {
-		let ownerCheck = false;
-		// go through all owners and see if they match the user
-		owners.forEach(owner => {
-			if (owner == message.author.id) ownerCheck = true;
-		});
-		// return if user is not an owner
-		if (!ownerCheck) return;
+		if (!owners.includes(message.author.id)) return;
 	}
 
 	// If command has permissions check user permissions
