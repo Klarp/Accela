@@ -23,6 +23,6 @@ module.exports = {
 			.setTitle('EMERGANCY SHUTDOWN COMMENCED')
 			.setDescription('Shutting down...');
 		await message.channel.send(sdEmbed);
-		Client.destroy();
+		Client.destroy().then(() => Client.login(Client.token));
 	},
 };

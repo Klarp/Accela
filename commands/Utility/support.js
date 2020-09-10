@@ -10,6 +10,7 @@ module.exports = {
 		const invEmbed = new MessageEmbed()
 			.setAuthor(bot.username, bot.displayAvatarURL())
 			.setTitle('Join Accela\'s Support Server')
+			.setColor('#2F3136')
 			.setURL('https://discord.gg/jgzXHkU');
 
 		message.channel.send(invEmbed);
