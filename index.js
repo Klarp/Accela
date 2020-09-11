@@ -17,6 +17,12 @@ exports.Client = client;
 
 const modules = ['Admin', 'osu!', 'Fun', 'Utility', 'Owner'];
 
+client.on('error', error => {
+	client.users.cache.get('186493565445079040').send('An error occured - check the console.');
+	console.log(error);
+	console.error();
+});
+
 // START COMMAND LOADING
 
 modules.forEach(c => {

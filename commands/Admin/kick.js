@@ -10,29 +10,39 @@ module.exports = {
 	modCmd: true,
 	usage: '<user>',
 	execute(message, args) {
-		// >>kick [user] [reason]
+		const toKick = message.mentions.members.first() || message.guild.member(args[0]);
 
-		// Stops if no mentions found
-		if (!message.mentions.members.first()) return message.reply('Please mention a user.');
-		// Grab the first mention in the message
-		const tag = message.mentions.members.first();
-		// Stop if the mention is the message author
-		if (message.member === tag) return message.reply('You can not use this on yourself');
-		// Remove the mention from the arguments
-		args.shift();
-		// Join the arguments to make the reason
-		let reason = args.join(' ');
-		// If no reason is found default to this
-		if (!reason) reason = 'No Reason Given';
-		// If user is kickable kick the user
-		if (tag.kickable) {
-			tag.kick(reason);
-		} else {
-			return message.reply(`Could not kick ${tag}.`);
+		if (!message.member.hasPermission('KICK_MEMBERS')) return message.channel.send('You do not have permission to perform this command!');
+		if (!toKick) return message.channel.send('You must provide a valid member to kick.');
+		if (toKick.id == message.author.id) return message.channel.send('You cannot kick yourself!');
+		if (toKick.kickable == false) return message.channel.send('I cannot kick that member!');
+		if (!message.guild.me.hasPermission('KICK_MEMBERS')) return message.channel.send('I do not have permission to ban members!');
+		if (message.member.roles.highest.position <= toKick.roles.highest.position) return message.channel.send('You cannot kick someone with the same role or roles above you!');
+
+		/**
+		 * @arg {string} reason The kick reason
+		 * @returns {string} The message to send to the log channel, user, and message channel
+		 */
+
+		let reason = args.slice(1).join(' ');
+		if (!reason) reason = 'No reason given.';
+
+		try {
+			toKick.send(`You have been kicked from **${message.guild.name}**! Reason: ${reason}`);
+		} catch (err) {
+			console.log(err);
+			message.channel.send('Could not send a DM to the member.');
 		}
-		// Log the kick
-		modAction(message.author, tag, 'Kick', reason);
 
-		message.channel.send(`Kicked: ${tag.user} Reason: ${reason}`);
+		setTimeout(() => {
+			toKick.kick({ reason: reason }).catch(err => {
+				console.log(err);
+				message.channel.send('An error occured.');
+			});
+		}, 1000);
+
+		modAction (message.author, toKick, 'Kick', reason);
+
+		message.channel.send(`Kicked ${toKick.user.username} ${reason ? 'with reason: ' + reason : 'with no reason given!'}`);
 	},
 };

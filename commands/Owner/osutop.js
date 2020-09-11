@@ -1,5 +1,5 @@
 const osu = require('node-osu');
-const discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const oj = require('ojsama');
 const curl = require('curl');
 
@@ -28,61 +28,6 @@ module.exports = {
 		const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
 
 		let name;
-		let mods = oj.modbits.none;
-		let acc_percent;
-		let combo;
-		let nmiss;
-
-		// Info Recent One
-		// r1_rank
-		let r1_url;
-		let r1_artist;
-		let r1_mapName;
-		let r1_diff;
-		let r1_count300;
-		let r1_count100;
-		let r1_count50;
-		let r1_miss;
-		let r1_combo;
-		let r1_maxCombo;
-		// r1_acc
-		let r1_pp;
-		let r1_maxpp;
-		let r1_mod;
-
-		// Info Recent Two
-		// r2_rank
-		let r2_url;
-		let r2_artist;
-		let r2_mapName;
-		let r2_diff;
-		let r2_count300;
-		let r2_count100;
-		let r2_count50;
-		let r2_miss;
-		let r2_combo;
-		let r2_maxCombo;
-		// r2_acc
-		let r2_pp;
-		let r2_maxpp;
-		let r2_mod;
-
-		// Info Recent Two
-		// r3_rank
-		let r3_url;
-		let r3_artist;
-		let r3_mapName;
-		let r3_diff;
-		let r3_count300;
-		let r3_count100;
-		let r3_count50;
-		let r3_miss;
-		let r3_combo;
-		let r3_maxCombo;
-		// r3_acc
-		let r3_pp;
-		let r3_maxpp;
-		let r3_mod;
 
 		let prefix = '>>';
 		if (serverConfig) {
@@ -123,200 +68,196 @@ module.exports = {
 			const r2 = r[1];
 			const r3 = r[2];
 
-			const r1_acc = r1.accuracy;
-			const r2_acc = r2.accuracy;
-			const r3_acc = r3.accuracy;
+			const r1_info = {
+				rank: getRank(r1.rank),
+				artist: r1.beatmap.artist,
+				title: r1.beatmap.title,
+				diff: r1.beatmap.version,
+				count300: r1.counts['300'],
+				count100: r1.counts['100'],
+				count50: r1.counts['50'],
+				miss: r1.counts.miss,
+				combo: r1.maxCombo,
+				maxCombo: r1.beatmap.maxCombo,
+				acc: null,
+				pp: null,
+				maxPP: null,
+				mods: null,
+			};
 
-			const r_acc = [r1_acc, r2_acc, r3_acc];
+			const r2_info = {
+				rank: getRank(r2.rank),
+				artist: r2.beatmap.artist,
+				title: r2.beatmap.title,
+				diff: r2.beatmap.version,
+				count300: r2.counts['300'],
+				count100: r2.counts['100'],
+				count50: r2.counts['50'],
+				miss: r2.counts.miss,
+				combo: r2.maxCombo,
+				maxCombo: r2.beatmap.maxCombo,
+				acc: null,
+				pp: null,
+				maxPP: null,
+				mods: null,
+			};
 
-			for (let i = 0; i < r_acc.length; i++) {
-				let e = r_acc[i];
+			const r3_info = {
+				rank: getRank(r3.rank),
+				artist: r3.beatmap.artist,
+				title: r3.beatmap.title,
+				diff: r3.beatmap.version,
+				count300: r3.counts['300'],
+				count100: r3.counts['100'],
+				count50: r3.counts['50'],
+				miss: r3.counts.miss,
+				combo: r3.maxCombo,
+				maxCombo: r3.beatmap.maxCombo,
+				acc: null,
+				pp: null,
+				maxPP: null,
+				mods: null,
+			};
 
-				if (e < 100) {
-					e *= 100;
+			// Curl time (kill me)
+
+			curl.get(`https://osu.ppy.sh/osu/${r1.beatmapId}`, function(err, response, body) {
+				const r1_mods = oj.modbits.from_string(getShortMods(r1.mods));
+				const r1_nmiss = r1.counts.miss;
+				const r1_combo = parseInt(r1.maxCombo);
+				let r1_acc = parseFloat(r1.accuracy.toFixed(2));
+
+				if (r1_acc < 100) {
+					r1_acc *= 100;
 				}
 
-				e = parseFloat(e.toFixed(2));
+				const parser = new oj.parser().feed(body);
+				const pMap = parser.map;
 
-				r_acc[i] = e;
-			}
+				const stars = new oj.diff().calc({ map: pMap, mods: r1_mods });
 
-			const r1_rank = getRank(r1.rank);
-			const r2_rank = getRank(r2.rank);
-			const r3_rank = getRank(r3.rank);
-
-			// Get the short version of mods (HD, HR etc.)
-			const shortMods_r1 = getShortMods(r1.mods);
-			const shortMods_r2 = getShortMods(r2.mods);
-			const shortMods_r3 = getShortMods(r3.mods);
-
-			function osuStat(callback) {
-			// PP calculation starts
-				curl.get(`https://osu.ppy.sh/osu/${r1.beatmapId}`, function(err, response, body) {
-					mods = oj.modbits.from_string(shortMods_r1);
-					acc_percent = parseFloat(r_acc[0]);
-					combo = parseInt(r1.maxCombo);
-					nmiss = parseInt(r1.counts.miss);
-
-					const parser = new oj.parser().feed(body);
-
-					const pMap = parser.map;
-
-					const stars = new oj.diff().calc({ map: pMap, mods: mods });
-
-					const pp = oj.ppv2({
-						stars: stars,
-						combo: combo,
-						nmiss: nmiss,
-						acc_percent: acc_percent,
-					});
-
-					const maxPP = oj.ppv2({ map: pMap, mods: mods });
-
-					const max_combo = pMap.max_combo();
-					combo = combo || max_combo;
-
-					const ppFix = pp.toString().split(' ');
-					const maxFix = maxPP.toString().split(' ');
-
-					const ppNum = parseFloat(ppFix[0]);
-					const maxNum = parseFloat(maxFix[0]);
-
-					r1_url = `https://osu.ppy.sh/b/${r1.beatmapId}`;
-					r1_artist = r1.beatmap.artist;
-					r1_mapName = r1.beatmap.title;
-					r1_diff = r1.beatmap.version;
-					r1_count300 = r1.counts[300];
-					r1_count100 = r1.counts[100];
-					r1_count50 = r1.counts[50];
-					r1_miss = r1.counts.miss;
-					r1_combo = r1.maxCombo;
-					r1_maxCombo = r1.beatmap.maxCombo;
-					r1_pp = ppNum.toFixed(2);
-					r1_maxpp = maxNum.toFixed(2);
-					r1_mod = oj.modbits.string(mods);
-
-					console.log(`Curl Function: ${r1_artist}`);
+				const r1_pp = oj.ppv2({
+					stars: stars,
+					combo: r1_combo,
+					nmiss: r1_nmiss,
+					acc_percent: r1_acc,
 				});
 
-				// PP calculation starts
-				curl.get(`https://osu.ppy.sh/osu/${r2.beatmapId}`, function(err, response, body) {
-					mods = oj.modbits.from_string(shortMods_r2);
-					acc_percent = parseFloat(r_acc[1]);
-					combo = parseInt(r2.maxCombo);
-					nmiss = parseInt(r2.counts.miss);
+				const r1_maxPP = oj.ppv2({ map: pMap, mods: r1_mods });
 
-					const parser = new oj.parser().feed(body);
+				const ppFix = r1_pp.toString().split(' ');
+				const maxFix = r1_maxPP.toString().split(' ');
 
-					const pMap = parser.map;
+				if (r1.pp) {
+					r1.pp.toFixed(2);
+				}
 
-					const stars = new oj.diff().calc({ map: pMap, mods: mods });
-
-					const pp = oj.ppv2({
-						stars: stars,
-						combo: combo,
-						nmiss: nmiss,
-						acc_percent: acc_percent,
-					});
-
-					const maxPP = oj.ppv2({ map: pMap, mods: mods });
-
-					const max_combo = pMap.max_combo();
-					combo = combo || max_combo;
-
-					const ppFix = pp.toString().split(' ');
-					const maxFix = maxPP.toString().split(' ');
-
-					const ppNum = parseFloat(ppFix[0]);
-					const maxNum = parseFloat(maxFix[0]);
-
-					r2_url = `https://osu.ppy.sh/b/${r2.beatmapId}`;
-					r2_artist = r2.beatmap.artist;
-					r2_mapName = r2.beatmap.title;
-					r2_diff = r2.beatmap.version;
-					r2_count300 = r2.counts[300];
-					r2_count100 = r2.counts[100];
-					r2_count50 = r2.counts[50];
-					r2_miss = r2.counts.miss;
-					r2_combo = r2.maxCombo;
-					r2_maxCombo = r2.beatmap.maxCombo;
-					r2_pp = ppNum.toFixed(2);
-					r2_maxpp = maxNum.toFixed(2);
-					r2_mod = oj.modbits.string(mods);
-
-					console.log(`Curl Function: ${r2_artist}`);
-				});
-
-				// PP calculation starts
-				curl.get(`https://osu.ppy.sh/osu/${r3.beatmapId}`, function(err, response, body) {
-					mods = oj.modbits.from_string(shortMods_r3);
-					acc_percent = parseFloat(r_acc[2]);
-					combo = parseInt(r3.maxCombo);
-					nmiss = parseInt(r3.counts.miss);
-
-					const parser = new oj.parser().feed(body);
-
-					const pMap = parser.map;
-
-					const stars = new oj.diff().calc({ map: pMap, mods: mods });
-
-					const pp = oj.ppv2({
-						stars: stars,
-						combo: combo,
-						nmiss: nmiss,
-						acc_percent: acc_percent,
-					});
-
-					const maxPP = oj.ppv2({ map: pMap, mods: mods });
-
-					const max_combo = pMap.max_combo();
-					combo = combo || max_combo;
-
-					const ppFix = pp.toString().split(' ');
-					const maxFix = maxPP.toString().split(' ');
-
-					const ppNum = parseFloat(ppFix[0]);
-					const maxNum = parseFloat(maxFix[0]);
-
-					r3_url = `https://osu.ppy.sh/b/${r3.beatmapId}`;
-					r3_artist = r3.beatmap.artist;
-					r3_mapName = r3.beatmap.title;
-					r3_diff = r3.beatmap.version;
-					r3_count300 = r3.counts[300];
-					r3_count100 = r3.counts[100];
-					r3_count50 = r3.counts[50];
-					r3_miss = r3.counts.miss;
-					r3_combo = r3.maxCombo;
-					r3_maxCombo = r3.beatmap.maxCombo;
-					r3_pp = ppNum.toFixed(2);
-					r3_maxpp = maxNum.toFixed(2);
-					r3_mod = oj.modbits.string(mods);
-
-					console.log(`Curl Function: ${r3_artist}`);
-				});
-
-				callback();
-			}
-
-			osuStat(function() {
-				console.log(`Callback Function: ${r1_artist}`);
-				console.log(`Callback Function: ${r3_artist}`);
-
-				const osuTopEmbed = new discord.MessageEmbed()
-					.setTitle(`Top 3 Plays of ${name}`)
-					.setDescription(`**1.** ${r1_rank} [${r1_artist} - ${r1_mapName} [${r1_diff}]](${r1_url} 'Map Link') 
-{${r1_count300}/${r1_count100}/${r1_count50}/${r1_miss}} | **${r1_combo}x**/${r1_maxCombo}X | ${r_acc[0]}% | **${r1_pp}pp**/${r1_maxpp}PP | ${r1_mod || 'NoMod'}
-
-**2.** ${r2_rank} [${r2_artist} - ${r2_mapName} [${r2_diff}]](${r2_url} 'Map Link') 
-{${r2_count300}/${r2_count100}/${r2_count50}/${r2_miss}} | **${r2_combo}x**/${r2_maxCombo}X | ${r_acc[1]}% | **${r2_pp}pp**/${r2_maxpp}PP | ${r2_mod || 'NoMod'}
-
-**3.** ${r3_rank} [${r3_artist} - ${r3_mapName} [${r3_diff}]](${r3_url} 'Map Link') 
-{${r3_count300}/${r3_count100}/${r3_count50}/${r3_miss}} | **${r3_combo}x**/${r3_maxCombo}X | ${r_acc[2]}% | **${r3_pp}pp**/${r3_maxpp}PP | ${r3_mod || 'NoMod'}`);
-
-				message.channel.send(osuTopEmbed);
+				r1_info.acc = r1_acc;
+				r1_info.pp = ppFix || r1.pp;
+				r1_info.maxPP = maxFix;
+				r1_info.mods = r1_mods;
 			});
 
+			curl.get(`https://osu.ppy.sh/osu/${r2.beatmapId}`, function(err, response, body) {
+				const r2_mods = oj.modbits.from_string(getShortMods(r2.mods));
+				const r2_nmiss = r2.counts.miss;
+				const r2_combo = parseInt(r2.maxCombo);
+				let r2_acc = parseFloat(r2.accuracy.toFixed(2));
 
+				if (r2_acc < 100) {
+					r2_acc *= 100;
+				}
+
+				const parser = new oj.parser().feed(body);
+				const pMap = parser.map;
+
+				const stars = new oj.diff().calc({ map: pMap, mods: r2_mods });
+
+				const r2_pp = oj.ppv2({
+					stars: stars,
+					combo: r2_combo,
+					nmiss: r2_nmiss,
+					acc_percent: r2_acc,
+				});
+
+				const r2_maxPP = oj.ppv2({ map: pMap, mods: r2_mods });
+
+				const ppFix = r2_pp.toString().split(' ');
+				const maxFix = r2_maxPP.toString().split(' ');
+
+				if (r2.pp) {
+					r2.pp.toFixed(2);
+				}
+
+				r2_info.acc = r2_acc;
+				r2_info.pp = ppFix || r2.pp;
+				r2_info.maxPP = maxFix;
+				r2_info.mods = r2_mods;
+			});
+
+			curl.get(`https://osu.ppy.sh/osu/${r3.beatmapId}`, function(err, response, body) {
+				const r3_mods = oj.modbits.from_string(getShortMods(r3.mods));
+				const r3_nmiss = r3.counts.miss;
+				const r3_combo = parseInt(r3.maxCombo);
+				let r3_acc = parseFloat(r3.accuracy.toFixed(2));
+
+				if (r3_acc < 100) {
+					r3_acc *= 100;
+				}
+
+				const parser = new oj.parser().feed(body);
+				const pMap = parser.map;
+
+				const stars = new oj.diff().calc({ map: pMap, mods: r3_mods });
+
+				const r3_pp = oj.ppv2({
+					stars: stars,
+					combo: r3_combo,
+					nmiss: r3_nmiss,
+					acc_percent: r3_acc,
+				});
+
+				const r3_maxPP = oj.ppv2({ map: pMap, mods: r3_mods });
+
+				const ppFix = r3_pp.toString().split(' ');
+				const maxFix = r3_maxPP.toString().split(' ');
+
+				if (r3.pp) {
+					r3.pp.toFixed(2);
+				}
+
+				r3_info.acc = r3_acc;
+				r3_info.pp = ppFix || r3.pp;
+				r3_info.maxPP = maxFix;
+				r3_info.mods = r3_mods;
+			});
+
+			/*
+				1. RANK ARTIST - TITLE [DIFF NAME]
+				{300/100/50/Miss} | combox/maxComboX | Acc | pp/MaxPP | Mods
+				2. RANK ARTIST - TITLE [DIFF NAME]
+				{300/100/50/Miss} | combox/maxComboX | Acc | pp/MaxPP | Mods
+				3. RANK ARTIST - TITLE [DIFF NAME]
+				{300/100/50/Miss} | combox/maxComboX | Acc | pp/MaxPP | Mods
+			*/
+
+			const topEmbed = new MessageEmbed()
+				.setAuthor(name, `http://a.ppy.sh/${r1.user.id}`)
+				.setColor('0xff69b4')
+				.setTitle(`Top 3 Plays of ${name}`)
+				.setDescription(`**1.** ${r1_info.rank} **${r1_info.artist} - ${r1_info.title} [${r1_info.diff}]**
+
+{${r1_info.count300}/${r1_info.count100}/${r1_info.count50}/${r1_info.miss}} | **${r1_info.combo}x**/${r1_info.maxCombo}X | ${r1_info.acc}% | **${r1_info.pp}pp**/${r1_info.maxPP}PP | ${r1_info.mods}
+
+**2.** ${r2_info.rank} **${r2_info.artist} - ${r2_info.title} [${r2_info.diff}]**
+
+{${r2_info.count300}/${r2_info.count100}/${r2_info.count50}/${r2_info.miss}} | **${r2_info.combo}x**/${r2_info.maxCombo}X | ${r2_info.acc}% | **${r2_info.pp}pp**/${r2_info.maxPP}PP | ${r2_info.mods}
+
+**3.** ${r3_info.rank}** ${r3_info.artist} - ${r3_info.title} [${r3_info.diff}]**
+
+{${r3_info.count300}/${r3_info.count100}/${r3_info.count50}/${r3_info.miss}} | **${r3_info.combo}x**/${r3_info.maxCombo}X | ${r3_info.acc}% | **${r3_info.pp}pp**/${r3_info.maxPP}PP | ${r3_info.mods}`);
+
+			message.channel.send(topEmbed);
 		}).catch(e => {
 			if (e.name == 'Error') {
 				return message.reply('No top play was found!');

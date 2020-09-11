@@ -11,33 +11,40 @@ module.exports = {
 	modCmd: true,
 	usage: '<user>',
 	execute(message, args) {
-		// >>soft-ban [user] [reason]
+		const toSF = message.mentions.members.first() || message.guild.member(args[0]);
 
-		// Stop if no mentions found
-		if (!message.mentions.members.first()) return message.reply('Please mention a user.');
-		// Grab the first mention in the message
-		const tag = message.mentions.members.first();
-		// Stop if the mention is the message author
-		if (message.member === tag) return message.reply('You can not use this on yourself');
-		// Remove the mention from the arguments
-		args.shift();
-		// Join the arguments to make the reason
-		let reason = args.join(' ');
-		// If no reason is found default to this
-		if (!reason) reason = 'No Reason Given';
-		// If the user is bannable ban the user
-		if (tag.bannable) {
-			tag.send(`You have been soft banned from ${message.guild.name}! This is not permanent and you are free to rejoin. Reason: ${reason}`);
-			// Ban the user
-			tag.ban({ days: 1, reason: reason });
-			// Unban the user
-			message.guild.members.unban(tag.id, { reason: 'softban' });
-		} else {
-			return message.reply(`Could not soft ban ${tag}.`);
+		if (!message.member.hasPermission('BAN_MEMBERS')) return message.channel.send('You do not have permission to perform this command!');
+		if (!toSF) return message.channel.send('You must provide a valid member to softban.');
+		if (toSF.id == message.author.id) return message.channel.send('You cannot softban yourself!');
+		if (toSF.kickable == false) return message.channel.send('I cannot softban that member!');
+		if (!message.guild.me.hasPermission('KICK_MEMBERS')) return message.channel.send('I do not have permission to softban members!');
+		if (message.member.roles.highest.position <= toSF.roles.highest.position) return message.channel.send('You cannot softban someone with the same role or roles above you!');
+
+		/**
+		 * @arg {string} reason The softban reason
+		 * @returns {string} The message to send to the log channel, user, and message channel
+		 */
+
+		let reason = args.slice(1).join(' ');
+		if (!reason) reason = 'No reason given.';
+
+		try {
+			toSF.send(`You have been softbanned from **${message.guild.name}**! Reason: ${reason}`);
+		} catch (err) {
+			console.log(err);
+			message.channel.send('Could not send a DM to the member.');
 		}
-		// Log the softban
-		modAction(message.author, tag, 'SoftBan', reason);
 
-		message.channel.send(`Soft Banned: ${tag.user}`);
+		setTimeout(() => {
+			toSF.ban({ days: 1, reason: reason }).catch(err => {
+				console.log(err);
+				message.channel.send('An error occured.');
+			});
+			message.guild.members.unban(toSF.id, { reason: 'softban' });
+		}, 1000);
+
+		modAction (message.author, toSF, 'SoftBan', reason);
+
+		message.channel.send(`Softbanned ${toSF.user.username} ${reason ? 'with reason: ' + reason : 'with no reason given!'}`);
 	},
 };
