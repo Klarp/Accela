@@ -1,4 +1,6 @@
+const osu = require('node-osu');
 const { Users } = require('../../dbObjects');
+const { osu_key } = require('../../config.json');
 
 module.exports = {
 	name: 'link',
@@ -7,21 +9,34 @@ module.exports = {
 	usage: '<osu user>',
 	args: true,
 	async execute(message, args) {
-		const user = args.join(' ').replace(/[^\w\s]/gi, '');
+		const name = args.join(' ');
+		let id = null;
+		let osuName = null;
 
-		if (user === '') return message.reply('Error: No special characters allowed!');
+		const osuApi = new osu.Api(osu_key, {
+			notFoundAsError: true,
+			completeScores: true,
+			parseNumeric: true,
+		});
+
+		await osuApi.getUser({ u: name }).then(user => {
+			id = user.id;
+			osuName = user.name;
+		});
 
 		try {
 			await Users.create({
 				user_id: message.author.id,
-				user_osu: user,
+				osu_name: osuName,
+				osu_id: id,
 			});
 			return message.channel.send(`Linked ${message.author} to ${args.join(' ')}`);
 		} catch(e) {
 			if (e.name === 'SequelizeUniqueConstraintError') {
 				try {
 					const upUser = await Users.update({
-						user_osu: args.join(' '),
+						osu_name: osuName,
+						osu_id: id,
 					},
 					{
 						where: { user_id: message.author.id },

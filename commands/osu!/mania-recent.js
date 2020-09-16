@@ -48,7 +48,11 @@ module.exports = {
 
 		// Find the user in the database
 		if (findUser) {
-			name = findUser.get('user_osu');
+			try {
+				name = findUser.get('verified_id');
+			} catch {
+				name = findUser.get('osu_id');
+			}
 		} else {
 			name = message.author.username;
 			message.channel.send(`No link found: use ${prefix}link [osu user] to link your osu! account!`);
