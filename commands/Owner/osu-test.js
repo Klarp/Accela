@@ -4,9 +4,7 @@ module.exports = {
 	description: 'Tests osu! commands',
 	module: 'Owner',
 	owner: true,
-	args: true,
-	usage: '<beatmap> <acc> <combo> <missed> <mods>',
-	async execute() {
-		console.log('oink');
+	execute() {
+		// No Current Testing
 	},
 };

@@ -1,12 +1,14 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const axios = require('axios');
+const osu = require('node-osu');
 
-const { token, owners, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL } = require('./config.json');
+const { token, owners, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL, osu_key } = require('./config.json');
 const { Users, Muted, sConfig } = require('./dbObjects');
 const checkPerm = require('./utils/checkPerm.js');
 const mapDetect = require('./utils/mapDetect');
 const modAction = require('./utils/modAction');
+const getRankRole = require('./utils/getRankRole');
 
 const osuUsers = new Discord.Collection();
 const configs = new Discord.Collection();
@@ -53,6 +55,35 @@ const activities_list = [
 	'vote @ https://discord.ly/accela',
 ];
 
+// OSU ROLES
+
+const roles = [
+	'754085973003993119',
+	'754086188025118770',
+	'754086290785304627',
+	'754086299681685696',
+	'754086107456471062',
+	'754089529287245855',
+	'754086656889585714',
+	'754086784484376596',
+	'754086852524507246',
+	'754086905825460265',
+	'754086720638681109',
+	'754089662242357289',
+	'754087013904547930',
+	'754087748209475595',
+	'754087814106448012',
+	'754087911066173460',
+	'754087679003721790',
+	'754089750717136906',
+	'754087989717762080',
+	'754088203534729276',
+	'754088281674743858',
+	'754088358916915241',
+	'754088053101953034',
+	'754089875157942435',
+];
+
 // BOT START
 
 client.once('ready', async () => {
@@ -63,11 +94,40 @@ client.once('ready', async () => {
 	const serverConfigs = await sConfig.findAll();
 	serverConfigs.forEach(s => configs.set(s.guild_id, s));
 
+	const osuApi = new osu.Api(osu_key);
+
 	// Rotate through activities
 	setInterval(() => {
 		const index = Math.floor(Math.random() * (activities_list.length - 1) + 1);
 		client.user.setActivity(activities_list[index]);
-	}, 30000);
+	}, 60 * 1000);
+
+	setInterval(async () => {
+		let count = 0;
+		await storedUsers.forEach(u => {
+			const id = u.get('user_id');
+			const osuGame = client.guilds.cache.get('98226572468690944');
+			console.log(id);
+			const osuMember = osuGame.members.cache.get(id);
+			if (!osuMember) return;
+			console.log(osuMember);
+			if (u.get('verified_id')) {
+				const vid = u.get('verified_id');
+				let rank = null;
+				const mode = u.get('osu_mode');
+				osuApi.getUser({ u: vid }).then(osuU => {
+					rank = osuU.pp.rank;
+				});
+				const role = getRankRole(rank, mode);
+				roles.forEach(r => {
+					if (osuMember.roles.cache.get(r)) osuMember.roles.remove(r);
+				});
+				osuMember.roles.add(role);
+			}
+			count++;
+		});
+		console.log(count);
+	}, 30 * 60 * 1000);
 
 	// Default member count
 	let userCount = 0;
