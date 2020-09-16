@@ -102,6 +102,7 @@ client.once('ready', async () => {
 		client.user.setActivity(activities_list[index]);
 	}, 60 * 1000);
 
+	/*
 	setInterval(async () => {
 		let count = 0;
 		await storedUsers.forEach(u => {
@@ -128,6 +129,7 @@ client.once('ready', async () => {
 		});
 		console.log(count);
 	}, 30 * 60 * 1000);
+	*/
 
 	// Default member count
 	let userCount = 0;
