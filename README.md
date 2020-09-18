@@ -60,34 +60,6 @@ To use Accela create a config.json inside the file directory with the following 
 	"owners": ["owner_id", "co-owner_id"],
 	
 	"osu_key": "<osu_api_key>",
-	"osu_mods": [ 
-		"None",
-		"NoFail", 
-		"Easy", 
-		"Hidden", 
-		"HardRock", 
-		"SuddenDeath", 
-		"DoubleTime", 
-		"HalfTime", 
-		"Nightcore", 
-		"Flashlight", 
-		"Autoplay", 
-		"SpunOut"
-	],
-	"mod_sh": {
-		"None": "NoMod",
-		"NoFail": "NF",
-		"Easy": "EZ",
-		"Hidden": "HD",
-		"HardRock": "HR",
-		"SuddenDeath": "SD",
-		"DoubleTime": "DT",
-		"HalfTime": "HT",
-		"Nightcore": "NC",
-		"Flashlight": "FL",
-		"Autoplay": "Auto",
-		"SpunOut": "SO"
-	}
 }
 ```
 
@@ -100,6 +72,7 @@ Please make sure to update tests as appropriate.
 - Phil#9284
 - Peeman69#3117
 - Stedoss#1309
+- Noah#0001
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
