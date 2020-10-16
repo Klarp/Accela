@@ -67,7 +67,36 @@ client.once('ready', async () => {
 	setInterval(() => {
 		const index = Math.floor(Math.random() * (activities_list.length - 1) + 1);
 		client.user.setActivity(activities_list[index]);
-	}, 30000);
+	}, 60 * 1000);
+
+	/*
+	setInterval(async () => {
+		let count = 0;
+		await storedUsers.forEach(u => {
+			const id = u.get('user_id');
+			const osuGame = client.guilds.cache.get('98226572468690944');
+			console.log(id);
+			const osuMember = osuGame.members.cache.get(id);
+			if (!osuMember) return;
+			console.log(osuMember);
+			if (u.get('verified_id')) {
+				const vid = u.get('verified_id');
+				let rank = null;
+				const mode = u.get('osu_mode');
+				osuApi.getUser({ u: vid }).then(osuU => {
+					rank = osuU.pp.rank;
+				});
+				const role = getRankRole(rank, mode);
+				roles.forEach(r => {
+					if (osuMember.roles.cache.get(r)) osuMember.roles.remove(r);
+				});
+				osuMember.roles.add(role);
+			}
+			count++;
+		});
+		console.log(count);
+	}, 30 * 60 * 1000);
+	*/
 
 	// Default member count
 	let userCount = 0;
