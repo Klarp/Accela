@@ -14,7 +14,8 @@ module.exports = {
         const man_shark = 'https://cdn.discordapp.com/halloween-bot/Man-shark.png';
         const centaur = 'https://cdn.discordapp.com/halloween-bot/Centaur.png';
         
-        if (args === '1') {
+        if (args[0] === '1') {
+            console.log('ping');
             const centaurEmbed = new MessageEmbed()
                 .setTitle('A trick-or-treater has stopped by!')
                 .setColor('#7289DA')
@@ -23,13 +24,14 @@ module.exports = {
         
             general.send(centaurEmbed);
         } else {
+            console.log('oink');
             const manSharkEmbed = new MessageEmbed()
                 .setTitle('A trick-or-treater has stopped by!')
                 .setColor('#7289DA')
                 .setDescription('Open the door to greet them with h!treat')
                 .setImage(man_shark);
         
-            general.send(manSharkEmbed);
+            general.channel.send(manSharkEmbed);
         }
 	},
 };
