@@ -15,13 +15,13 @@ module.exports = {
         const centaur = 'https://cdn.discordapp.com/halloween-bot/Centaur.png';
         
         if (args === '1') {
-            const manSharkEmbed = new MessageEmbed()
+            const centaurEmbed = new MessageEmbed()
                 .setTitle('A trick-or-treater has stopped by!')
                 .setColor('#7289DA')
                 .setDescription('Open the door to greet them with h!treat')
                 .setImage('https://cdn.discordapp.com/halloween-bot/Man-shark.png');
         
-            general.send(fakeEmbed);
+            general.send(centaurEmbed);
         } else {
             const manSharkEmbed = new MessageEmbed()
                 .setTitle('A trick-or-treater has stopped by!')
@@ -29,7 +29,7 @@ module.exports = {
                 .setDescription('Open the door to greet them with h!treat')
                 .setImage('https://cdn.discordapp.com/halloween-bot/Man-shark.png');
         
-            general.send(fakeEmbed);
+            general.send(manSharkEmbed);
         }
 	},
 };
