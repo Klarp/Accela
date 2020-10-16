@@ -15,6 +15,8 @@ module.exports = {
         const centaur = 'https://cdn.discordapp.com/halloween-bot/Centaur.png';
         const wumpus_yeti = 'https://cdn.discordapp.com/halloween-bot/Wumpus-Yeti.png';
         const goblin = 'https://cdn.discordapp.com/halloween-bot/Goblin.png'
+        const slime = 'https://cdn.discordapp.com/halloween-bot/Slime.png';
+        const demon = 'https://cdn.discordapp.com/halloween-bot/Demon.png';
         
         if (args[0] === '1') {
             const centaurEmbed = new MessageEmbed()
@@ -40,6 +42,22 @@ module.exports = {
                 .setImage(goblin);
         
             general.send(goblinEmbed);
+        } else if (args[0] === '4') {
+            const slimeEmbed = new MessageEmbed()
+                .setTitle('A trick-or-treater has stopped by!')
+                .setColor('#7289DA')
+                .setDescription('Open the door to greet them with h!treat')
+                .setImage(slime);
+        
+            general.send(slimeEmbed);
+        } else if (args[0] === '5') {
+            const demonEmbed = new MessageEmbed()
+                .setTitle('A trick-or-treater has stopped by!')
+                .setColor('#7289DA')
+                .setDescription('Open the door to greet them with h!treat')
+                .setImage(demon);
+        
+            general.send(demonEmbed);
         }
         else {
             const manSharkEmbed = new MessageEmbed()
