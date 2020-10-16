@@ -19,7 +19,7 @@ module.exports = {
                 .setTitle('A trick-or-treater has stopped by!')
                 .setColor('#7289DA')
                 .setDescription('Open the door to greet them with h!treat')
-                .setImage('https://cdn.discordapp.com/halloween-bot/Man-shark.png');
+                .setImage(centaur);
         
             general.send(centaurEmbed);
         } else {
@@ -27,7 +27,7 @@ module.exports = {
                 .setTitle('A trick-or-treater has stopped by!')
                 .setColor('#7289DA')
                 .setDescription('Open the door to greet them with h!treat')
-                .setImage('https://cdn.discordapp.com/halloween-bot/Man-shark.png');
+                .setImage(man_shark);
         
             general.send(manSharkEmbed);
         }
