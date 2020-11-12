@@ -7,8 +7,7 @@ module.exports = {
 	name: 'leaderboard',
 	aliases: 'lb',
 	description: 'Leaderboard of verified osu! accounts in the server [Development]',
-	module: 'Owner',
-	alpha: true,
+	module: 'Osu',
 	async execute(message, args) {
 		const users = await Users.findAll();
 
