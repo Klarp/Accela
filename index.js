@@ -1,19 +1,23 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const axios = require('axios');
+const osu = require('node-osu');
+const qrate = require('qrate');
 
-const { token, owners, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL } = require('./config.json');
+const { token, owners, alpha_testers, osu_key, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL } = require('./config.json');
 const { Users, Muted, sConfig } = require('./dbObjects');
 const checkPerm = require('./utils/checkPerm.js');
 const mapDetect = require('./utils/mapDetect');
 const modAction = require('./utils/modAction');
+const getRankRole = require('./utils/getRankRole.js');
 
-const osuUsers = new Discord.Collection();
 const configs = new Discord.Collection();
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
 exports.Client = client;
+
+const osuApi = new osu.Api(osu_key);
 
 const modules = ['Admin', 'osu!', 'Fun', 'Utility', 'Owner'];
 
@@ -50,16 +54,87 @@ const activities_list = [
 	'osu! lazer',
 	'at Cyberia',
 	'h-help im trapped here',
-	'vote @ https://discord.ly/accela',
+	'l-let me out of this bot',
 ];
 
 // BOT START
 
 client.once('ready', async () => {
-	// Initialize Databases
+	// Initialize osu! Database
 	const storedUsers = await Users.findAll();
-	storedUsers.forEach(u => osuUsers.set(u.user_id, u));
+	storedUsers
+		.filter(user => user.verified_id !== null)
+		.filter(user => client.users.cache.has(user.user_id));
 
+	const worker = async (u) => {
+		const osuID = u.get('verified_id');
+		const userID = u.get('user_id');
+		const mode = u.get('osu_mode');
+		const osuGame = client.guilds.cache.get('98226572468690944');
+		const osuMember = osuGame.members.cache.get(userID);
+		if (!osuMember) return;
+		let std_rank = null;
+		let taiko_rank = null;
+		let ctb_rank = null;
+		let mania_rank = null;
+
+		// std
+		await osuApi.getUser({ u: osuID, m: 0 }).then(osuUser => {
+			std_rank = osuUser.pp.rank;
+			if (std_rank === '0') std_rank = null;
+		});
+		// Taiko
+		await osuApi.getUser({ u: osuID, m: 1 }).then(osuUser => {
+			taiko_rank = osuUser.pp.rank;
+			if (taiko_rank === '0') taiko_rank = null;
+		});
+		// ctb
+		await osuApi.getUser({ u: osuID, m: 2 }).then(osuUser => {
+			ctb_rank = osuUser.pp.rank;
+			if (ctb_rank === '0') ctb_rank = null;
+		});
+		// Mania
+		await osuApi.getUser({ u: osuID, m: 3 }).then(osuUser => {
+			mania_rank = osuUser.pp.rank;
+			if (mania_rank === '0') mania_rank = null;
+		});
+
+		try {
+			const upUser = await Users.update({
+				std_rank: std_rank,
+				taiko_rank: taiko_rank,
+				ctb_rank: ctb_rank,
+				mania_rank: mania_rank,
+			},
+			{
+				where: { user_id: userID },
+			});
+			if (upUser > 0) {
+				let rank;
+				if (mode === 0 && std_rank !== null) rank = std_rank;
+				if (mode === 1 && taiko_rank !== null) rank = taiko_rank;
+				if (mode === 2 && ctb_rank !== null) rank = ctb_rank;
+				if (mode === 3 && mania_rank !== null) rank = mania_rank;
+				getRankRole(osuMember, rank, mode);
+			}
+		} catch (err) {
+			console.error(err);
+		}
+
+		console.log('Processing', osuMember.displayName);
+	};
+
+	const q = qrate(worker, 1, 0.5);
+
+	setInterval(() => {
+		for (let i = 0; i < storedUsers.length; i++) {
+			q.push(storedUsers[i]);
+		}
+	}, 60 * 60 * 1000);
+
+	// 60 * 60 * 1000 - One Hour
+
+	// Initialize Server Database
 	const serverConfigs = await sConfig.findAll();
 	serverConfigs.forEach(s => configs.set(s.guild_id, s));
 
@@ -67,7 +142,6 @@ client.once('ready', async () => {
 	setInterval(() => {
 		const index = Math.floor(Math.random() * (activities_list.length - 1) + 1);
 		client.user.setActivity(activities_list[index]);
-<<<<<<< HEAD
 	}, 60 * 1000);
 
 	/*
@@ -98,9 +172,6 @@ client.once('ready', async () => {
 		console.log(count);
 	}, 30 * 60 * 1000);
 	*/
-=======
-	}, 30000);
->>>>>>> parent of 1711e39... Bug Fixes
 
 	// Default member count
 	let userCount = 0;
@@ -312,6 +383,10 @@ client.on('message', async message => {
 		if (!owners.includes(message.author.id)) return;
 	}
 
+	if (command.alpha) {
+		if (!alpha_testers.includes(message.author.id)) return;
+	}
+
 	// If command has permissions check user permissions
 	if (command.perms) {
 		if (!checkPerm(message.member, command.perms, message)) return;
@@ -384,6 +459,7 @@ Please contact @Karp#0001 if you see this message`);
 // MESSAGE DELETE START
 
 client.on('messageDelete', async message => {
+	if (message.channel.type === 'dm') return;
 	// Find server config
 	const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
 	// Start log flag on false

@@ -26,11 +26,14 @@ require('./models/Muted.js')(seqMute, Sequelize);
 require('./models/Config.js')(serverConfig, Sequelize);
 
 const force = process.argv.includes('--force') || process.argv.includes('-f');
+const osu = process.argv.includes('--osu') || process.argv.includes('-o');
 
 sequelize.sync({ force }).then(async () => {
 	console.log('osu! users synced');
 	sequelize.close();
 }).catch(console.error);
+
+if (osu) return;
 
 seqMute.sync({ force }).then(async () => {
 	console.log('Muted users synced');
