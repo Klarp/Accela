@@ -6,6 +6,7 @@ module.exports = {
 	module: 'Osu!',
 	usage: '<osu user>',
 	args: true,
+	owner: true,
 	async execute(message, args) {
 		const user = args.join(' ').replace(/[^\w\s]/gi, '');
 
