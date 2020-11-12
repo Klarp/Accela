@@ -8,7 +8,7 @@ module.exports = {
 	owner: true,
 	execute() {
 		const osu_server = Client.guilds.cache.get('98226572468690944');
-		const offtopic = osu_server.channels.cache.get('158481913055674368');
+		const offtopic = osu_server.channels.cache.get('98226572468690944');
 
 		const fakeEmbed = new MessageEmbed()
 			.setTitle('A trick-or-treater has stopped by!')

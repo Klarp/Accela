@@ -25,7 +25,7 @@ module.exports = {
 
 		if (!args[0]) {
 			const nameColumnWidth = 32;
-			const rankColumnWidth = 10;
+			const rankColumnWidth = 9;
 
 			let table = '';
 
@@ -55,7 +55,7 @@ ${table}
 
 
 			const nameColumnWidth = 32;
-			const rankColumnWidth = 10;
+			const rankColumnWidth = 9;
 
 			let table = '';
 
