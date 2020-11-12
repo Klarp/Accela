@@ -71,7 +71,7 @@ ${table}
 			const newList = userList.sort((a, b) => a.rank - b.rank)
 				.filter(user => Client.users.cache.has(user.user_id))
 				.filter(user => user.rank !== null)
-				.first(10);
+				.first(11);
 
 			for (let i = 0; i < newList.length; i++) {
 				table += getRow(i + 1, newList[i], nameColumnWidth, rankColumnWidth, nameColumnWidth) + '\n';
