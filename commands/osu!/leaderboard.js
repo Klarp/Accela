@@ -10,6 +10,7 @@ module.exports = {
 	module: 'Osu',
 	async execute(message, args) {
 		const users = await Users.findAll();
+		const server = message.guild;
 
 		let mode = 'std';
 		if (args[0]) mode = args[0];
@@ -35,6 +36,7 @@ module.exports = {
 
 			const newList = userList.sort((a, b) => a.rank - b.rank)
 				.filter(user => Client.users.cache.has(user.user_id))
+				.filter(user => server.members.cache.has(user.user_id))
 				.first(10);
 
 			for (let i = 0; i < newList.length; i++) {
