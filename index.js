@@ -122,7 +122,7 @@ client.once('ready', async () => {
 			console.error(err);
 		}
 
-		logChannel.send('Processing', osuMember.displayName);
+		logChannel.send(`Processing ${osuMember.displayName}`);
 	};
 
 	const q = qrate(worker, 1, 0.5);
