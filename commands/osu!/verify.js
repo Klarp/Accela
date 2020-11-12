@@ -76,6 +76,7 @@ module.exports = {
 
 							// RANK SYSTEM STARTS
 							const osuGame = Client.guilds.cache.get('98226572468690944');
+							const logChannel = osuGame.channels.cache.get('776522946872344586');
 							const osuMember = osuGame.members.cache.get(message.author.id);
 
 							const userEmbed = new MessageEmbed()
@@ -132,6 +133,7 @@ Rank (osu!std): ${userStat.pp_rank}`)
 										if (mode === 2 && ctb_rank !== null) rank = ctb_rank;
 										if (mode === 3 && mania_rank !== null) rank = mania_rank;
 										getRankRole(osuMember, rank, mode);
+										logChannel.send(`:white_check_mark: ${message.author} verified with ${user.username}`);
 									}
 								}
 
@@ -163,6 +165,7 @@ Rank (osu!std): ${userStat.pp_rank}`)
 													if (mode === 2 && ctb_rank !== null) rank = ctb_rank;
 													if (mode === 3 && mania_rank !== null) rank = mania_rank;
 													getRankRole(osuMember, rank, mode);
+													logChannel.send(`:white_check_mark: ${message.author} verified with ${user.username}`);
 												}
 											}
 											return message.channel.send(userEmbed);
@@ -192,11 +195,14 @@ Rank (osu!std): ${userStat.pp_rank}`)
 						});
 				})
 				.catch(err => {
+					const osuGame = Client.guilds.cache.get('98226572468690944');
+					const logChannel = osuGame.channels.cache.get('776522946872344586');
 					const errorEmbed = new MessageEmbed()
 						.setTitle(':x: Error: Could Not Verify!')
 						.setColor('RED')
 						.setDescription('Please try again with a new code.');
 					message.channel.send(errorEmbed);
+					logChannel.send(`:x: ${message.author} failed to verify`);
 					console.log(err.response.status);
 				});
 		}

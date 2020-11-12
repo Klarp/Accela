@@ -71,6 +71,7 @@ client.once('ready', async () => {
 		const userID = u.get('user_id');
 		const mode = u.get('osu_mode');
 		const osuGame = client.guilds.cache.get('98226572468690944');
+		const logChannel = osuGame.channels.cache.get('776522946872344586');
 		const osuMember = osuGame.members.cache.get(userID);
 		if (!osuMember) return;
 		let std_rank = null;
@@ -121,7 +122,7 @@ client.once('ready', async () => {
 			console.error(err);
 		}
 
-		console.log('Processing', osuMember.displayName);
+		logChannel.send('Processing', osuMember.displayName);
 	};
 
 	const q = qrate(worker, 1, 0.5);
