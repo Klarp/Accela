@@ -4,7 +4,7 @@ const axios = require('axios');
 const osu = require('node-osu');
 const qrate = require('qrate');
 
-const { token, owners, alpha_testers, osu_key, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL } = require('./config.json');
+const { token, owners, osu_key, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL } = require('./config.json');
 const { Users, Muted, sConfig } = require('./dbObjects');
 const checkPerm = require('./utils/checkPerm.js');
 const mapDetect = require('./utils/mapDetect');
@@ -381,10 +381,6 @@ client.on('message', async message => {
 	// If command is owner only check if user is owner
 	if (command.owner) {
 		if (!owners.includes(message.author.id)) return;
-	}
-
-	if (command.alpha) {
-		if (!alpha_testers.includes(message.author.id)) return;
 	}
 
 	// If command has permissions check user permissions
