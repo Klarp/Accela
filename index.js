@@ -383,6 +383,10 @@ client.on('message', async message => {
 		if (!owners.includes(message.author.id)) return;
 	}
 
+	if (command.alpha) {
+		if (!alpha_testers.includes(message.author.id)) return;
+	}
+
 	// If command has permissions check user permissions
 	if (command.perms) {
 		if (!checkPerm(message.member, command.perms, message)) return;

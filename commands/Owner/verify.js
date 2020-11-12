@@ -12,6 +12,7 @@ module.exports = {
 	description: 'Verifies your osu! account [Development]',
 	module: 'Owner',
 	usage: '[code]',
+	alpha: true,
 	execute(message, args) {
 		const osuApi = new osu.Api(osu_key);
 

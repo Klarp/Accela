@@ -8,9 +8,10 @@ const getRankRole = require('../../utils/getRankRole');
 module.exports = {
 	name: 'mode',
 	description: 'Changes mode for rank role system [DEVELOPMENT]',
-	module: 'Osu',
+	module: 'Owner',
 	guildOnly: true,
 	usage: '[mode]',
+	alpha: true,
 	async execute(message, args) {
 		const osuApi = new osu.Api(osu_key);
 
