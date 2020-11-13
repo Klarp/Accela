@@ -127,9 +127,11 @@ client.once('ready', async () => {
 
 	const q = qrate(worker, 1, 0.5);
 
-	setInterval(() => {
-		for (let i = 0; i < storedUsers.length; i++) {
-			q.push(storedUsers[i]);
+	setInterval(async () => {
+		const osuUsers = await Users.findAll();
+		console.log(`Starting processing of ${osuUsers.length} members`);
+		for (let i = 0; i < osuUsers.length; i++) {
+			q.push(osuUsers[i]);
 		}
 	}, 60 * 60 * 1000);
 
