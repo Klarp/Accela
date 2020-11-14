@@ -1,6 +1,9 @@
-const { Client } = require('../../index');
+const timeSince = require('../../utils/timeSince.js');
+
+const { Client, upDate } = require('../../index');
 const { Users, sConfig } = require('../../dbObjects');
 const { MessageEmbed, Collection } = require('discord.js');
+
 const userList = new Collection();
 
 module.exports = {
@@ -11,6 +14,7 @@ module.exports = {
 	async execute(message, args) {
 		const users = await Users.findAll();
 		const server = message.guild;
+		const newDate = upDate();
 
 		let mode = 'std';
 		if (args[0]) mode = args[0];
@@ -32,11 +36,12 @@ module.exports = {
 
 			table += getHeader(nameColumnWidth, rankColumnWidth) + '\n';
 
-			await users.forEach(u => userList.set(u.user_id, { user_id: u.user_id, osu_name: u.osu_name, rank: u.std_rank }));
+			await users.forEach(u => userList.set(u.user_id, { verified_id: u.verified_id, user_id: u.user_id, osu_name: u.osu_name, rank: u.std_rank }));
 
 			const newList = userList.sort((a, b) => a.rank - b.rank)
 				.filter(user => Client.users.cache.has(user.user_id))
 				.filter(user => server.members.cache.has(user.user_id))
+				.filter(user => user.verified_id !== null)
 				.first(10);
 
 			for (let i = 0; i < newList.length; i++) {
@@ -48,7 +53,7 @@ module.exports = {
 ${table}
 \`\`\``)
 				.setColor('0xff69b4')
-				.setFooter(`${prefix}lb [mode] for other gamemodes`);
+				.setFooter(`Last Updated ${timeSince(newDate)} • ${prefix}lb [mode] for other gamemodes`);
 
 			message.channel.send(leaderEmbed);
 		} else {
@@ -63,10 +68,10 @@ ${table}
 
 			table += getHeader(nameColumnWidth, rankColumnWidth) + '\n';
 
-			if (mode === 'std') await users.forEach(u => userList.set(u.user_id, { user_id: u.user_id, osu_name: u.osu_name, rank: u.std_rank }));
-			if (mode === 'taiko') await users.forEach(u => userList.set(u.user_id, { user_id: u.user_id, osu_name: u.osu_name, rank: u.taiko_rank }));
-			if (mode === 'ctb') await users.forEach(u => userList.set(u.user_id, { user_id: u.user_id, osu_name: u.osu_name, rank: u.ctb_rank }));
-			if (mode === 'mania') await users.forEach(u => userList.set(u.user_id, { user_id: u.user_id, osu_name: u.osu_name, rank: u.mania_rank }));
+			if (mode === 'std') await users.forEach(u => userList.set(u.user_id, { verified_id: u.verified_id, user_id: u.user_id, osu_name: u.osu_name, rank: u.std_rank }));
+			if (mode === 'taiko') await users.forEach(u => userList.set(u.user_id, { verified_id: u.verified_id, user_id: u.user_id, osu_name: u.osu_name, rank: u.taiko_rank }));
+			if (mode === 'ctb') await users.forEach(u => userList.set(u.user_id, { verified_id: u.verified_id, user_id: u.user_id, osu_name: u.osu_name, rank: u.ctb_rank }));
+			if (mode === 'mania') await users.forEach(u => userList.set(u.user_id, { verified_id: u.verified_id, user_id: u.user_id, osu_name: u.osu_name, rank: u.mania_rank }));
 
 			const newList = userList.sort((a, b) => a.rank - b.rank)
 				.filter(user => Client.users.cache.has(user.user_id))
@@ -81,10 +86,15 @@ ${table}
 				.addField(`osu! Game Leaderboard (osu!${mode})`, `\`\`\`scala
 ${table}
 \`\`\``)
-				.setColor('0xff69b4');
+				.setColor('0xff69b4')
+				.setFooter(`Last Updated ${timeSince(newDate)}`);
 
 			message.channel.send(leaderEmbed);
 		}
+
+		/*
+		/////////////////////////// EMBED BUILDING ///////////////////////////
+		*/
 
 		function getHeader(nameWidth, rankWidth) {
 			let header = '';

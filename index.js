@@ -17,6 +17,12 @@ client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
 exports.Client = client;
 
+let lbDate = Date.now();
+
+module.exports.upDate = () => {
+	return lbDate;
+};
+
 const osuApi = new osu.Api(osu_key);
 
 const modules = ['Admin', 'osu!', 'Fun', 'Utility', 'Owner'];
@@ -127,9 +133,17 @@ client.once('ready', async () => {
 
 	const q = qrate(worker, 1, 0.5);
 
+	q.drain = () => {
+		lbDate = Date.now();
+	};
+
 	setInterval(async () => {
+		const osuGame = client.guilds.cache.get('98226572468690944');
+		const logChannel = osuGame.channels.cache.get('776522946872344586');
 		const osuUsers = await Users.findAll();
-		console.log(`Starting processing of ${osuUsers.length} members`);
+
+		logChannel.send(`**Started processing of ${osuUsers.length} members**`);
+
 		for (let i = 0; i < osuUsers.length; i++) {
 			q.push(osuUsers[i]);
 		}

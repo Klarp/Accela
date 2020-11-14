@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
 		ctb_rank: {
 			type: DataTypes.STRING,
 			unique: false,
-		}
+		},
 	},	{
 		timestamps: false,
 	});

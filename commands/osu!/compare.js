@@ -40,10 +40,12 @@ module.exports = {
 		}
 
 		let name;
+		let id;
 		let mods = oj.modbits.none;
 		let acc_percent;
 		let combo;
 		let nmiss;
+		let verified = `:x: Not Verified [use ${prefix}verify]`;
 
 		// Access database
 		if (menUser) {
@@ -54,23 +56,38 @@ module.exports = {
 
 		// Find the user in the database
 		if (findUser) {
-			name = findUser.get('user_osu');
+			if (findUser.get('verified_id')) {
+				id = findUser.get('verified_id');
+				name = findUser.get('osu_name');
+				verified = ':white_check_mark: Verified';
+			} else {
+				id = findUser.get('osu_id');
+			}
 		} else {
 			name = message.author.username;
-			message.channel.send(`No link found: use ${prefix}link [osu user] to link your osu! account!`);
+			verified = '';
+
 		}
 
 		if (menUser && !findUser) {
 			name = menUser.username;
+			verified = '';
 		}
 
 		// Use arguments if applicable
 		if (!menUser && args[0]) {
 			name = args[0];
+			verified = '';
 		}
 
+		if (!menUser && !findUser && !args[0]) {
+			message.channel.send(`No link found: use ${prefix}link [osu user] to link your osu! account!`);
+		}
+
+		const search = name || id;
+
 		// Find user through the api
-		osuApi.getScores({ u: name, b: beatmap }).then(async r => {
+		osuApi.getScores({ u: search, b: beatmap }).then(async r => {
 			const recent = r[0];
 			Number.prototype.toFixedDown = function(digits) {
 				const re = new RegExp('(\\d+\\.\\d{' + digits + '})(\\d)'),
@@ -140,7 +157,8 @@ module.exports = {
 **${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${recent.pp || ppNum.toFixed(2)}pp**/${maxNum.toFixed(2)}PP
 
 ${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
-					`)
+					
+${verified}`)
 					.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
 					.setFooter(`Completed ${rDate}`);
 

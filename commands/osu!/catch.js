@@ -31,6 +31,7 @@ module.exports = {
 		}
 
 		let name;
+		let verified = `:x: Not Verified [use ${prefix}verify]`;
 
 		// Access database
 		if (menUser) {
@@ -45,19 +46,30 @@ module.exports = {
 
 		// Find the user in the database
 		if (findUser) {
-			name = findUser.get('user_osu');
+			if (findUser.get('verified_id')) {
+				name = findUser.get('verified_id');
+				verified = ':white_check_mark: Verified';
+			} else {
+				name = findUser.get('osu_id');
+			}
 		} else {
 			name = message.author.username;
-			message.channel.send(`No link found: use ${prefix}link [osu user] to link your osu! account!`);
+			verified = '';
 		}
 
 		// Use arguments if applicable
 		if (!menUser && args[0]) {
 			name = args[0];
+			verified = '';
 		}
 
 		if (!menUser && args[1]) {
 			name = args.join(' ');
+			verified = '';
+		}
+
+		if (!menUser && !findUser && !args[0]) {
+			message.channel.send(`No link found: use ${prefix}link [osu user] to link your osu! account!`);
 		}
 
 		// Find user through the api
@@ -80,8 +92,10 @@ module.exports = {
 				.setURL(`https://osu.ppy.sh/u/${user.id}`)
 				.setDescription(`**Level** ${Math.floor(user.level)} | **Global Rank** ${rank} | **[${countryEmote}](https://osu.ppy.sh/rankings/mania/performance?country=${user.country} 'Country Rankings') Rank** ${crank}
 				
-**PP** ${Math.round(user.pp.raw)} | **Accuracy** ${user.accuracyFormatted} | **Play Count** ${user.counts.plays}`)
-				.setFooter(`Joined ${d} • osu!ctb`);
+**PP** ${Math.round(user.pp.raw)} | **Accuracy** ${user.accuracyFormatted} | **Play Count** ${user.counts.plays}
+
+${verified}`)
+				.setFooter(`osu!ctb • Joined ${d}`);
 				/*
 				.addField('Accuracy', user.accuracyFormatted, true)
 				.addField('Play Count', user.counts.plays, true)
@@ -94,7 +108,7 @@ module.exports = {
 			message.channel.send({ embed: osuEmbed });
 		}).catch(e => {
 			if (e.name == 'Error') {
-				return message.reply('No recent play was found!');
+				return message.reply(`No user was found named ${name}!`);
 			}
 			console.error(e);
 			return message.reply('An error has occured!');

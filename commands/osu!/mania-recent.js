@@ -34,6 +34,8 @@ module.exports = {
 		}
 
 		let name;
+		let id;
+		let verified = `:x: Not Verified [use ${prefix}verify]`;
 
 		// Access database
 		if (menUser) {
@@ -44,27 +46,42 @@ module.exports = {
 
 		if (menUser) {
 			name = menUser.username;
+			verified = '';
 		}
 
 		// Find the user in the database
 		if (findUser) {
-			name = findUser.get('user_osu');
+			if (findUser.get('verified_id')) {
+				id = findUser.get('verified_id');
+				name = findUser.get('osu_name');
+				verified = ':white_check_mark: Verified';
+			} else {
+				id = findUser.get('osu_id');
+			}
 		} else {
 			name = message.author.username;
-			message.channel.send(`No link found: use ${prefix}link [osu user] to link your osu! account!`);
+			verified = '';
 		}
 
 		// Use arguments if applicable
 		if (!menUser && args[0]) {
 			name = args[0];
+			verified = '';
 		}
 
 		if (!menUser && args[1]) {
 			name = args.join(' ');
+			verified = '';
 		}
 
+		if (!menUser && !findUser && !args[0]) {
+			message.channel.send(`No link found: use ${prefix}link [osu user] to link your osu! account!`);
+		}
+
+		const search = name || id;
+
 		// Find user through the api
-		osuApi.getUserRecent({ m: 3, u: name }).then(async r => {
+		osuApi.getUserRecent({ m: 3, u: search }).then(async r => {
 			const recent = r[0];
 			let acc = recent.accuracy;
 			acc = acc.toFixed(4);
@@ -91,7 +108,8 @@ module.exports = {
 				.setDescription(`${rank} | ${score} | {${hit300}/${hit100}/${hit50}/${hitmiss}}
 
 **${recent.maxCombo}x** | ${acc}% | PP Coming Soon
-				`)
+				
+${verified}`)
 				.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
 				.setFooter(`Completed ${rDate} • osu!mania`);
 			message.channel.send(osuEmbed);

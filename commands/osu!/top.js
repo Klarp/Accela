@@ -44,11 +44,13 @@ module.exports = {
 		}
 
 		let name;
+		let id;
 		let mods = oj.modbits.none;
 		let acc_percent;
 		let combo;
 		let nmiss;
 		let nameFlag = true;
+		let verified = `:x: Not Verified [use ${prefix}verify]`;
 
 		// Access database
 		if (menUser) {
@@ -60,34 +62,52 @@ module.exports = {
 		if (!menUser && isNaN(args[0]) && args[0]) {
 			name = args.join(' ');
 			nameFlag = false;
+			verified = '';
 		}
 
 		if (!menUser && !isNaN(args[0])) {
 			if (args[1]) {
 				nameFlag = false;
+				args.shift();
+				name = args.join(' ');
 			} else {
 				nameFlag = true;
 			}
-			args.shift();
-			name = args.join(' ');
+			verified = '';
 		}
 
 		// Find the user in the database
 		if (nameFlag) {
 			if (findUser) {
-				name = findUser.get('user_osu');
+				if (findUser.get('verified_id')) {
+					id = findUser.get('verified_id');
+					name = findUser.get('osu_name');
+					verified = ':white_check_mark: Verified';
+				} else {
+					id = findUser.get('osu_id');
+				}
 			} else {
 				name = message.author.username;
-				message.channel.send(`No link found: use ${prefix}link [osu user] to link your osu! account!`);
+				verified = '';
+				console.log(name);
 			}
 		}
 
 		if (menUser && !findUser) {
 			name = menUser.username;
+			verified = '';
+			console.log('test3');
 		}
 
+		if (!menUser && !findUser && !args[0]) {
+			message.channel.send(`No link found: use ${prefix}link [osu user] to link your osu! account!`);
+			console.log('test4');
+		}
+
+		const search = name || id;
+
 		// Find user through the api
-		osuApi.getUserBest({ u: name, limit: 10 }).then(async r => {
+		osuApi.getUserBest({ u: search, limit: 10 }).then(async r => {
 			const recent = r[topNum];
 			Number.prototype.toFixedDown = function(digits) {
 				const re = new RegExp('(\\d+\\.\\d{' + digits + '})(\\d)'),
@@ -146,7 +166,7 @@ module.exports = {
 
 				// Create embed (Need to stlye this better)
 				const osuEmbed = new discord.MessageEmbed()
-					.setAuthor(name, `http://a.ppy.sh/${recent.user.id}`, `https://osu.ppy.sh/u/${recent.user.id}`)
+					.setAuthor(recent.user.name, `http://a.ppy.sh/${recent.user.id}`, `https://osu.ppy.sh/u/${recent.user.id}`)
 					.setColor('0xff69b4')
 					.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
 					.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
@@ -155,7 +175,8 @@ module.exports = {
 **${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${ppNum.toFixed(2)}pp**/${maxNum.toFixed(2)}PP
 
 ${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
-					`)
+					
+${verified}`)
 					.setFooter(`Completed ${rDate}`);
 
 				/*

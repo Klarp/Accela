@@ -2,12 +2,6 @@ const osu = require('node-osu');
 const Discord = require('discord.js');
 const { osu_key } = require('../../config.json');
 const { Users, sConfig } = require('../../dbObjects');
-const prom_client = require('prom-client');
-
-const counter = new prom_client.Counter({
-	name: 'command_osu_total',
-	help: 'command_osu_help',
-});
 
 module.exports = {
 	name: 'osu',
@@ -16,7 +10,6 @@ module.exports = {
 	module: 'Osu!',
 	usage: '<user>',
 	async execute(message, args) {
-		counter.inc();
 		// Access the api
 		const osuApi = new osu.Api(osu_key);
 
@@ -40,22 +33,33 @@ module.exports = {
 		}
 
 		let name;
-
+		let verified = `:x: Not Verified [use ${prefix}verify]`;
 		// Find the user in the database
 		if (findUser) {
-			name = findUser.get('user_osu');
+			if (findUser.get('verified_id')) {
+				name = findUser.get('verified_id');
+				verified = ':white_check_mark: Verified';
+			} else {
+				name = findUser.get('osu_id');
+			}
 		} else {
 			name = message.author.username;
-			message.channel.send(`No link found: use ${prefix}link [osu user] to link your osu! account!`);
+			verified = '';
 		}
 
 		if (menUser && !findUser) {
 			name = menUser.username;
+			verified = '';
 		}
 
 		// Use arguments if applicable
 		if (!menUser && args[0]) {
 			name = args.join(' ');
+			verified = '';
+		}
+
+		if (!menUser && !findUser && !args[0]) {
+			message.channel.send(`No link found: use ${prefix}link [osu user] to link your osu! account!`);
 		}
 
 		// Find user through the api
@@ -69,17 +73,20 @@ module.exports = {
 
 			const country = user.country.toLowerCase();
 			const countryEmote = `:flag_${country}:`;
+			// vEmote = Client.emojis.cache.get(764167424202899498);
 
 			// Create the embed
 			const osuEmbed = new Discord.MessageEmbed()
-				.setAuthor(user.name, `http://a.ppy.sh/${user.id}`, `https://osu.ppy.sh/u/${user.id}`)
+				.setAuthor(`${user.name}`, `http://a.ppy.sh/${user.id}`, `https://osu.ppy.sh/u/${user.id}`)
 				.setColor('0xff69b4')
 				.setTitle(`Information On ${user.name}`)
 				.setURL(`https://osu.ppy.sh/u/${user.id}`)
 				.setDescription(`**Level** ${Math.floor(user.level)} | **Global Rank** ${rank} | **[${countryEmote}](https://osu.ppy.sh/rankings/osu/performance?country=${user.country} 'Country Rankings') Rank** ${crank}
 				
-**PP** ${Math.round(user.pp.raw)} | **Accuracy** ${user.accuracyFormatted} | **Play Count** ${user.counts.plays}`)
-				.setFooter(`Joined ${d} • osu!std`);
+**PP** ${Math.round(user.pp.raw)} | **Accuracy** ${user.accuracyFormatted} | **Play Count** ${user.counts.plays}
+
+${verified}`)
+				.setFooter(`osu!std • Joined ${d}`);
 				/*
 				.addField('Accuracy', user.accuracyFormatted, true)
 				.addField('Play Count', user.counts.plays, true)
@@ -92,7 +99,7 @@ module.exports = {
 			message.channel.send({ embed: osuEmbed });
 		}).catch(e => {
 			console.error(e);
-			return message.reply(`No user was found named ${name}!`);
+			return message.reply(`No user was found with name/id ${name}!`);
 		});
 	},
 };
