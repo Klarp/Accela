@@ -3,6 +3,7 @@ const discord = require('discord.js');
 const oj = require('ojsama');
 const curl = require('curl');
 
+const { Client } = require('../../index');
 const { osu_key } = require('../../config.json');
 const { Users, sConfig } = require('../../dbObjects');
 const getShortMods = require('../../utils/getShortMods.js');
@@ -43,6 +44,9 @@ module.exports = {
 			}
 		}
 
+		const cyberia = Client.guilds.cache.get('687858540425117755');
+		const verifiedEmote = cyberia.emojis.cache.find(emoji => emoji.name === 'verified');
+
 		let name;
 		let id;
 		let mods = oj.modbits.none;
@@ -82,26 +86,23 @@ module.exports = {
 				if (findUser.get('verified_id')) {
 					id = findUser.get('verified_id');
 					name = findUser.get('osu_name');
-					verified = ':white_check_mark: Verified';
+					verified = `${verifiedEmote} Verified`;
 				} else {
 					id = findUser.get('osu_id');
 				}
 			} else {
 				name = message.author.username;
 				verified = '';
-				console.log(name);
 			}
 		}
 
 		if (menUser && !findUser) {
 			name = menUser.username;
 			verified = '';
-			console.log('test3');
 		}
 
 		if (!menUser && !findUser && !args[0]) {
 			message.channel.send(`No link found: use ${prefix}link [osu user] to link your osu! account!`);
-			console.log('test4');
 		}
 
 		const search = name || id;
@@ -167,7 +168,7 @@ module.exports = {
 				// Create embed (Need to stlye this better)
 				const osuEmbed = new discord.MessageEmbed()
 					.setAuthor(recent.user.name, `http://a.ppy.sh/${recent.user.id}`, `https://osu.ppy.sh/u/${recent.user.id}`)
-					.setColor('0xff69b4')
+					.setColor('#af152a')
 					.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
 					.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
 					.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${recent.counts['300']}/${recent.counts['100']}/${recent.counts['50']}/${recent.counts.miss}}

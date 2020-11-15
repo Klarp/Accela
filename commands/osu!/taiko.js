@@ -1,6 +1,7 @@
 const osu = require('node-osu');
 const Discord = require('discord.js');
 
+const { Client } = require('../../index');
 const { osu_key } = require('../../config.json');
 const { Users, sConfig } = require('../../dbObjects');
 
@@ -31,6 +32,9 @@ module.exports = {
 			}
 		}
 
+		const cyberia = Client.guilds.cache.get('687858540425117755');
+		const verifiedEmote = cyberia.emojis.cache.find(emoji => emoji.name === 'verified');
+
 		// Access database
 		if (menUser) {
 			findUser = await Users.findOne({ where: { user_id: menUser.id } });
@@ -47,7 +51,7 @@ module.exports = {
 		if (findUser) {
 			if (findUser.get('verified_id')) {
 				name = findUser.get('verified_id');
-				verified = ':white_check_mark: Verified';
+				verified = `${verifiedEmote} Verified`;
 			} else {
 				name = findUser.get('osu_id');
 			}
@@ -86,7 +90,7 @@ module.exports = {
 			// Create the embed
 			const osuEmbed = new Discord.MessageEmbed()
 				.setAuthor(`${user.name}`, `http://a.ppy.sh/${user.id}`, `https://osu.ppy.sh/u/${user.id}`)
-				.setColor('0xff69b4')
+				.setColor('#af152a')
 				.setTitle(`Information On ${user.name}`)
 				.setURL(`https://osu.ppy.sh/u/${user.id}`)
 				.setDescription(`**Level** ${Math.floor(user.level)} | **Global Rank** ${rank} | **[${countryEmote}](https://osu.ppy.sh/rankings/mania/performance?country=${user.country} 'Country Rankings') Rank** ${crank}

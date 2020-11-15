@@ -20,7 +20,7 @@ module.exports = {
 			const noVerifyEmbed = new MessageEmbed()
 				.setTitle('Please Verify Your osu! Account!')
 				.setDescription('https://accela.xyz/verify.html')
-				.setColor('0xff69b4');
+				.setColor('#af152a');
 
 			message.channel.send(noVerifyEmbed);
 		}
@@ -81,7 +81,7 @@ module.exports = {
 
 							const userEmbed = new MessageEmbed()
 								.setTitle(':white_check_mark: Verfication Accepted!')
-								.setColor('0xff69b4')
+								.setColor('#af152a')
 								.setDescription(`User: ${user.username}
 Rank (osu!std): ${userStat.pp_rank}`)
 								.setFooter(`ID: ${user.id} | Use >>mode to change game modes`);

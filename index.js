@@ -20,7 +20,9 @@ exports.Client = client;
 let lbDate = Date.now();
 
 module.exports.upDate = () => {
-	return lbDate;
+	if (lbDate) {
+		return lbDate;
+	}
 };
 
 const osuApi = new osu.Api(osu_key);

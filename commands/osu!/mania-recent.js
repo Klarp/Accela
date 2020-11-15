@@ -1,6 +1,7 @@
 const osu = require('node-osu');
 const discord = require('discord.js');
 
+const { Client } = require('../../index');
 const { osu_key } = require('../../config.json');
 const { Users, sConfig } = require('../../dbObjects');
 const timeSince = require('../../utils/timeSince');
@@ -33,6 +34,9 @@ module.exports = {
 			}
 		}
 
+		const cyberia = Client.guilds.cache.get('687858540425117755');
+		const verifiedEmote = cyberia.emojis.cache.find(emoji => emoji.name === 'verified');
+
 		let name;
 		let id;
 		let verified = `:x: Not Verified [use ${prefix}verify]`;
@@ -54,7 +58,7 @@ module.exports = {
 			if (findUser.get('verified_id')) {
 				id = findUser.get('verified_id');
 				name = findUser.get('osu_name');
-				verified = ':white_check_mark: Verified';
+				verified = `${verifiedEmote} Verified`;
 			} else {
 				id = findUser.get('osu_id');
 			}
@@ -103,7 +107,7 @@ module.exports = {
 			// Get the short version of mods (HD, HR etc.)
 			const osuEmbed = new discord.MessageEmbed()
 				.setAuthor(name, `http://a.ppy.sh/${recent.user.id}`)
-				.setColor('0xff69b4')
+				.setColor('#af152a')
 				.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
 				.setDescription(`${rank} | ${score} | {${hit300}/${hit100}/${hit50}/${hitmiss}}
 

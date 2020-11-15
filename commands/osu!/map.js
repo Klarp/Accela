@@ -142,7 +142,7 @@ module.exports = {
 
 					// Create the embed
 					const osuEmbed = new Discord.MessageEmbed()
-						.setColor('0xff69b4')
+						.setColor('#af152a')
 						.setAuthor(map.creator, `http://a.ppy.sh/${u.id}`)
 						.setTitle(`${map.artist} - ${map.title} (${map.version})`)
 						.setThumbnail(`https://b.ppy.sh/thumb/${map.beatmapSetId}l.jpg`)

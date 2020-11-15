@@ -8,7 +8,6 @@ module.exports = {
 	module: 'Osu!',
 	usage: '<osu user>',
 	args: true,
-	owner: true,
 	async execute(message, args) {
 		const osuApi = new osu.Api(osu_key);
 

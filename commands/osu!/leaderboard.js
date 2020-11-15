@@ -52,7 +52,7 @@ module.exports = {
 				.addField(`osu! Game Leaderboard (osu!${mode})`, `\`\`\`scala
 ${table}
 \`\`\``)
-				.setColor('0xff69b4')
+				.setColor('#af152a')
 				.setFooter(`Last Updated ${timeSince(newDate)} • ${prefix}lb [mode] for other gamemodes`);
 
 			message.channel.send(leaderEmbed);
@@ -86,7 +86,7 @@ ${table}
 				.addField(`osu! Game Leaderboard (osu!${mode})`, `\`\`\`scala
 ${table}
 \`\`\``)
-				.setColor('0xff69b4')
+				.setColor('#af152a')
 				.setFooter(`Last Updated ${timeSince(newDate)}`);
 
 			message.channel.send(leaderEmbed);
