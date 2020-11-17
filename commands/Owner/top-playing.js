@@ -8,7 +8,7 @@ module.exports = {
 	owner: true,
 	execute(message) {
 		const topEmbed = new MessageEmbed()
-			.setTitle('Top 10 games being played right now:')
+			.setTitle('Top 10 games being played in the server:')
 			.setColor('#af152a')
 			.setDescription(`1. osu! with 292 players
 			2. League of Legends with 92 players
