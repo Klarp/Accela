@@ -1,4 +1,4 @@
-const { MessagedEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
 	name: 'top-playing',
@@ -7,7 +7,7 @@ module.exports = {
 	module: 'Owner',
 	owner: true,
 	execute(message) {
-		const topEmbed = new MessagedEmbed()
+		const topEmbed = new MessageEmbed()
 			.setTitle('Top 10 games being played right now:')
 			.setColor('#af152a')
 			.setDescription(`1. osu! with 292 players
