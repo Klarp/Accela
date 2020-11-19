@@ -9,8 +9,8 @@ const { Client } = require('../../index');
 module.exports = {
 	name: 'verify',
 	aliases: 'v',
-	description: 'Verifies your osu! account [Development]',
-	module: 'Osu',
+	description: 'Verifies your osu! account',
+	module: 'Osu!',
 	usage: '[code]',
 	execute(message, args) {
 		const osuApi = new osu.Api(osu_key);

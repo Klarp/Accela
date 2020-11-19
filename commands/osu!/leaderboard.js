@@ -9,8 +9,8 @@ const userList = new Collection();
 module.exports = {
 	name: 'leaderboard',
 	aliases: 'lb',
-	description: 'Leaderboard of verified osu! accounts in the server [Development]',
-	module: 'Osu',
+	description: 'Leaderboard of verified osu! accounts in the server',
+	module: 'Osu!',
 	async execute(message, args) {
 		const users = await Users.findAll();
 		const server = message.guild;

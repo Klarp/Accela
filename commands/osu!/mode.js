@@ -7,8 +7,8 @@ const getRankRole = require('../../utils/getRankRole');
 
 module.exports = {
 	name: 'mode',
-	description: 'Changes mode for rank role system [DEVELOPMENT]',
-	module: 'Osu',
+	description: 'Changes mode for rank role system',
+	module: 'Osu!',
 	guildOnly: true,
 	usage: '[mode]',
 	async execute(message, args) {
