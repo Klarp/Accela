@@ -42,12 +42,22 @@ module.exports = {
 				.filter(user => Client.users.cache.has(user.user_id))
 				.filter(user => server.members.cache.has(user.user_id))
 				.filter(user => user.verified_id !== null)
-				.filter(user => user.rank !== null)
-				.first(10);
+				.filter(user => user.rank !== null);
 
-			for (let i = 0; i < newList.length; i++) {
-				table += getRow(i + 1, newList[i], nameColumnWidth, rankColumnWidth, nameColumnWidth) + '\n';
+			const leaderList = newList.first(10);
+
+			for (let i = 0; i < leaderList.length; i++) {
+				table += getRow(i + 1, leaderList[i], nameColumnWidth, rankColumnWidth, nameColumnWidth) + '\n';
 			}
+
+			for (let i = 0; i < newList.size; i++) {
+				//
+			}
+
+			const listArray = newList.array();
+			const posNumber = listArray.findIndex(u => u.user_id === message.author.id) + 1;
+
+			table += getPos(posNumber, listArray, nameColumnWidth, rankColumnWidth);
 
 			const leaderEmbed = new MessageEmbed()
 				.addField(`osu! Game Leaderboard (osu!${mode})`, `\`\`\`scala
@@ -78,12 +88,18 @@ ${table}
 				.filter(user => Client.users.cache.has(user.user_id))
 				.filter(user => server.members.cache.has(user.user_id))
 				.filter(user => user.verified_id !== null)
-				.filter(user => user.rank !== null)
-				.first(10);
+				.filter(user => user.rank !== null);
 
-			for (let i = 0; i < newList.length; i++) {
-				table += getRow(i + 1, newList[i], nameColumnWidth, rankColumnWidth, nameColumnWidth) + '\n';
+			const leaderList = newList.first(10);
+
+			for (let i = 0; i < leaderList.length; i++) {
+				table += getRow(i + 1, leaderList[i], nameColumnWidth, rankColumnWidth, nameColumnWidth) + '\n';
 			}
+
+			const listArray = newList.array();
+			const posNumber = listArray.findIndex(u => u.user_id === message.author.id) + 1;
+
+			table += getPos(posNumber, listArray, nameColumnWidth, rankColumnWidth);
 
 			const leaderEmbed = new MessageEmbed()
 				.addField(`osu! Game Leaderboard (osu!${mode})`, `\`\`\`scala
@@ -177,6 +193,25 @@ ${table}
 			}
 
 			return row;
+		}
+
+		function getPos(pos, list, nameWidth, rankWidth) {
+			let posHolder = '';
+
+			for (let i = 0; i <= nameWidth; i++) {
+				posHolder += '-';
+			}
+
+			posHolder += '+';
+
+			for (let i = 0; i < rankWidth; i++) {
+				posHolder += '-';
+			}
+
+			posHolder += '+ \n';
+
+			posHolder += `Your Position: ${pos}/${list.length}`;
+			return posHolder;
 		}
 	},
 };
