@@ -106,7 +106,7 @@ module.exports = {
 
 			// Get the short version of mods (HD, HR etc.)
 			const osuEmbed = new discord.MessageEmbed()
-				.setAuthor(name, `http://a.ppy.sh/${recent.user.id}`)
+				.setAuthor(recent.user.name || name, `http://a.ppy.sh/${recent.user.id}`)
 				.setColor('#af152a')
 				.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
 				.setDescription(`${rank} | ${score} | {${hit300}/${hit100}/${hit50}/${hitmiss}}

@@ -178,7 +178,7 @@ module.exports = {
 					const failPercent = mapCompletion.toFixed(2);
 
 					const osuFailEmbed = new discord.MessageEmbed()
-						.setAuthor(name, `http://a.ppy.sh/${recent.user.id}`, `https://osu.ppy.sh/u/${recent.user.id}`)
+						.setAuthor(recent.user.name || name, `http://a.ppy.sh/${recent.user.id}`, `https://osu.ppy.sh/u/${recent.user.id}`)
 						.setColor('#af152a')
 						.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
 						.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${hit300}/${hit100}/${hit50}/${hitmiss}}
@@ -193,7 +193,7 @@ ${verified}`)
 					message.channel.send(osuFailEmbed);
 				} else {
 					const osuEmbed = new discord.MessageEmbed()
-						.setAuthor(name, `http://a.ppy.sh/${recent.user.id}`)
+						.setAuthor(recent.user.name || name, `http://a.ppy.sh/${recent.user.id}`)
 						.setColor('#af152a')
 						.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
 						.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${hit300}/${hit100}/${hit50}/${hitmiss}}

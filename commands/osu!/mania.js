@@ -93,7 +93,7 @@ module.exports = {
 
 			// Create the embed
 			const osuEmbed = new Discord.MessageEmbed()
-				.setAuthor(`${user.name}`, `http://a.ppy.sh/${user.id}`, `https://osu.ppy.sh/u/${user.id}`)
+				.setAuthor(`${user.name || name}`, `http://a.ppy.sh/${user.id}`, `https://osu.ppy.sh/u/${user.id}`)
 				.setColor('#af152a')
 				.setTitle(`Information On ${user.name}`)
 				.setURL(`https://osu.ppy.sh/u/${user.id}`)
