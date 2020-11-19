@@ -60,7 +60,7 @@ module.exports = {
 			table += getPos(posNumber, listArray, nameColumnWidth, rankColumnWidth);
 
 			const leaderEmbed = new MessageEmbed()
-				.addField(`osu! Game Leaderboard (osu!${mode})`, `\`\`\`scala
+				.addField(`${message.guild.name} Leaderboard (osu!${mode})`, `\`\`\`scala
 ${table}
 \`\`\``)
 				.setColor('#af152a')
