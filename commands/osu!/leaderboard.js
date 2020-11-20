@@ -50,14 +50,11 @@ module.exports = {
 				table += getRow(i + 1, leaderList[i], nameColumnWidth, rankColumnWidth, nameColumnWidth) + '\n';
 			}
 
-			for (let i = 0; i < newList.size; i++) {
-				//
-			}
-
 			const listArray = newList.array();
 			const posNumber = listArray.findIndex(u => u.user_id === message.author.id) + 1;
+			const listUser = newList.get(message.author.id);
 
-			table += getPos(posNumber, listArray, nameColumnWidth, rankColumnWidth);
+			table += getPos(posNumber, listArray, listUser, nameColumnWidth, rankColumnWidth);
 
 			const leaderEmbed = new MessageEmbed()
 				.addField(`${message.guild.name} Leaderboard (osu!${mode})`, `\`\`\`scala
@@ -98,8 +95,9 @@ ${table}
 
 			const listArray = newList.array();
 			const posNumber = listArray.findIndex(u => u.user_id === message.author.id) + 1;
+			const listUser = listArray.find(u => u.user_id === message.author.id);
 
-			table += getPos(posNumber, listArray, nameColumnWidth, rankColumnWidth);
+			table += getPos(posNumber, listArray, listUser, nameColumnWidth, rankColumnWidth);
 
 			const leaderEmbed = new MessageEmbed()
 				.addField(`osu! Game Leaderboard (osu!${mode})`, `\`\`\`scala
@@ -195,8 +193,12 @@ ${table}
 			return row;
 		}
 
-		function getPos(pos, list, nameWidth, rankWidth) {
+		function getPos(pos, list, user, nameWidth, rankWidth) {
 			let posHolder = '';
+			if (!user) return posHolder;
+			const rank = user.rank;
+
+			let positionText = `Your Position: ${pos}/${list.length}`;
 
 			for (let i = 0; i <= nameWidth; i++) {
 				posHolder += '-';
@@ -210,7 +212,27 @@ ${table}
 
 			posHolder += '+ \n';
 
-			posHolder += `Your Position: ${pos}/${list.length}`;
+			if (pos === 0) {
+				positionText = '';
+				posHolder += positionText;
+			} else {
+				posHolder += positionText;
+			}
+
+			for (let i = positionText.length; i <= nameWidth; i++) {
+				posHolder += ' ';
+			}
+
+			posHolder += '| ';
+
+			posHolder += rank;
+
+			for (let i = rank.length; i < rankWidth - 1; i++) {
+				posHolder += ' ';
+			}
+
+			posHolder += '|';
+
 			return posHolder;
 		}
 	},
