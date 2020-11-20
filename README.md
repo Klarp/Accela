@@ -44,6 +44,6 @@ Please make sure to update tests as appropriate.
 - Ek
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+[GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/)
 
  [![Bots for Discord](https://botsfordiscord.com/api/bot/687856844848234502/widget)](https://botsfordiscord.com/bots/687856844848234502)
