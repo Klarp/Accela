@@ -1,3 +1,23 @@
+/*
+	Copyright (C) 2020 Brody Jagoe
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+	Contact: admin@accela.xyz
+*/
+
+
 const fs = require('fs');
 const Discord = require('discord.js');
 const axios = require('axios');
@@ -70,6 +90,7 @@ const activities_list = [
 client.once('ready', async () => {
 	// Initialize osu! Database
 	const storedUsers = await Users.findAll();
+	let startDate;
 	storedUsers
 		.filter(user => user.verified_id !== null)
 		.filter(user => client.users.cache.has(user.user_id));
@@ -79,7 +100,6 @@ client.once('ready', async () => {
 		const userID = u.get('user_id');
 		const mode = u.get('osu_mode');
 		const osuGame = client.guilds.cache.get('98226572468690944');
-		const logChannel = osuGame.channels.cache.get('776522946872344586');
 		const osuMember = osuGame.members.cache.get(userID);
 		if (!osuMember) return;
 		let std_rank = null;
@@ -129,20 +149,25 @@ client.once('ready', async () => {
 		} catch (err) {
 			console.error(err);
 		}
-
-		logChannel.send(`Processing ${osuMember.displayName}`);
 	};
 
 	const q = qrate(worker, 1, 0.5);
 
 	q.drain = () => {
+		const osuGame = client.guilds.cache.get('98226572468690944');
+		const logChannel = osuGame.channels.cache.get('776522946872344586');
+
 		lbDate = Date.now();
+		let finishDate = lbDate - startDate;
+		finishDate = finishDate / 60000;
+		logChannel.send(`**Finished processing in ${finishDate.toFixed(2)} minutes**`);
 	};
 
 	setInterval(async () => {
 		const osuGame = client.guilds.cache.get('98226572468690944');
 		const logChannel = osuGame.channels.cache.get('776522946872344586');
 		const osuUsers = await Users.findAll();
+		startDate = Date.now();
 
 		logChannel.send(`**Started processing of ${osuUsers.length} members**`);
 
