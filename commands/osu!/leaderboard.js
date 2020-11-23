@@ -1,6 +1,6 @@
 const timeSince = require('../../utils/timeSince.js');
 
-const { Client, upDate } = require('../../index');
+const { upDate } = require('../../index');
 const { Users, sConfig } = require('../../dbObjects');
 const { MessageEmbed, Collection } = require('discord.js');
 
@@ -39,7 +39,6 @@ module.exports = {
 			await users.forEach(u => userList.set(u.user_id, { verified_id: u.verified_id, user_id: u.user_id, osu_name: u.osu_name, rank: u.std_rank }));
 
 			const newList = userList.sort((a, b) => a.rank - b.rank)
-				.filter(user => Client.users.cache.has(user.user_id))
 				.filter(user => server.members.cache.has(user.user_id))
 				.filter(user => user.verified_id !== null)
 				.filter(user => user.rank !== null);
@@ -82,7 +81,6 @@ ${table}
 			if (mode === 'mania') await users.forEach(u => userList.set(u.user_id, { verified_id: u.verified_id, user_id: u.user_id, osu_name: u.osu_name, rank: u.mania_rank }));
 
 			const newList = userList.sort((a, b) => a.rank - b.rank)
-				.filter(user => Client.users.cache.has(user.user_id))
 				.filter(user => server.members.cache.has(user.user_id))
 				.filter(user => user.verified_id !== null)
 				.filter(user => user.rank !== null);
@@ -149,7 +147,7 @@ ${table}
 		function getRow(pos, user, nameWidth, rankWidth) {
 			let row = '';
 			let longName;
-			const discordUser = Client.users.cache.get(user.user_id);
+			const discordUser = server.members.cache.get(user.user_id).user;
 			const discordTag = titleCase(discordUser.tag);
 
 			let userName = `${pos}. ${discordTag} (${user.osu_name})`;
