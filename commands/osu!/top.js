@@ -63,13 +63,16 @@ module.exports = {
 			findUser = await Users.findOne({ where: { user_id: message.author.id } });
 		}
 
+		// User look up | No Mention | No Number Arg
 		if (!menUser && isNaN(args[0]) && args[0]) {
 			name = args.join(' ');
 			nameFlag = false;
 			verified = '';
 		}
 
+		// No Mention | Has Number Arg
 		if (!menUser && !isNaN(args[0])) {
+			// Check if User Lookup
 			if (args[1]) {
 				nameFlag = false;
 				args.shift();
@@ -89,18 +92,20 @@ module.exports = {
 					verified = `${verifiedEmote} Verified`;
 				} else {
 					id = findUser.get('osu_id');
+					name = findUser.get('osu_name');
 				}
 			} else {
 				name = message.author.username;
-				verified = '';
 			}
 		}
 
+		// If mentioned a user
 		if (menUser && !findUser) {
 			name = menUser.username;
 			verified = '';
 		}
 
+		// Not linked message
 		if (!menUser && !findUser && !args[0]) {
 			message.channel.send(`No link found: use ${prefix}link [osu user] to link your osu! account!`);
 		}

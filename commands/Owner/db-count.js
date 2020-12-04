@@ -8,8 +8,6 @@ module.exports = {
 	owner: true,
 	async execute(message) {
 		const storedUsers = await Users.findAll();
-		console.log('oink');
-
 		message.channel.send(`The database has ${storedUsers.length} users`);
 	},
 };

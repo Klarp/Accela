@@ -20,8 +20,7 @@ module.exports = {
 
 		await osuApi.getUser({ u: user }).then(u => {
 			osuID = u.id;
-			osuName = u.username;
-			console.log(u.username);
+			osuName = u.name;
 		});
 
 		try {

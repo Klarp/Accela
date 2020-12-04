@@ -61,10 +61,10 @@ module.exports = {
 				verified = `${verifiedEmote} Verified`;
 			} else {
 				id = findUser.get('osu_id');
+				name = findUser.get('osu_name');
 			}
 		} else {
 			name = message.author.username;
-			verified = '';
 		}
 
 		// Use arguments if applicable

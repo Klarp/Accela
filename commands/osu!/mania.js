@@ -59,7 +59,6 @@ module.exports = {
 			}
 		} else {
 			name = message.author.username;
-			verified = '';
 		}
 
 		// Use arguments if applicable

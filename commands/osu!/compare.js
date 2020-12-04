@@ -69,8 +69,6 @@ module.exports = {
 			}
 		} else {
 			name = message.author.username;
-			verified = '';
-
 		}
 
 		if (menUser && !findUser) {
