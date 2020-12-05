@@ -2,7 +2,7 @@ module.exports = async (member, rank, mode) => {
 	let role;
 
 	if (mode === 0) {
-		if (rank < 100) {
+		if (rank < 100 && rank !== 0) {
 			// 1 - 99
 			role = '754085973003993119';
 		} else if (rank < 500) {
@@ -25,7 +25,7 @@ module.exports = async (member, rank, mode) => {
 
 	// Taiko
 	if (mode === 1) {
-		if (rank < 100) {
+		if (rank < 100 && rank !== 0) {
 			// 1 - 99
 			role = '754087013904547930';
 		} else if (rank < 500) {
@@ -48,7 +48,7 @@ module.exports = async (member, rank, mode) => {
 
 	// Catch the Beat
 	if (mode === 2) {
-		if (rank < 100) {
+		if (rank < 100 && rank !== 0) {
 			// 1 - 99
 			role = '754087989717762080';
 		} else if (rank < 500) {
@@ -71,7 +71,7 @@ module.exports = async (member, rank, mode) => {
 
 	// Mania
 	if (mode === 3) {
-		if (rank < 100) {
+		if (rank < 100 && rank !== 0) {
 			// 1 - 99
 			role = '754086656889585714';
 		} else if (rank < 500) {
