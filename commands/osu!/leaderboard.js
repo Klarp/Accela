@@ -41,7 +41,7 @@ module.exports = {
 			const newList = userList.sort((a, b) => a.rank - b.rank)
 				.filter(user => server.members.cache.has(user.user_id))
 				.filter(user => user.verified_id !== null)
-				.filter(user => user.rank !== null);
+				.filter(user => user.rank !== null || user.rank > 0);
 
 			const leaderList = newList.first(10);
 
@@ -83,7 +83,7 @@ ${table}
 			const newList = userList.sort((a, b) => a.rank - b.rank)
 				.filter(user => server.members.cache.has(user.user_id))
 				.filter(user => user.verified_id !== null)
-				.filter(user => user.rank !== null);
+				.filter(user => user.rank !== null || user.rank > 0);
 
 			const leaderList = newList.first(10);
 
