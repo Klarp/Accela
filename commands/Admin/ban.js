@@ -1,4 +1,4 @@
-const modAction = require('../../utils/modAction.js');
+const { modAction } = require('../../utils');
 
 module.exports = {
 	name: 'ban',
@@ -42,7 +42,7 @@ module.exports = {
 			});
 		}, 1000);
 
-		modAction (message.author, toBan, 'Ban', reason);
+		modAction(message.author, toBan, 'Ban', reason);
 
 		message.channel.send(`Banned ${toBan.user.username} ${reason ? 'with reason: ' + reason : 'with no reason given!'}`);
 	},

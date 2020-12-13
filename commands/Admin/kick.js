@@ -1,4 +1,4 @@
-const modAction = require('../../utils/modAction.js');
+const { modAction } = require('../../utils');
 
 module.exports = {
 	name: 'kick',
@@ -41,7 +41,7 @@ module.exports = {
 			});
 		}, 1000);
 
-		modAction (message.author, toKick, 'Kick', reason);
+		modAction(message.author, toKick, 'Kick', reason);
 
 		message.channel.send(`Kicked ${toKick.user.username} ${reason ? 'with reason: ' + reason : 'with no reason given!'}`);
 	},

@@ -1,4 +1,4 @@
-const modAction = require('../../utils/modAction.js');
+const { modAction } = require('../../utils');
 
 module.exports = {
 	name: 'soft-ban',
@@ -43,7 +43,7 @@ module.exports = {
 			message.guild.members.unban(toSF.id, { reason: 'softban' });
 		}, 1000);
 
-		modAction (message.author, toSF, 'SoftBan', reason);
+		modAction(message.author, toSF, 'SoftBan', reason);
 
 		message.channel.send(`Softbanned ${toSF.user.username} ${reason ? 'with reason: ' + reason : 'with no reason given!'}`);
 	},

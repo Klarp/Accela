@@ -4,7 +4,7 @@ const Discord = require('discord.js');
 const curl = require('curl');
 
 const { osu_key } = require('../../config.json');
-const getDiff = require('../../utils/getDiff.js');
+const { getDiff } = require('../../utils');
 const idGrab = require('../../index.js');
 
 module.exports = {

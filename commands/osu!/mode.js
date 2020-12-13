@@ -3,7 +3,7 @@ const { MessageEmbed } = require('discord.js');
 const { Client } = require('../../index');
 const { Users } = require('../../dbObjects');
 const { osu_key } = require('../../config.json');
-const getRankRole = require('../../utils/getRankRole');
+const { getRankRole } = require('../../utils');
 
 module.exports = {
 	name: 'mode',

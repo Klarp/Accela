@@ -1,6 +1,6 @@
 const axios = require('axios');
 const osu = require('node-osu');
-const getRankRole = require('../../utils/getRankRole.js');
+const { getRankRole } = require('../../utils');
 const { MessageEmbed } = require('discord.js');
 const { osu_key, osu_key_v2 } = require('../../config.json');
 const { Users } = require('../../dbObjects');

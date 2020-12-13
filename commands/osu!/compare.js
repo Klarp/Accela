@@ -6,11 +6,8 @@ const curl = require('curl');
 const { Client } = require('../../index');
 const { osu_key } = require('../../config.json');
 const { Users, sConfig } = require('../../dbObjects');
-const getShortMods = require('../../utils/getShortMods.js');
-const getRank = require('../../utils/getRank.js');
-const timeSince = require('../../utils/timeSince');
+const { getShortMods, getRank, timeSince , getDiff} = require('../../utils');
 const idGrab = require('../../index.js');
-const getDiff = require('../../utils/getDiff.js');
 
 module.exports = {
 	name: 'compare',

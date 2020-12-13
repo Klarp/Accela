@@ -1,4 +1,4 @@
-const timeSince = require('../../utils/timeSince.js');
+const { timeSince } = require('../../utils');
 
 const { upDate } = require('../../index');
 const { Users, sConfig } = require('../../dbObjects');

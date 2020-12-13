@@ -4,8 +4,7 @@ const discord = require('discord.js');
 const { Client } = require('../../index');
 const { osu_key } = require('../../config.json');
 const { Users, sConfig } = require('../../dbObjects');
-const timeSince = require('../../utils/timeSince');
-const getRank = require('../../utils/getRank');
+const { timeSince, getRank } = require('../../utils');
 
 module.exports = {
 	name: 'mania-recent',

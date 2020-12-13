@@ -1,4 +1,4 @@
-const modAction = require('../../utils/modAction.js');
+const { modAction } = require('../../utils');
 const { Muted } = require('../../dbObjects');
 
 module.exports = {

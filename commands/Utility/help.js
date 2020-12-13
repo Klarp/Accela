@@ -1,5 +1,5 @@
 const { prefix } = require('../../config.json');
-const checkPerm = require('../../utils/checkPerm.js');
+const { checkPerm } = require('../../utils');
 const { owners } = require('../../config.json');
 const { MessageEmbed } = require('discord.js');
 

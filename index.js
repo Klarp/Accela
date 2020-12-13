@@ -25,16 +25,14 @@ const qrate = require('qrate');
 
 const { token, owners, osu_key, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL } = require('./config.json');
 const { Users, Muted, sConfig } = require('./dbObjects');
-const checkPerm = require('./utils/checkPerm.js');
-const mapDetect = require('./utils/mapDetect');
-const modAction = require('./utils/modAction');
-const getRankRole = require('./utils/getRankRole.js');
 
 const configs = new Discord.Collection();
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
 exports.Client = client;
+
+const util = require('./utils');
 
 let lbDate = Date.now();
 
@@ -144,7 +142,7 @@ client.once('ready', async () => {
 				if (mode === 1 && taiko_rank !== null) rank = taiko_rank;
 				if (mode === 2 && ctb_rank !== null) rank = ctb_rank;
 				if (mode === 3 && mania_rank !== null) rank = mania_rank;
-				getRankRole(osuMember, rank, mode);
+				util.getRankRole(osuMember, rank, mode);
 			}
 		} catch (err) {
 			console.error(err);
@@ -187,35 +185,6 @@ client.once('ready', async () => {
 		const index = Math.floor(Math.random() * (activities_list.length - 1) + 1);
 		client.user.setActivity(activities_list[index]);
 	}, 60 * 1000);
-
-	/*
-	setInterval(async () => {
-		let count = 0;
-		await storedUsers.forEach(u => {
-			const id = u.get('user_id');
-			const osuGame = client.guilds.cache.get('98226572468690944');
-			console.log(id);
-			const osuMember = osuGame.members.cache.get(id);
-			if (!osuMember) return;
-			console.log(osuMember);
-			if (u.get('verified_id')) {
-				const vid = u.get('verified_id');
-				let rank = null;
-				const mode = u.get('osu_mode');
-				osuApi.getUser({ u: vid }).then(osuU => {
-					rank = osuU.pp.rank;
-				});
-				const role = getRankRole(rank, mode);
-				roles.forEach(r => {
-					if (osuMember.roles.cache.get(r)) osuMember.roles.remove(r);
-				});
-				osuMember.roles.add(role);
-			}
-			count++;
-		});
-		console.log(count);
-	}, 30 * 60 * 1000);
-	*/
 
 	// Default member count
 	let userCount = 0;
@@ -368,7 +337,7 @@ client.on('message', async message => {
 		if (noPrefixFlag) {
 			// Map Detection
 			if (message.content.startsWith('https://osu.ppy.sh/b/') || message.content.startsWith('https://osu.ppy.sh/beatmapsets/')) {
-				mapDetect(message);
+				util.mapDetect(message);
 			}
 
 			// Emote Commands
@@ -429,7 +398,7 @@ client.on('message', async message => {
 
 	// If command has permissions check user permissions
 	if (command.perms) {
-		if (!checkPerm(message.member, command.perms, message)) return;
+		if (!util.checkPerm(message.member, command.perms, message)) return;
 	}
 
 	// Stop if a command can't be run inside DMs
@@ -624,7 +593,7 @@ client.on('guildMemberAdd', async (member) => {
 	member.roles.add(muteRole.id).then(() => {
 		member.send(`You have been muted in ${member.guild.name}! Reason: Mute Evasion`);
 	});
-	modAction(client.user, member, 'Mute', 'Mute Evasion');
+	util.modAction(client.user, member, 'Mute', 'Mute Evasion');
 });
 
 process.on('unhandledRejection', error => {
