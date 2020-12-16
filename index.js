@@ -81,6 +81,9 @@ const activities_list = [
 	'h-help im trapped here',
 	'l-let me out of this bot',
 	'now run on human souls',
+	'reading manga',
+	'watching anime',
+	'creating bot farms',
 ];
 
 // BOT START
@@ -529,13 +532,61 @@ client.on('guildBanAdd', async (guild, user) => {
 	// Get mod channel from config
 	const modChannel = serverConfig.get('mod_channel');
 
+	const fetchedLogs = await guild.fetchAuditLogs({
+		limit: 1,
+		type: 'MEMBER_BAN_ADD',
+	});
+
+	const banLog = fetchedLogs.entries.first();
+
 	// If mod logging is true log the ban
-	if (logFlag) {
-		const banEmbed = new Discord.MessageEmbed()
-			.setThumbnail(user.displayAvatarURL())
-			.setTitle('User Banned')
-			.setDescription(`${user.tag} (${user.id})`);
-		guild.channels.cache.get(modChannel).send(banEmbed);
+	if (logFlag || guild.id === '98226572468690944') {
+		if (!banLog) {
+			if (!guild.me.hasPermission('VIEW_AUDIT_LOG')) return;
+			const banEmbed = new Discord.MessageEmbed()
+				.setThumbnail(user.displayAvatarURL())
+				.setColor('#ff0000')
+				.setTitle(`Banned ${user.tag}`)
+				.setDescription(`:lock: ${user}`)
+				.setTimestamp();
+			guild.channels.cache.get(modChannel).send(banEmbed);
+		} else {
+			const { executor, target, reason } = banLog;
+
+			if (target.id === user.id && reason) {
+				const banEmbed = new Discord.MessageEmbed()
+					.setThumbnail(user.displayAvatarURL())
+					.setColor('#ff0000')
+					.setTitle(`Banned ${user.tag}`)
+					.setDescription(`:lock: ${user}
+
+**Moderator:** ${executor}
+**Reason:** ${reason}`)
+					.setFooter(`ID: ${user.id}`)
+					.setTimestamp();
+				guild.channels.cache.get(modChannel).send(banEmbed);
+			} else if(reason) {
+				const banEmbed = new Discord.MessageEmbed()
+					.setThumbnail(user.displayAvatarURL())
+					.setColor('#ff0000')
+					.setTitle(`Banned ${user.tag}`)
+					.setDescription(`:lock: ${user}
+
+**Reason:** ${reason}`)
+					.setFooter(`ID: ${user.id}`)
+					.setTimestamp();
+				guild.channels.cache.get(modChannel).send(banEmbed);
+			} else {
+				const banEmbed = new Discord.MessageEmbed()
+					.setThumbnail(user.displayAvatarURL())
+					.setColor('#ff0000')
+					.setTitle(`Banned ${user.tag}`)
+					.setDescription(`:lock: ${user}`)
+					.setFooter(`ID: ${user.id}`)
+					.setTimestamp();
+				guild.channels.cache.get(modChannel).send(banEmbed);
+			}
+		}
 	}
 });
 
@@ -549,13 +600,49 @@ client.on('guildBanRemove', async (guild, user) => {
 	// Get mod channel from config
 	const modChannel = serverConfig.get('mod_channel');
 
+	const fetchedLogs = await guild.fetchAuditLogs({
+		limit: 1,
+		type: 'MEMBER_BAN_REMOVE',
+	});
+
+	const unBanLog = fetchedLogs.entries.first();
+
 	// If mod logging is true log the unban
 	if (logFlag) {
-		const unbanEmbed = new Discord.MessageEmbed()
-			.setThumbnail(user.displayAvatarURL())
-			.setTitle('User Unbanned')
-			.setDescription(`${user.tag} (${user.id})`);
-		guild.channels.cache.get(modChannel).send(unbanEmbed);
+		if (!unBanLog) {
+			const unbanEmbed = new Discord.MessageEmbed()
+				.setThumbnail(user.displayAvatarURL())
+				.setColor('#33cc33')
+				.setTitle(`Unbanned ${user.tag}`)
+				.setDescription(`:unlock: ${user}`)
+				.setFooter(`ID: ${user.id}`)
+				.setTimestamp();
+			guild.channels.cache.get(modChannel).send(unbanEmbed);
+		} else {
+			const { executor, target } = unBanLog;
+
+			if (target.id === user.id) {
+				const unbanEmbed = new Discord.MessageEmbed()
+					.setThumbnail(user.displayAvatarURL())
+					.setColor('#33cc33')
+					.setTitle(`Unbanned ${user.tag}`)
+					.setDescription(`:unlock: ${user}
+
+**Moderator:** ${executor}`)
+					.setFooter(`ID: ${user.id}`)
+					.setTimestamp();
+				guild.channels.cache.get(modChannel).send(unbanEmbed);
+			} else {
+				const unbanEmbed = new Discord.MessageEmbed()
+					.setThumbnail(user.displayAvatarURL())
+					.setColor('#33cc33')
+					.setTitle(`Unbanned ${user.tag}`)
+					.setDescription(`:unlock: ${user}`)
+					.setFooter(`ID: ${user.id}`)
+					.setTimestamp();
+				guild.channels.cache.get(modChannel).send(unbanEmbed);
+			}
+		}
 	}
 	// Look for the user in the muted database
 	const muteUser = await Muted.findOne({ where: { user_id: user.id } });
@@ -580,7 +667,7 @@ client.on('guildBanRemove', async (guild, user) => {
 
 // NEW MEMBER START
 
-client.on('guildMemberAdd', async (member) => {
+client.on('guildMemberAdd', async member => {
 	// Find user in muted database
 	const muteUser = await Muted.findOne({ where: { user_id: member.id } });
 	// Do nothing if no user is found
@@ -598,6 +685,65 @@ client.on('guildMemberAdd', async (member) => {
 
 process.on('unhandledRejection', error => {
 	console.error('Unhandled promise rejection:', error);
+});
+
+// MEMBER LEAVE START
+
+client.on('guildMemberRemove', async (member) => {
+	// Find server config
+	const serverConfig = await sConfig.findOne({ where: { guild_id: member.guild.id } });
+	// Get mod logging value from config
+	const logFlag = serverConfig.get('mod_logging');
+	// Get mod channel from config
+	const modChannel = serverConfig.get('mod_channel');
+
+	const user = member.user;
+
+	const firstFetch = await member.guild.fetchAuditLogs({
+		limit: 1,
+	});
+
+	const firstLog = firstFetch.entries.first();
+
+	if (firstLog.action === 'MEMBER_BAN_ADD' && firstLog.target.id === member.id) return;
+
+	const fetchedLogs = await member.guild.fetchAuditLogs({
+		limit: 1,
+		type: 'MEMBER_KICK',
+	});
+
+	const kickLog = fetchedLogs.entries.first();
+
+	if (!logFlag) return;
+
+	if (kickLog) {
+		const { executor, target, reason } = kickLog;
+
+		if (target.id === member.id) {
+			const kickEmbed = new Discord.MessageEmbed()
+				.setThumbnail(user.displayAvatarURL())
+				.setColor('#ffff00')
+				.setTitle(`Kicked ${user.tag}`)
+				.setDescription(`:athletic_shoe: ${user}
+
+**Moderator**: ${executor}
+**Reason:** ${reason}`)
+				.setFooter(`ID: ${user.id}`)
+				.setTimestamp();
+			member.guild.channels.cache.get(modChannel).send(kickEmbed);
+		} else if (!reason) {
+			const kickEmbed = new Discord.MessageEmbed()
+				.setThumbnail(user.displayAvatarURL())
+				.setColor('#ffff00')
+				.setTitle(`Kicked ${user.tag}`)
+				.setDescription(`:athletic_shoe: ${user}
+
+**Moderator**: ${executor}`)
+				.setFooter(`ID: ${user.id}`)
+				.setTimestamp();
+			member.guild.channels.cache.get(modChannel).send(kickEmbed);
+		}
+	}
 });
 
 client.login(token);
