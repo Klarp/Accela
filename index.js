@@ -545,10 +545,11 @@ client.on('guildBanAdd', async (guild, user) => {
 			if (!guild.me.hasPermission('VIEW_AUDIT_LOG')) return;
 			const banEmbed = new Discord.MessageEmbed()
 				.setThumbnail(user.displayAvatarURL())
-				.setColor('#ff0000')
+				.setColor('#EA4D4B')
 				.setTitle(`Banned ${user.tag}`)
 				.setDescription(`:lock: ${user}`)
 				.setTimestamp();
+			if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
 			guild.channels.cache.get(modChannel).send(banEmbed);
 		} else {
 			const { executor, target, reason } = banLog;
@@ -556,7 +557,7 @@ client.on('guildBanAdd', async (guild, user) => {
 			if (target.id === user.id && reason) {
 				const banEmbed = new Discord.MessageEmbed()
 					.setThumbnail(user.displayAvatarURL())
-					.setColor('#ff0000')
+					.setColor('#EA4D4B')
 					.setTitle(`Banned ${user.tag}`)
 					.setDescription(`:lock: ${user}
 
@@ -564,26 +565,29 @@ client.on('guildBanAdd', async (guild, user) => {
 **Reason:** ${reason}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
+				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
 				guild.channels.cache.get(modChannel).send(banEmbed);
 			} else if(reason) {
 				const banEmbed = new Discord.MessageEmbed()
 					.setThumbnail(user.displayAvatarURL())
-					.setColor('#ff0000')
+					.setColor('#EA4D4B')
 					.setTitle(`Banned ${user.tag}`)
 					.setDescription(`:lock: ${user}
 
 **Reason:** ${reason}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
+				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
 				guild.channels.cache.get(modChannel).send(banEmbed);
 			} else {
 				const banEmbed = new Discord.MessageEmbed()
 					.setThumbnail(user.displayAvatarURL())
-					.setColor('#ff0000')
+					.setColor('#EA4D4B')
 					.setTitle(`Banned ${user.tag}`)
 					.setDescription(`:lock: ${user}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
+				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
 				guild.channels.cache.get(modChannel).send(banEmbed);
 			}
 		}
@@ -612,11 +616,12 @@ client.on('guildBanRemove', async (guild, user) => {
 		if (!unBanLog) {
 			const unbanEmbed = new Discord.MessageEmbed()
 				.setThumbnail(user.displayAvatarURL())
-				.setColor('#33cc33')
+				.setColor('#4BB580')
 				.setTitle(`Unbanned ${user.tag}`)
 				.setDescription(`:unlock: ${user}`)
 				.setFooter(`ID: ${user.id}`)
 				.setTimestamp();
+			if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(unbanEmbed);
 			guild.channels.cache.get(modChannel).send(unbanEmbed);
 		} else {
 			const { executor, target } = unBanLog;
@@ -624,22 +629,24 @@ client.on('guildBanRemove', async (guild, user) => {
 			if (target.id === user.id) {
 				const unbanEmbed = new Discord.MessageEmbed()
 					.setThumbnail(user.displayAvatarURL())
-					.setColor('#33cc33')
+					.setColor('#4BB580')
 					.setTitle(`Unbanned ${user.tag}`)
 					.setDescription(`:unlock: ${user}
 
 **Moderator:** ${executor}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
+				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(unbanEmbed);
 				guild.channels.cache.get(modChannel).send(unbanEmbed);
 			} else {
 				const unbanEmbed = new Discord.MessageEmbed()
 					.setThumbnail(user.displayAvatarURL())
-					.setColor('#33cc33')
+					.setColor('#4BB580')
 					.setTitle(`Unbanned ${user.tag}`)
 					.setDescription(`:unlock: ${user}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
+				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(unbanEmbed);
 				guild.channels.cache.get(modChannel).send(unbanEmbed);
 			}
 		}
@@ -722,7 +729,7 @@ client.on('guildMemberRemove', async (member) => {
 		if (target.id === member.id) {
 			const kickEmbed = new Discord.MessageEmbed()
 				.setThumbnail(user.displayAvatarURL())
-				.setColor('#ffff00')
+				.setColor('#F5E44D')
 				.setTitle(`Kicked ${user.tag}`)
 				.setDescription(`:athletic_shoe: ${user}
 
@@ -730,17 +737,19 @@ client.on('guildMemberRemove', async (member) => {
 **Reason:** ${reason}`)
 				.setFooter(`ID: ${user.id}`)
 				.setTimestamp();
+			if (member.guild.id === '98226572468690944') return member.guild.channels.cache.get('158484765136125952').send(kickEmbed);
 			member.guild.channels.cache.get(modChannel).send(kickEmbed);
 		} else if (!reason) {
 			const kickEmbed = new Discord.MessageEmbed()
 				.setThumbnail(user.displayAvatarURL())
-				.setColor('#ffff00')
+				.setColor('#F5E44D')
 				.setTitle(`Kicked ${user.tag}`)
 				.setDescription(`:athletic_shoe: ${user}
 
 **Moderator**: ${executor}`)
 				.setFooter(`ID: ${user.id}`)
 				.setTimestamp();
+			if (member.guild.id === '98226572468690944') return member.guild.channels.cache.get('158484765136125952').send(kickEmbed);
 			member.guild.channels.cache.get(modChannel).send(kickEmbed);
 		}
 	}

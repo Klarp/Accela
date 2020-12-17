@@ -2,7 +2,6 @@ const osu = require('node-osu');
 const oj = require('ojsama');
 const Discord = require('discord.js');
 const curl = require('curl');
-const { Client } = require('../../index');
 const { osu_key } = require('../../config.json');
 
 module.exports = {
