@@ -728,7 +728,7 @@ client.on('guildMemberRemove', async (member) => {
 	const kickLog = fetchedLogs.entries.first();
 
 
-	if (logFlag) {
+	if (logFlag || member.guild.id === '98226572468690944') {
 		if (kickLog) {
 			const { executor, target, reason } = kickLog;
 
