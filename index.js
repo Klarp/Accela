@@ -727,36 +727,37 @@ client.on('guildMemberRemove', async (member) => {
 
 	const kickLog = fetchedLogs.entries.first();
 
-	if (!logFlag && !member.guild.id === '98226572468690944') return;
 
-	if (kickLog) {
-		const { executor, target, reason } = kickLog;
+	if (logFlag) {
+		if (kickLog) {
+			const { executor, target, reason } = kickLog;
 
-		if (target.id === member.id) {
-			const kickEmbed = new Discord.MessageEmbed()
-				.setThumbnail(user.displayAvatarURL())
-				.setColor('#F5E44D')
-				.setTitle(`Kicked ${user.tag}`)
-				.setDescription(`:athletic_shoe: ${user}
+			if (target.id === member.id) {
+				const kickEmbed = new Discord.MessageEmbed()
+					.setThumbnail(user.displayAvatarURL())
+					.setColor('#F5E44D')
+					.setTitle(`Kicked ${user.tag}`)
+					.setDescription(`:athletic_shoe: ${user}
 
 **Moderator**: ${executor}
 **Reason:** ${reason}`)
-				.setFooter(`ID: ${user.id}`)
-				.setTimestamp();
-			if (member.guild.id === '98226572468690944') return member.guild.channels.cache.get('277163440999628800').send(kickEmbed);
-			member.guild.channels.cache.get(modChannel).send(kickEmbed);
-		} else if (!reason) {
-			const kickEmbed = new Discord.MessageEmbed()
-				.setThumbnail(user.displayAvatarURL())
-				.setColor('#F5E44D')
-				.setTitle(`Kicked ${user.tag}`)
-				.setDescription(`:athletic_shoe: ${user}
+					.setFooter(`ID: ${user.id}`)
+					.setTimestamp();
+				if (member.guild.id === '98226572468690944') return member.guild.channels.cache.get('277163440999628800').send(kickEmbed);
+				member.guild.channels.cache.get(modChannel).send(kickEmbed);
+			} else if (!reason) {
+				const kickEmbed = new Discord.MessageEmbed()
+					.setThumbnail(user.displayAvatarURL())
+					.setColor('#F5E44D')
+					.setTitle(`Kicked ${user.tag}`)
+					.setDescription(`:athletic_shoe: ${user}
 
 **Moderator**: ${executor}`)
-				.setFooter(`ID: ${user.id}`)
-				.setTimestamp();
-			if (member.guild.id === '98226572468690944') return member.guild.channels.cache.get('277163440999628800').send(kickEmbed);
-			member.guild.channels.cache.get(modChannel).send(kickEmbed);
+					.setFooter(`ID: ${user.id}`)
+					.setTimestamp();
+				if (member.guild.id === '98226572468690944') return member.guild.channels.cache.get('277163440999628800').send(kickEmbed);
+				member.guild.channels.cache.get(modChannel).send(kickEmbed);
+			}
 		}
 	}
 });
