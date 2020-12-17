@@ -608,7 +608,7 @@ client.on('guildBanRemove', async (guild, user) => {
 	const unBanLog = fetchedLogs.entries.first();
 
 	// If mod logging is true log the unban
-	if (logFlag) {
+	if (logFlag || guild.id === '98226572468690944') {
 		if (!unBanLog) {
 			const unbanEmbed = new Discord.MessageEmbed()
 				.setThumbnail(user.displayAvatarURL())
@@ -714,7 +714,7 @@ client.on('guildMemberRemove', async (member) => {
 
 	const kickLog = fetchedLogs.entries.first();
 
-	if (!logFlag) return;
+	if (!logFlag && !member.guild.id === '98226572468690944') return;
 
 	if (kickLog) {
 		const { executor, target, reason } = kickLog;
