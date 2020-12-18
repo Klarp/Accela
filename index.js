@@ -551,7 +551,7 @@ client.on('guildBanAdd', async (guild, user) => {
 				.setTitle(`Banned ${user.tag}`)
 				.setDescription(`:lock: ${user}`)
 				.setTimestamp();
-			if (guild.id === '98226572468690944') return guild.channels.cache.get('277163440999628800').send(banEmbed);
+			if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
 			guild.channels.cache.get(modChannel).send(banEmbed);
 		} else {
 			const { executor, target, reason } = banLog;
@@ -567,7 +567,7 @@ client.on('guildBanAdd', async (guild, user) => {
 **Reason:** ${reason}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
-				if (guild.id === '98226572468690944') return guild.channels.cache.get('277163440999628800').send(banEmbed);
+				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
 				guild.channels.cache.get(modChannel).send(banEmbed);
 			} else if(reason) {
 				const banEmbed = new Discord.MessageEmbed()
@@ -579,7 +579,7 @@ client.on('guildBanAdd', async (guild, user) => {
 **Reason:** ${reason}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
-				if (guild.id === '98226572468690944') return guild.channels.cache.get('277163440999628800').send(banEmbed);
+				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
 				guild.channels.cache.get(modChannel).send(banEmbed);
 			} else {
 				const banEmbed = new Discord.MessageEmbed()
@@ -589,7 +589,7 @@ client.on('guildBanAdd', async (guild, user) => {
 					.setDescription(`:lock: ${user}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
-				if (guild.id === '98226572468690944') return guild.channels.cache.get('277163440999628800').send(banEmbed);
+				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
 				guild.channels.cache.get(modChannel).send(banEmbed);
 			}
 		}
@@ -625,7 +625,7 @@ client.on('guildBanRemove', async (guild, user) => {
 				.setDescription(`:unlock: ${user}`)
 				.setFooter(`ID: ${user.id}`)
 				.setTimestamp();
-			if (guild.id === '98226572468690944') return guild.channels.cache.get('277163440999628800').send(unbanEmbed);
+			if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(unbanEmbed);
 			guild.channels.cache.get(modChannel).send(unbanEmbed);
 		} else {
 			const { executor, target } = unBanLog;
@@ -640,7 +640,7 @@ client.on('guildBanRemove', async (guild, user) => {
 **Moderator:** ${executor}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
-				if (guild.id === '98226572468690944') return guild.channels.cache.get('277163440999628800').send(unbanEmbed);
+				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(unbanEmbed);
 				guild.channels.cache.get(modChannel).send(unbanEmbed);
 			} else {
 				const unbanEmbed = new Discord.MessageEmbed()
@@ -650,7 +650,7 @@ client.on('guildBanRemove', async (guild, user) => {
 					.setDescription(`:unlock: ${user}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
-				if (guild.id === '98226572468690944') return guild.channels.cache.get('277163440999628800').send(unbanEmbed);
+				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(unbanEmbed);
 				guild.channels.cache.get(modChannel).send(unbanEmbed);
 			}
 		}
@@ -743,7 +743,7 @@ client.on('guildMemberRemove', async (member) => {
 **Reason:** ${reason}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
-				if (member.guild.id === '98226572468690944') return member.guild.channels.cache.get('277163440999628800').send(kickEmbed);
+				if (member.guild.id === '98226572468690944') return member.guild.channels.cache.get('158484765136125952').send(kickEmbed);
 				member.guild.channels.cache.get(modChannel).send(kickEmbed);
 			} else if (!reason) {
 				const kickEmbed = new Discord.MessageEmbed()
@@ -755,7 +755,7 @@ client.on('guildMemberRemove', async (member) => {
 **Moderator**: ${executor}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
-				if (member.guild.id === '98226572468690944') return member.guild.channels.cache.get('277163440999628800').send(kickEmbed);
+				if (member.guild.id === '98226572468690944') return member.guild.channels.cache.get('158484765136125952').send(kickEmbed);
 				member.guild.channels.cache.get(modChannel).send(kickEmbed);
 			}
 		}
