@@ -2,8 +2,7 @@
 
 module.exports = {
 	name: 'cbt',
-	aliases: 'tosu',
-	description: 'Tests my osu! stuff',
+	description: 'Displays cbt definition',
 	module: 'Owner',
 	owner: true,
 	async execute(message) {

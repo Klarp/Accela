@@ -8,7 +8,7 @@ const { Users, sConfig } = require('../../dbObjects');
 module.exports = {
 	name: 'mania',
 	aliases: ['piano'],
-	description: 'Gets the requested osu! user information for mania.',
+	description: 'Gets the requested osu! user information for mania',
 	module: 'Osu!',
 	usage: '<user>',
 	async execute(message, args) {

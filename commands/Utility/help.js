@@ -9,10 +9,10 @@ function ucFirst(string) {
 
 module.exports = {
 	name: 'help',
-	description: 'List all of my commands or info about a specific command.',
-	module: 'Utility',
 	aliases: ['commands'],
-	usage: '[command name]',
+	description: 'Lists all commands or info about a specific command',
+	module: 'Utility',
+	usage: '[command]',
 	cooldown: 5,
 	execute(message, args) {
 		const data = [];
@@ -43,7 +43,7 @@ module.exports = {
 					owners.forEach(owner => {
 						if (owner === message.author.id) ownerCheck = true;
 					});
-					if (!ownerCheck) return message.reply('You are not listed as an owner');
+					if (!ownerCheck) return;
 				}
 				data.push(`**__${nameU} Commands__**\n`);
 
@@ -52,6 +52,7 @@ module.exports = {
 						if (c.perms) {
 							if (!checkPerm(message.member, c.perms, message)) return;
 						}
+
 						if (c.owner) {
 							let ownerCheck = false;
 							owners.forEach(owner => {
@@ -59,6 +60,11 @@ module.exports = {
 							});
 							if (!ownerCheck) return;
 						}
+
+						if (c.osuDiscord) {
+							if (message.guild.id !== '98226572468690944') return;
+						}
+
 						data.push(`**${c.name}**: ${c.description}`);
 					}
 				});

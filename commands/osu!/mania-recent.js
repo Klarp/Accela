@@ -9,7 +9,7 @@ const { timeSince, getRank } = require('../../utils');
 module.exports = {
 	name: 'mania-recent',
 	aliases: ['mr', 'maniar', 'maniarecent', 'mrecent', 'mrs'],
-	description: 'Gets the recently completed score on mania!',
+	description: 'Gets the recently completed score on mania',
 	module: 'Osu!',
 	perms: '',
 	owner: true,

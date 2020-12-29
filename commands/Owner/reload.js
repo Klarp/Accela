@@ -3,7 +3,7 @@ module.exports = {
 	description: 'Reloads a command',
 	module: 'Owner',
 	owner: true,
-	usage: '[command name]',
+	usage: '[command]',
 	args: true,
 	execute(message, args) {
 		const commandName = args[0].toLowerCase();

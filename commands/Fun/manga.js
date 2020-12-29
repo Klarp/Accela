@@ -8,7 +8,7 @@ module.exports = {
 	module: 'Fun',
 	cooldown: 5,
 	args: true,
-	usage: '[name]',
+	usage: '[manga]',
 	execute(message, args) {
 		const manga = args.join(' ');
 		aniList.search('manga', manga).then(res => {

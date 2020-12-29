@@ -9,7 +9,7 @@ module.exports = {
 	module: 'Fun',
 	cooldown: 5,
 	args: true,
-	usage: '[name]',
+	usage: '[anime]',
 	execute(message, args) {
 		const anime = args.join(' ');
 

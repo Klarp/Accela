@@ -81,8 +81,8 @@ const activities_list = [
 	'h-help im trapped here',
 	'l-let me out of this bot',
 	'now run on human souls',
-	'reading manga',
-	'watching anime',
+	'nekopara vol. 1',
+	'finding nekopara dlc',
 	'creating bot farms',
 ];
 
@@ -394,6 +394,10 @@ client.on('message', async message => {
 		if (!modFlag) return;
 	}
 
+	if (command.osuDiscord) {
+		if (message.guild.id !== '98226572468690944') return;
+	}
+
 	// If command is owner only check if user is owner
 	if (command.owner) {
 		if (!owners.includes(message.author.id)) return;
@@ -532,7 +536,9 @@ client.on('guildBanAdd', async (guild, user) => {
 	// Get mod channel from config
 	const modChannel = serverConfig.get('mod_channel');
 
-	await util.sleep(500);
+	await util.sleep(1000);
+
+	if (!guild.me.hasPermission('VIEW_AUDIT_LOG')) return;
 
 	const fetchedLogs = await guild.fetchAuditLogs({
 		limit: 1,
@@ -544,7 +550,6 @@ client.on('guildBanAdd', async (guild, user) => {
 	// If mod logging is true log the ban
 	if (logFlag || guild.id === '98226572468690944') {
 		if (!banLog) {
-			if (!guild.me.hasPermission('VIEW_AUDIT_LOG')) return;
 			const banEmbed = new Discord.MessageEmbed()
 				.setThumbnail(user.displayAvatarURL())
 				.setColor('#EA4D4B')
@@ -606,7 +611,9 @@ client.on('guildBanRemove', async (guild, user) => {
 	// Get mod channel from config
 	const modChannel = serverConfig.get('mod_channel');
 
-	await util.sleep(500);
+	await util.sleep(1000);
+
+	if (!guild.me.hasPermission('VIEW_AUDIT_LOG')) return;
 
 	const fetchedLogs = await guild.fetchAuditLogs({
 		limit: 1,
@@ -710,6 +717,8 @@ client.on('guildMemberRemove', async (member) => {
 
 	const user = member.user;
 
+	if (!member.guild.me.hasPermission('VIEW_AUDIT_LOG')) return;
+
 	const firstFetch = await member.guild.fetchAuditLogs({
 		limit: 1,
 	});
@@ -718,7 +727,7 @@ client.on('guildMemberRemove', async (member) => {
 
 	if (firstLog.action === 'MEMBER_BAN_ADD' && firstLog.target.id === member.id) return;
 
-	await util.sleep(500);
+	await util.sleep(1000);
 
 	const fetchedLogs = await member.guild.fetchAuditLogs({
 		limit: 1,

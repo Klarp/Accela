@@ -1,16 +1,17 @@
+const { MessageEmbed } = require('discord.js');
 const { modAction } = require('../../utils');
 const ms = require('ms');
 
 module.exports = {
 	name: 'temp-mute',
 	aliases: ['tempmute', 'tmute'],
-	description: 'Temporally mutes users.',
+	description: 'Temporally mutes a member in the server',
 	module: 'Admin',
 	guildOnly: true,
 	perms: 'MANAGE_ROLES',
 	args: true,
 	modCmd: true,
-	usage: '<user> <time> <reason>',
+	usage: '<member> <time> <reason>',
 	async execute(message, args) {
 		// >>temp-mute [user] [time] [reason]
 
@@ -66,7 +67,12 @@ module.exports = {
 		} else {
 			// Give the user the muted role
 			tag.roles.add(muteRole.id).then(() => {
-				tag.send(`You have been temp muted in ${message.guild.name} for ${ms(ms(muteTime))}! Reason: ${reason}`);
+				const tempMuteEmbed = new MessageEmbed()
+					.setTitle(`Temp Muted in ${message.guild.name}`)
+					.setDescription(`Reason: ${reason}
+Time: ${ms(ms(muteTime))}`);
+
+				tag.send(tempMuteEmbed);
 			});
 			message.channel.send(`Muted: ${tag.user} for ${ms(ms(muteTime))}`);
 			// Log the mute

@@ -4,7 +4,7 @@ const { Client } = require('../../index');
 module.exports = {
 	name: 'invite',
 	aliases: 'inv',
-	description: 'Invite the bot into your own server',
+	description: 'Get the invite link for Accela',
 	module: 'Utility',
 	execute(message) {
 		const bot = Client.user;

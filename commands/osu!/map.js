@@ -10,7 +10,7 @@ const idGrab = require('../../index.js');
 module.exports = {
 	name: 'map',
 	aliases: ['beatmap', 'bmap'],
-	description: 'Gets the requested beatmap information.',
+	description: 'Gets the requested beatmap information',
 	module: 'Osu!',
 	usage: '<beatmap> +<mods>',
 	async execute(message, args) {

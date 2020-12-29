@@ -8,8 +8,6 @@ const { osu_key } = require('../../config.json');
 const { Users, sConfig } = require('../../dbObjects');
 const { timeSince, getShortMods, getRank, getDiff } = require('../../utils');
 
-
-
 module.exports = {
 	name: 'top',
 	aliases: 't',

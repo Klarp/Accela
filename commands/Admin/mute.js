@@ -1,16 +1,17 @@
+const { MessageEmbed } = require('discord.js');
 const { modAction } = require('../../utils');
 const { Muted } = require('../../dbObjects');
 
 module.exports = {
 	name: 'mute',
 	aliases: 'silence',
-	description: 'Mute a member',
+	description: 'Mute a member in the server',
 	module: 'Admin',
 	guildOnly: true,
 	perms: 'MANAGE_ROLES',
 	args: true,
 	modCmd: true,
-	usage: '<user>',
+	usage: '<member> <reason>',
 	async execute(message, args) {
 		// >>mute [user] [reason]
 
@@ -60,7 +61,11 @@ module.exports = {
 		} else {
 			// Give the user the muted role
 			tag.roles.add(muteRole.id).then(() => {
-				tag.send(`You have been muted in ${message.guild.name}! Reason: ${reason}`);
+				const muteEmbed = new MessageEmbed()
+					.setTitle(`Muted in ${message.guild.name}`)
+					.setDescription(`Reason: ${reason}`);
+
+				tag.send(muteEmbed);
 			});
 			message.channel.send(`Muted: ${tag.user}`);
 			// Log the mute

@@ -2,9 +2,9 @@ const Discord = require('discord.js');
 
 module.exports = {
 	name: 'server-info',
+	aliases: ['serverinfo', 'sinfo'],
 	description: 'Get information about the server',
 	module: 'Utility',
-	aliases: ['serverinfo', 'sinfo'],
 	async execute(message) {
 		const server = message.guild;
 		const desc = server.description || 'None';

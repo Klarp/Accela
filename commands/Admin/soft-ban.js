@@ -1,15 +1,16 @@
+const { MessageEmbed } = require('discord.js');
 const { modAction } = require('../../utils');
 
 module.exports = {
 	name: 'soft-ban',
 	aliases: ['sban', 'softban'],
-	description: 'Kick a member and remove messages',
+	description: 'Kick a member from the server and remove member\'s messages',
 	module: 'Admin',
 	guildOnly: true,
 	perms: 'BAN_MEMBERS',
 	args: true,
 	modCmd: true,
-	usage: '<user>',
+	usage: '<member> <reason>',
 	execute(message, args) {
 		const toSF = message.mentions.members.first() || message.guild.member(args[0]);
 
@@ -28,8 +29,13 @@ module.exports = {
 		let reason = args.slice(1).join(' ');
 		if (!reason) reason = 'No reason given.';
 
+		const sfEmbed = new MessageEmbed()
+			.setTitle(`Softbanned from ${message.guild.name}`)
+			.setColor('#EA4D4B')
+			.setDescription(`Reason: ${reason}`);
+
 		try {
-			toSF.send(`You have been softbanned from **${message.guild.name}**! Reason: ${reason}`);
+			toSF.send(sfEmbed);
 		} catch (err) {
 			console.log(err);
 			message.channel.send('Could not send a DM to the member.');

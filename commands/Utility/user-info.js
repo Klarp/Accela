@@ -2,9 +2,9 @@ const Discord = require('discord.js');
 
 module.exports = {
 	name: 'user-info',
+	aliases: ['userinfo', 'uinfo'],
 	description: 'Get information about yourself or a user',
 	module: 'Utility',
-	aliases: ['userinfo', 'uinfo'],
 	usage: '<user>',
 	execute(message) {
 		const status = {

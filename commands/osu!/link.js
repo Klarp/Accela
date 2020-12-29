@@ -4,9 +4,9 @@ const { osu_key } = require('../../config.json');
 
 module.exports = {
 	name: 'link',
-	description: 'Links osu! account for use with osu commands.',
+	description: 'Links osu! account for use with osu! commands',
 	module: 'Osu!',
-	usage: '<osu user>',
+	usage: '<user>',
 	args: true,
 	async execute(message, args) {
 		const osuApi = new osu.Api(osu_key);

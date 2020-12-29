@@ -1,14 +1,15 @@
+const { MessageEmbed } = require('discord.js');
 const { modAction } = require('../../utils');
 
 module.exports = {
 	name: 'kick',
-	description: 'Kick a user from the server.',
+	description: 'Kick a member from the server.',
 	module: 'Admin',
 	guildOnly: true,
 	perms: 'KICK_MEMBERS',
 	args: true,
 	modCmd: true,
-	usage: '<user>',
+	usage: '<member> <reason>',
 	execute(message, args) {
 		const toKick = message.mentions.members.first() || message.guild.member(args[0]);
 
@@ -27,8 +28,13 @@ module.exports = {
 		let reason = args.slice(1).join(' ');
 		if (!reason) reason = 'No reason given.';
 
+		const kickEmbed = new MessageEmbed()
+			.setTitle(`You've been kicked from ${message.guild.name}`)
+			.setColor('#F5E44D')
+			.setDescription(`Reason: ${reason}`);
+
 		try {
-			toKick.send(`You have been kicked from **${message.guild.name}**! Reason: ${reason}`);
+			toKick.send(kickEmbed);
 		} catch (err) {
 			console.log(err);
 			message.channel.send('Could not send a DM to the member.');

@@ -1,16 +1,17 @@
+const { MessageEmbed } = require('discord.js');
 const { modAction } = require('../../utils');
 const { Muted } = require('../../dbObjects');
 
 module.exports = {
 	name: 'unmute',
 	aliases: ['unsilence', 'umute'],
-	description: 'Unmute a member',
+	description: 'Unmute a member in the server',
 	module: 'Admin',
 	guildOnly: true,
 	perms: 'MANAGE_ROLES',
 	args: true,
 	modCmd: true,
-	usage: '<user>',
+	usage: '<member>',
 	async execute(message, args) {
 		// >>unmute [user] [reason]
 
@@ -38,7 +39,11 @@ module.exports = {
 		if(tag.roles.cache.find(r => r.name === 'muted')) {
 			// Remove the muted role from the user
 			tag.roles.remove(muteRole.id).then(() => {
-				tag.send(`You have been unmuted in ${message.guild.name}! Reason: ${reason}`);
+				const unMuteEmbed = new MessageEmbed()
+					.setTitle(`Unmuted in ${message.guild.name}`)
+					.setColor('#4BB580')
+					.setDescription(`Reason: ${reason}`);
+				tag.send(unMuteEmbed);
 			});
 			message.channel.send(`Unmuted: ${tag.user}`);
 			// Log the unmute

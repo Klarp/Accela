@@ -1,14 +1,15 @@
+const { MessageEmbed } = require('discord.js');
 const { modAction } = require('../../utils');
 
 module.exports = {
 	name: 'ban',
-	description: 'Ban a user from the server.',
+	description: 'Ban a member from the server',
 	module: 'Admin',
 	guildOnly: true,
 	perms: 'BAN_MEMBERS',
 	args: true,
 	modCmd: true,
-	usage: '<user> <reason>',
+	usage: '<member> <reason>',
 	execute(message, args) {
 
 		const toBan = message.mentions.members.first() || message.guild.member(args[0]);
@@ -23,13 +24,18 @@ module.exports = {
 		/**
 		 * @arg {string} reason The ban reason
 		 * @returns {string} The message to send to the log channel, user, and message channel
-		 */
+		*/
 
 		let reason = args.slice(1).join(' ');
 		if (!reason) reason = 'No reason given.';
 
+		const banEmbed = new MessageEmbed()
+			.setTitle(`Banned from ${message.guild.name}`)
+			.setColor('#EA4D4B')
+			.setDescription(`Reason: ${reason}`);
+
 		try {
-			toBan.send(`You have been banned from **${message.guild.name}**! Reason: ${reason}`);
+			toBan.send(banEmbed);
 		} catch (err) {
 			console.log(err);
 			message.channel.send('Could not send a DM to the member.');
@@ -47,5 +53,3 @@ module.exports = {
 		message.channel.send(`Banned ${toBan.user.username} ${reason ? 'with reason: ' + reason : 'with no reason given!'}`);
 	},
 };
-
-// also gonna redo this

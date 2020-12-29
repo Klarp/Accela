@@ -7,10 +7,10 @@ const { getRankRole } = require('../../utils');
 
 module.exports = {
 	name: 'mode',
-	description: 'Changes mode for rank role system',
+	description: 'Changes mode for rank role system (osu! Game Discord Only)',
 	module: 'Osu!',
 	guildOnly: true,
-	usage: '[mode]',
+	usage: '<mode>',
 	async execute(message, args) {
 		const osuApi = new osu.Api(osu_key);
 

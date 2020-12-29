@@ -5,9 +5,9 @@ const { version } = require('../../package.json');
 
 module.exports = {
 	name: 'bot-info',
+	aliases: ['botinfo', 'binfo', 'info'],
 	description: 'Get information about the bot',
 	module: 'Utility',
-	aliases: ['botinfo', 'binfo', 'info'],
 	async execute(message) {
 		let prefix = '>>';
 		const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });

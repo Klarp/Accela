@@ -6,13 +6,13 @@ const curl = require('curl');
 const { Client } = require('../../index');
 const { osu_key } = require('../../config.json');
 const { Users, sConfig } = require('../../dbObjects');
-const { getShortMods, getRank, timeSince , getDiff} = require('../../utils');
+const { getShortMods, getRank, timeSince, getDiff } = require('../../utils');
 const idGrab = require('../../index.js');
 
 module.exports = {
 	name: 'compare',
-	aliases: ['cs', 'c'],
-	description: 'Compares with last score sent.',
+	aliases: ['cs'],
+	description: 'Compares with last score sent',
 	module: 'Osu!',
 	async execute(message, args) {
 		if (!idGrab) return message.reply('No score to compare.');

@@ -4,7 +4,7 @@ const { MessageEmbed } = require('discord.js');
 module.exports = {
 	name: 'server-list',
 	aliases: ['serverlist', 'slist'],
-	description: 'Get list of servers the bot is in [owner only]',
+	description: 'DM list of servers the bot is in',
 	module: 'Owner',
 	owner: true,
 	async execute(message) {

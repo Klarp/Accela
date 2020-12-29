@@ -2,7 +2,7 @@ const { Client } = require('../../index.js');
 
 module.exports = {
 	name: 'ping',
-	description: 'Ping!',
+	description: 'Get the websocket ping',
 	module: 'Utility',
 	cooldown: 5,
 	execute(message) {
