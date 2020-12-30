@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const { timeSince } = require('../../utils');
 
 module.exports = {
 	name: 'user-info',
@@ -18,15 +19,23 @@ module.exports = {
 
 		const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' });
 		let lastSeen;
+		let lastTime;
+		let lastTimeSince;
 		let lmonth, lday, lyear;
 		if (member.lastMessage) {
 			lastSeen = member.lastMessage.createdAt;
+			lastTime = lastSeen.toLocaleTimeString();
+			lastTimeSince = timeSince(lastSeen);
 			[{ value: lmonth },, { value: lday },, { value: lyear }] = dateTimeFormat.formatToParts(lastSeen);
 		} else {
 			lastSeen = 'Unknown';
 		}
 		const joined = member.joinedAt;
 		const created = target.createdAt;
+		const joinTime = joined.toLocaleTimeString();
+		const createdTime = created.toLocaleTimeString();
+		const joinSince = timeSince(joined);
+		const createdSince = timeSince(created);
 		const [{ value: jmonth },, { value: jday },, { value: jyear }] = dateTimeFormat.formatToParts(joined);
 		const [{ value: cmonth },, { value: cday },, { value: cyear }] = dateTimeFormat.formatToParts(created);
 
@@ -71,11 +80,11 @@ module.exports = {
 **Activity:** ${activity}
 **Playing:** ${game} (${gameState})
 			
-**Joined On:** ${jday} ${jmonth} ${jyear}
-**Last Seen:** ${lastDate}
+**Joined Server:** ${joinSince} \`${jday} ${jmonth} ${jyear} ${joinTime}\`
+**Last Seen:** ${lastTimeSince} \`${lastDate} ${lastTime}\`
 			
 **Roles:** ${roles}`)
-			.setFooter(`Joined Discord: ${cday} ${cmonth} ${cyear}`);
+			.setFooter(`Joined Discord: ${createdSince} (${cday} ${cmonth} ${cyear} ${createdTime})`);
 
 		message.channel.send(infoEmbed);
 	},

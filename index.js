@@ -491,7 +491,7 @@ client.on('messageDelete', async message => {
 	// If log flag is true log the message delete
 	if (logFlag) {
 		const delEmbed = new Discord.MessageEmbed()
-			.setAuthor(`${message.author.tag} (${message.author.id})`, message.author.displayAvatarURL())
+			.setAuthor(`${message.author.tag} (${message.author.id})`, message.author.displayAvatarURL({ dynamic : true }))
 			.setColor('RED')
 			.setTitle('Message Deleted')
 			.setDescription(message)
@@ -551,7 +551,7 @@ client.on('guildBanAdd', async (guild, user) => {
 	if (logFlag || guild.id === '98226572468690944') {
 		if (!banLog) {
 			const banEmbed = new Discord.MessageEmbed()
-				.setThumbnail(user.displayAvatarURL())
+				.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 				.setColor('#EA4D4B')
 				.setTitle(`Banned ${user.tag}`)
 				.setDescription(`:lock: ${user}`)
@@ -563,7 +563,7 @@ client.on('guildBanAdd', async (guild, user) => {
 
 			if (target.id === user.id && reason) {
 				const banEmbed = new Discord.MessageEmbed()
-					.setThumbnail(user.displayAvatarURL())
+					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 					.setColor('#EA4D4B')
 					.setTitle(`Banned ${user.tag}`)
 					.setDescription(`:lock: ${user}
@@ -576,7 +576,7 @@ client.on('guildBanAdd', async (guild, user) => {
 				guild.channels.cache.get(modChannel).send(banEmbed);
 			} else if(reason) {
 				const banEmbed = new Discord.MessageEmbed()
-					.setThumbnail(user.displayAvatarURL())
+					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 					.setColor('#EA4D4B')
 					.setTitle(`Banned ${user.tag}`)
 					.setDescription(`:lock: ${user}
@@ -588,7 +588,7 @@ client.on('guildBanAdd', async (guild, user) => {
 				guild.channels.cache.get(modChannel).send(banEmbed);
 			} else {
 				const banEmbed = new Discord.MessageEmbed()
-					.setThumbnail(user.displayAvatarURL())
+					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 					.setColor('#EA4D4B')
 					.setTitle(`Banned ${user.tag}`)
 					.setDescription(`:lock: ${user}`)
@@ -626,7 +626,7 @@ client.on('guildBanRemove', async (guild, user) => {
 	if (logFlag || guild.id === '98226572468690944') {
 		if (!unBanLog) {
 			const unbanEmbed = new Discord.MessageEmbed()
-				.setThumbnail(user.displayAvatarURL())
+				.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 				.setColor('#4BB580')
 				.setTitle(`Unbanned ${user.tag}`)
 				.setDescription(`:unlock: ${user}`)
@@ -639,7 +639,7 @@ client.on('guildBanRemove', async (guild, user) => {
 
 			if (target.id === user.id) {
 				const unbanEmbed = new Discord.MessageEmbed()
-					.setThumbnail(user.displayAvatarURL())
+					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 					.setColor('#4BB580')
 					.setTitle(`Unbanned ${user.tag}`)
 					.setDescription(`:unlock: ${user}
@@ -651,7 +651,7 @@ client.on('guildBanRemove', async (guild, user) => {
 				guild.channels.cache.get(modChannel).send(unbanEmbed);
 			} else {
 				const unbanEmbed = new Discord.MessageEmbed()
-					.setThumbnail(user.displayAvatarURL())
+					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 					.setColor('#4BB580')
 					.setTitle(`Unbanned ${user.tag}`)
 					.setDescription(`:unlock: ${user}`)
@@ -743,7 +743,7 @@ client.on('guildMemberRemove', async (member) => {
 
 			if (target.id === member.id) {
 				const kickEmbed = new Discord.MessageEmbed()
-					.setThumbnail(user.displayAvatarURL())
+					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 					.setColor('#F5E44D')
 					.setTitle(`Kicked ${user.tag}`)
 					.setDescription(`:athletic_shoe: ${user}
@@ -756,7 +756,7 @@ client.on('guildMemberRemove', async (member) => {
 				member.guild.channels.cache.get(modChannel).send(kickEmbed);
 			} else if (!reason) {
 				const kickEmbed = new Discord.MessageEmbed()
-					.setThumbnail(user.displayAvatarURL())
+					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 					.setColor('#F5E44D')
 					.setTitle(`Kicked ${user.tag}`)
 					.setDescription(`:athletic_shoe: ${user}
