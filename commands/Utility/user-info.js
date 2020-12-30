@@ -29,7 +29,11 @@ module.exports = {
 			[{ value: lmonth },, { value: lday },, { value: lyear }] = dateTimeFormat.formatToParts(lastSeen);
 		} else {
 			lastSeen = 'Unknown';
+			lastTime = '';
 		}
+
+		if (!lastTimeSince) lastTimeSince = 'Unknown';
+
 		const joined = member.joinedAt;
 		const created = target.createdAt;
 		const joinTime = joined.toLocaleTimeString();
@@ -59,7 +63,6 @@ module.exports = {
 				gameState = target.presence.activities[1].state;
 			}
 			if (target.presence.activities[1].name === 'Spotify') {
-				console.log(target.presence.activities[1]);
 				gameState = `${target.presence.activities[1].state} - ${target.presence.activities[1].details}`;
 			}
 		}
@@ -72,6 +75,10 @@ module.exports = {
 			lastDate = 'Unknown';
 		}
 
+		let lastMessage = '';
+
+		if (member.lastMessage) lastMessage = `\`${lastDate} ${lastTime}\``;
+
 		const infoEmbed = new Discord.MessageEmbed()
 			.setAuthor(`${target.tag} (${target.id})`, target.displayAvatarURL({ dynamic : true }))
 			.setColor('BLUE')
@@ -81,7 +88,7 @@ module.exports = {
 **Playing:** ${game} (${gameState})
 			
 **Joined Server:** ${joinSince} \`${jday} ${jmonth} ${jyear} ${joinTime}\`
-**Last Seen:** ${lastTimeSince} \`${lastDate} ${lastTime}\`
+**Last Seen:** ${lastTimeSince} ${lastMessage}
 			
 **Roles:** ${roles}`)
 			.setFooter(`Joined Discord: ${createdSince} (${cday} ${cmonth} ${cyear} ${createdTime})`);
