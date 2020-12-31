@@ -27,7 +27,8 @@ module.exports = {
 		});
 
 		let findUser;
-		const menUser = message.mentions.users.first();
+		let menUser = message.mentions.users.first();
+		if (args[0]) menUser = message.guild.member(args[0]).user;
 		let prefix = '>>';
 
 		if (message.channel.type !== 'dm') {

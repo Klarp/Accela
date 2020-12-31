@@ -7,15 +7,16 @@ module.exports = {
 	description: 'Get information about yourself or a user',
 	module: 'Utility',
 	usage: '<user>',
-	execute(message) {
+	execute(message, args) {
 		const status = {
 			online: 'Online',
 			idle: 'Idle',
 			dnd: 'Do Not Disturb',
 			offline: 'Offline/Invisible',
 		};
-		const member = message.mentions.members.first() || message.member;
-		const target = message.mentions.users.first() || message.author;
+		const member = message.mentions.members.first() || message.guild.member(args[0]) || message.member;
+		let target = message.mentions.users.first() || message.author;
+		if (args[0]) target = message.guild.member(args[0]).user;
 
 		const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' });
 		let lastSeen;
@@ -55,12 +56,15 @@ module.exports = {
 
 		if (target.presence.activities[0]) {
 			activity = target.presence.activities[0].state;
+			if (activity === null) activity = 'None';
 		}
 
 		if (target.presence.activities[1]) {
 			game = target.presence.activities[1].name;
+			if (game === null) game = 'None';
 			if (target.presence.activities[1].state) {
 				gameState = target.presence.activities[1].state;
+				if (gameState === null) gameState = 'None';
 			}
 			if (target.presence.activities[1].name === 'Spotify') {
 				gameState = `${target.presence.activities[1].state} - ${target.presence.activities[1].details}`;

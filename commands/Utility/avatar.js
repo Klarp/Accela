@@ -5,7 +5,8 @@ module.exports = {
 	module: 'Utility',
 	usage: '<user>',
 	execute(message, args) {
-		const menUser = message.mentions.users.first() || message.guild.member(args[0]);
+		let menUser = message.mentions.users.first();
+		if (args[0]) menUser = message.guild.member(args[0]).user;
 
 		if(menUser) {
 			message.channel.send(menUser.displayAvatarURL({ size:4096, dynamic:true }));
