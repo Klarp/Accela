@@ -4,6 +4,8 @@ Accela is an osu! and moderation bot
 
 Accela strives to become a simple and elegant looking osu! bot which only shows the user the most important information.
 
+To invite Accela to your server [Click Here](https://discord.com/oauth2/authorize?client_id=687856844848234502&scope=bot&permissions=805383190)
+
 ## Installation
 
 Use the package manager [node.js](https://nodejs.org/en/) to install Accela.
