@@ -1,8 +1,7 @@
 # Accela
 
-Accela is a new osu! and moderation bot
+Accela is a osu! and moderation bot
 
-We are currently in beta but have functional and neat osu! related commands. 
 Accela strives to become a simple and elegant looking osu! bot which only shows the user the most important information.
 
 ## Installation
