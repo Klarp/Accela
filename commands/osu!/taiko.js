@@ -22,7 +22,12 @@ module.exports = {
 		let prefix = '>>';
 		let findUser;
 		let menUser = message.mentions.users.first();
-		if (args[0] && !menUser) menUser = message.guild.member(args[0]).user;
+		let memberFlag = false;
+		if (!menUser && args[0]) {
+			memberFlag = true;
+			menUser = message.guild.member(args[0]);
+		}
+		if (!menUser && memberFlag) menUser = message.member;
 		let name;
 		let verified = `:x: Not Verified [use ${prefix}verify]`;
 

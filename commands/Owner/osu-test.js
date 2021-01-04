@@ -8,13 +8,15 @@ module.exports = {
 	module: 'Owner',
 	owner: true,
 	async execute(message, args) {
-		let member;
+		let menUser = message.mentions.users.first();
+		let memberFlag = false;
+		if (!menUser && args[0]) {
+			memberFlag = true;
+			menUser = message.guild.member(args[0]);
+		}
+		if (!menUser && memberFlag) menUser = message.member;
 
-		if (message.mentions.members) member = message.mentions.members.first();
-		if (args[0] && !member) member = message.guild.member(args[0]).user;
-		if (!member) message.member;
-
-		const user = await Users.findOne({ where: { user_id: member.id } });
+		const user = await Users.findOne({ where: { user_id: menUser.id } });
 		if (!user) return message.reply('Could not find user!');
 
 		const mode = user.get('osu_mode');
@@ -24,8 +26,8 @@ module.exports = {
 		const mania_rank = user.get('mania_rank');
 
 		const searchEmbed = new MessageEmbed()
-			.setAuthor(`${member.user.tag} (${member.id})`)
-			.setTitle(`${member.displayName}'s Info`)
+			.setAuthor(`${menUser.user.tag} (${menUser.id})`)
+			.setTitle(`${menUser.displayName}'s Info`)
 			.setColor('0xff69b4')
 			.setDescription(`Current Mode: ${mode}
 osu!std: ${std_rank}

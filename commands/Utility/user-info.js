@@ -15,12 +15,20 @@ module.exports = {
 			offline: 'Offline/Invisible',
 		};
 		let member = message.mentions.members.first();
-		if (!member && args[0]) member = message.guild.member(args[0]);
-		if (!member) member = message.member;
+		let memberFlag = false;
+		if (!member && args[0]) {
+			memberFlag = true;
+			member = message.guild.member(args[0]);
+		}
+		if (!member && memberFlag) member = message.member;
 
 		let target = message.mentions.users.first();
-		if (!target && args[0]) target = message.guild.member(args[0]).user;
-		if (!target) target = message.member.user;
+		let targetFlag = false;
+		if (!member && args[0]) {
+			targetFlag = true;
+			target = message.guild.member(args[0]);
+		}
+		if (!target && targetFlag) target = message.member.user;
 
 		const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' });
 		let lastSeen;
@@ -39,7 +47,6 @@ module.exports = {
 
 		if (!lastTimeSince) lastTimeSince = 'Unknown';
 
-		console.log(target);
 		const joined = member.joinedAt;
 		const created = target.createdAt;
 		const joinTime = joined.toLocaleTimeString();
