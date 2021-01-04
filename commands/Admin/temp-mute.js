@@ -13,23 +13,39 @@ module.exports = {
 	modCmd: true,
 	usage: '<member> <time> <reason>',
 	async execute(message, args) {
-		// >>temp-mute [user] [time] [reason]
-
 		// Stop if no mentions found
 		if (!message.mentions.members.first()) return message.reply('Please mention a user.');
-		// Grab the first mentions in the message
-		const tag = message.mentions.members.first();
+
+		/**
+		 * Member to be temp-muted
+		 * @const {Object}
+		 */
+		const tag = message.mentions.members.first() || message.guild.member(args[0]);
+
 		// Stop if the mention is the message author
 		if (message.author === tag) return message.reply('You can not use this on yourself');
+
 		// Remove the mention from the arguments
 		args.shift();
-		// Get the time from the arguments
+
+		/**
+		 * Time to be muted
+		 * @const {string} muteTime
+		 */
 		const muteTime = args.shift();
-		// Join the arguments to make the reason
+
+		/**
+		 * @arg reason The temp-mute reason
+		 */
 		let reason = args.join(' ');
+
 		// If no reason is found default to this
 		if (!reason) reason = 'No Reason Given';
-		// Find muted role in the server
+
+		/**
+		 * Find muted role in the server
+		 * @type {Object}
+		 */
 		let muteRole = message.guild.roles.cache.find(r => r.name === 'muted');
 
 		// MUTE ROLE CREATION START
@@ -81,7 +97,7 @@ Time: ${ms(ms(muteTime))}`);
 			// Remove mute after time is finished
 			setTimeout(function() {
 				tag.roles.remove(muteRole.id);
-				modAction(message.author, tag, 'Unmute', 'Temp Mute Removal');
+				modAction(message.author, tag, 'Unmute', 'Temp Mute Removal', undefined);
 			}, ms(muteTime));
 		}
 	},

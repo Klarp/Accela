@@ -13,19 +13,25 @@ module.exports = {
 	modCmd: true,
 	usage: '<member> <reason>',
 	async execute(message, args) {
-		// >>mute [user] [reason]
-
 		// Stop if no mentions found
 		if (!message.mentions.members.first()) return message.reply('Please mention a user.');
-		// Grab the first mention in the message
-		const tag = message.mentions.members.first();
+
+		/**
+		 * Member to be muted
+		 * @const {Object}
+		 */
+		const tag = message.mentions.members.first() || message.guild.member(args[0]);
+
 		// Stop if the mention is the message author
 		if (message.member === tag) return message.reply('You can not use this on yourself');
-		// Remove the mention from the arguments
+
+		// Remove the mention/ID from the arguments
 		args.shift();
-		// Join the arguments to make the reason
+
+		/**
+		 * @arg reason The mute reason
+		 */
 		let reason = args.join(' ');
-		// If no reason is found default to this
 		if (!reason) reason = 'No Reason Given';
 		// Find the muted role in the server
 		let muteRole = message.guild.roles.cache.find(r => r.name === 'muted');
@@ -69,7 +75,7 @@ module.exports = {
 			});
 			message.channel.send(`Muted: ${tag.user}`);
 			// Log the mute
-			modAction(message.author, tag, 'Mute', reason);
+			modAction(message.author, tag, 'Mute', reason, undefined);
 			// DATABASE ENTRY START
 			try {
 				// Add muted user to the database

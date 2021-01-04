@@ -46,7 +46,7 @@ module.exports = {
 
 		let name;
 		let id;
-		let mods = oj.modbits.none;
+		let mods = oj.modbits.nomod;
 		let acc_percent;
 		let combo;
 		let nmiss;
@@ -112,11 +112,6 @@ module.exports = {
 		// Find user through the api
 		osuApi.getUserBest({ u: search, limit: 10 }).then(async r => {
 			const recent = r[topNum];
-			Number.prototype.toFixedDown = function(digits) {
-				const re = new RegExp('(\\d+\\.\\d{' + digits + '})(\\d)'),
-					m = this.toString().match(re);
-				return m ? parseFloat(m[1]) : this.valueOf();
-			};
 			let acc = recent.accuracy;
 			acc = acc.toFixed(4);
 			// Calculate acc
@@ -165,7 +160,7 @@ module.exports = {
 				const ppNum = parseFloat(ppFix[0]);
 				const maxNum = parseFloat(maxFix[0]);
 
-				const rDate = timeSince(recent.date);
+				const rDate = timeSince(recent.date.getTime());
 
 				// Create embed (Need to stlye this better)
 				const osuEmbed = new discord.MessageEmbed()

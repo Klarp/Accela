@@ -8,6 +8,13 @@ const { osu_key } = require('./config.json');
 const { sConfig } = require('./dbObjects.js');
 
 module.exports = {
+	/**
+	 * Checks user permissions
+	 * @param {Object} user User to check
+	 * @param {string} perm Permission to check
+	 * @param {Object} message Discord Message
+	 * @returns {boolean}
+	 */
 	checkPerm(user, perm, message) {
 		if (message.channel.type === 'dm') return true;
 		if (user.hasPermission(perm)) {
@@ -17,23 +24,30 @@ module.exports = {
 		}
 	},
 
+	/**
+	 * Gets emoji that matches star level
+	 * @param {string} star Star level of map
+	 * @returns {Object} Discord Emoji
+	 */
 	getDiff(star) {
+		/** @const {Object} emoji Discord Emoji */
 		const emoji = Client.emojis.cache;
+
 		let diff;
 
-		if (star < 2) {
+		if (star < '2') {
 			// Easy
 			diff = emoji.get('738125708802654322');
-		} else if (star < 2.7) {
+		} else if (star < '2.7') {
 			// Normal
 			diff = emoji.get('738125709180010557');
-		} else if (star < 4) {
+		} else if (star < '4') {
 			// Hard
 			diff = emoji.get('738125709113032716');
-		} else if (star < 5.3) {
+		} else if (star < '5.3') {
 			// Insane
 			diff = emoji.get('738125709129547947');
-		} else if (star < 6.5) {
+		} else if (star < '6.5') {
 			// Expert
 			diff = emoji.get('738125708810780744');
 		} else {
@@ -44,7 +58,13 @@ module.exports = {
 		return diff;
 	},
 
+	/**
+	 * Gets emoji that matches rank
+	 * @param {string} rank Rank on osu! score
+	 * @returns {Object} Discord Emoji
+	 */
 	getRank(rank) {
+		/** @const {Object} emoji Discord Emoji */
 		const emoji = Client.emojis.cache;
 		let e;
 
@@ -81,6 +101,12 @@ module.exports = {
 		return e;
 	},
 
+	/**
+	 * Sets the rank for member
+	 * @param {Object} member Discord Member
+	 * @param {number} rank osu! rank
+	 * @param {number} mode osu! mode
+	 */
 	async getRankRole(member, rank, mode) {
 		let role;
 
@@ -175,6 +201,7 @@ module.exports = {
 			}
 		}
 
+		/** @const {string[]} roleList List of osu! Game discord roles */
 		const roleList = [
 			'754085973003993119',
 			'754086188025118770',
@@ -204,6 +231,7 @@ module.exports = {
 
 		roleList.forEach(r => {
 			if (member.roles.cache.get(r)) {
+				/** @const {number} rankRole Rank role ID */
 				const rankRole = member.roles.cache.get(r).id;
 				if (rankRole === role) return;
 				member.roles.remove(r);
@@ -212,7 +240,13 @@ module.exports = {
 		member.roles.add(role);
 	},
 
+	/**
+	 * Returns short mods
+	 * @param {string[]} mods
+	 * @returns {string} Short mods
+	 */
 	getShortMods(mods) {
+		/** @const {string[]} osu_mods osu! long form mods */
 		const osu_mods = [
 			'None',
 			'NoFail',
@@ -227,6 +261,8 @@ module.exports = {
 			'Autoplay',
 			'SpunOut',
 		];
+
+		/** @const {Object} mod_sh osu! mod list */
 		const mod_sh = {
 			'None': 'NoMod',
 			'NoFail': 'NF',
@@ -242,51 +278,73 @@ module.exports = {
 			'SpunOut': 'SO',
 		};
 
-
+		/** @const {Object} modsOnly Filters mods */
 		const modsOnly = mods.filter(mod =>
 			osu_mods.includes(mod));
 
+		/** @const {string} shortMods Short form of mods */
 		const shortMods = modsOnly.map(mod => mod_sh[mod]).join('');
 
 		return shortMods;
 	},
 
+	/**
+	 * Detects map in message
+	 * @param {Object} msg Message
+	 * @returns {Object} Discord Embed
+	 */
 	mapDetect(msg) {
 		const osuApi = new osu.Api(osu_key);
 
+		/** @const {string} bMap The beatmap id from link */
 		const bMap = msg.content.split('/').pop();
+		/** @const {Object} client The bot client */
 		const client = msg.client;
 
 		osuApi.getBeatmaps({ b: bMap }).then(beatmap => {
+			/** @const {Object} map osu! beatmap */
 			const map = beatmap[0];
 			osuApi.getUser({ u: map.creator }).then(u => {
 				curl.get(`https://osu.ppy.sh/osu/${map.id}`, function(err, response, body) {
-
+					/** @const {Object} parser Parsed body of beatmap */
 					const parser = new oj.parser().feed(body);
+
+					/** @const {Object} pMap Parsed osu! beatmap */
 					const pMap = parser.map;
+
+					/** @const {string} maxPP Max pp gainable on beatmap */
 					const maxPP = oj.ppv2({ map: pMap }).toString();
+
+					/** @const {string} ppFix Splits maxPP */
 					const ppFix = maxPP.split(' ');
+
+					/** @const {string} stars Calculated star level of beatmap*/
 					const stars = new oj.diff().calc({ map: pMap });
+
+					/** @const {string[]} star Star level of string split */
 					const star = stars.toString().split(' ');
+
+					/** @const {string} s Isolated star level of star */
 					const s = star[0];
 
+					/** @const {Object} emoji Discord Emoji */
 					const emoji = client.emojis.cache;
 
 					let diff;
 
-					if (s < 2) {
+					if (s < '2') {
 						// Easy
 						diff = emoji.get('738125708802654322');
-					} else if (s < 2.7) {
+					} else if (s < '2.7') {
 						// Normal
 						diff = emoji.get('738125709180010557');
-					} else if (s < 4) {
+					} else if (s < '4') {
 						// Hard
 						diff = emoji.get('738125709113032716');
-					} else if (s < 5.3) {
+					} else if (s < '5.3') {
 						// Insane
 						diff = emoji.get('738125709129547947');
-					} else if (s < 6.5) {
+					} else if (s < '6.5') {
 						// Expert
 						diff = emoji.get('738125708810780744');
 					} else {
@@ -328,6 +386,15 @@ Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${ma
 		});
 	},
 
+	/**
+	 * Returns embed that logs mod actions
+	 * @param {Object} mod Moderator
+	 * @param {Object} member Target
+	 * @param {string} action Moderator action
+	 * @param {string} reason Reason for action
+	 * @param {number} length Length of action
+	 * @returns {promise} Discord Embed
+	 */
 	async modAction(mod, member, action, reason, length) {
 		const serverConfig = await sConfig.findOne({ where: { guild_id: member.guild.id } });
 		const modLog = serverConfig.get('mod_logging');
@@ -401,8 +468,14 @@ Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${ma
 		}
 	},
 
+	/**
+	 * Returns the time since the date
+	 * @param {number} date
+	 * @returns {string} The time since the date
+	 */
 	timeSince(date) {
-		const seconds = Math.floor((new Date() - date) / 1000);
+		/** @const {number} seconds Seconds since date has passed */
+		const seconds = Math.floor((Date.now() - date) / 1000);
 
 		let interval = Math.floor(seconds / 31536000);
 
@@ -428,6 +501,10 @@ Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${ma
 		return Math.floor(seconds) + ' seconds ago';
 	},
 
+	/**
+	 * Sleep function to stop script
+	 * @param {number} milliseconds Number of milliseconds to sleep
+	 */
 	sleep(milliseconds) {
 		const date = Date.now();
 		let currentDate = null;

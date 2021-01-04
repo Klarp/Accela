@@ -17,6 +17,11 @@ module.exports = {
 	async execute(message, args) {
 		if (!idGrab) return message.reply('No score to compare.');
 		if (!idGrab.mapID) return message.reply('No score to compare.');
+
+		/**
+		 * The ID of the beatmap
+		 * @const {string}
+		 */
 		const beatmap = idGrab.mapID.toString().split('/').pop();
 
 		// Access the api
@@ -26,9 +31,23 @@ module.exports = {
 			parseNumeric: true,
 		});
 
+		/**
+		 * Wether the user is in the database
+		 * @type {boolean}
+		 */
 		let findUser;
+
+		/**
+		 * The first mentioned user in the message
+		 * @type {Object}
+		 */
 		let menUser = message.mentions.users.first();
-		if (args[0]) menUser = message.guild.member(args[0]).user;
+		if (args[0] && !menUser) menUser = message.guild.member(args[0]).user;
+
+		/**
+		 * The prefix of the server
+		 * @type {string}
+		 */
 		let prefix = '>>';
 
 		if (message.channel.type !== 'dm') {
@@ -38,15 +57,58 @@ module.exports = {
 			}
 		}
 
+		/**
+		 * The guild with the required emotes
+		 * @const {Object}
+		 */
 		const cyberia = Client.guilds.cache.get('687858540425117755');
+
+		/**
+		 * The verified emote
+		 * @const {Object}
+		 */
 		const verifiedEmote = cyberia.emojis.cache.find(emoji => emoji.name === 'verified');
 
+		/**
+		 * The name of the user
+		 * @type {string}
+		 */
 		let name;
+
+		/**
+		 * The ID of the user
+		 * @type {string}
+		 */
 		let id;
-		let mods = oj.modbits.none;
+
+		/**
+		 * The mods used in the score
+		 * @type {string}
+		 */
+		let mods = oj.modbits.nomod;
+
+		/**
+		 * The accuracy percentage of the score
+		 * @type {number}
+		 */
 		let acc_percent;
+
+		/**
+		 * The top combo of the score
+		 * @type {number}
+		 */
 		let combo;
+
+		/**
+		 * The count of misses in the score
+		 * @type {number}
+		 */
 		let nmiss;
+
+		/**
+		 * The verified text for the embed
+		 * @type {string}
+		 */
 		let verified = `:x: Not Verified [use ${prefix}verify]`;
 
 		// Access database
@@ -88,12 +150,16 @@ module.exports = {
 
 		// Find user through the api
 		osuApi.getScores({ u: search, b: beatmap }).then(async r => {
+			/**
+			 * The most recent score
+			 * @const {Object}
+			 */
 			const recent = r[0];
-			Number.prototype.toFixedDown = function(digits) {
-				const re = new RegExp('(\\d+\\.\\d{' + digits + '})(\\d)'),
-					m = this.toString().match(re);
-				return m ? parseFloat(m[1]) : this.valueOf();
-			};
+
+			/**
+			 * The accuracy of the recent score
+			 * @type {number}
+			 */
 			let acc = recent.accuracy;
 			acc = acc.toFixed(4);
 			// Calculate acc
@@ -102,10 +168,22 @@ module.exports = {
 			}
 			acc = parseFloat(acc.toFixed(2));
 
+			/**
+			 * The score of the recent score
+			 * @const {string}
+			 */
 			const score = recent.score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-			// Get the short version of mods (HD, HR etc.) and get emojis for score rank
+			/**
+			 * The short version of mods used on the score
+			 * @const {string}
+			 */
 			const shortMods = getShortMods(recent.mods);
+
+			/**
+			 * The emoji used for the rank
+			 * @const {Object}
+			 */
 			const rank = getRank(recent.rank);
 
 			// PP calculation starts
@@ -115,15 +193,40 @@ module.exports = {
 				combo = parseInt(recent.maxCombo);
 				nmiss = parseInt(recent.counts.miss);
 
+				/**
+				 * The parsed body of the beatmap
+				 * @const {Object}
+				 */
 				const parser = new oj.parser().feed(body);
 
+				/**
+				 * The parsed beatmap
+				 * @const {Object}
+				 */
 				const pMap = parser.map;
 
+				/**
+				 * The calculated star difficulty of the beatmap
+				 * @const {Object}
+				 */
 				const stars = new oj.diff().calc({ map: pMap, mods: mods });
+
+				/**
+				 * The star difficulty split from the string
+				 * @const {string[]}
+				 */
 				const star = stars.toString().split(' ');
 
+				/**
+				 * The emoji used for the star level
+				 * @const {Object}
+				 */
 				const diff = getDiff(star[0]);
 
+				/**
+				 * The calculcated pp score of the recent score
+				 * @const {string}
+				 */
 				const pp = oj.ppv2({
 					stars: stars,
 					combo: combo,
@@ -131,17 +234,48 @@ module.exports = {
 					acc_percent: acc_percent,
 				});
 
+				/**
+				 * The calculated max pp score of the recent score
+				 * @const {string}
+				 */
 				const maxPP = oj.ppv2({ map: pMap, mods: mods });
 
+				/**
+				 * The max combo of the beatmap
+				 * @const {string}
+				 */
 				const max_combo = pMap.max_combo();
 				combo = combo || max_combo;
 
+				/**
+				 * The pp score split from the string
+				 * @const {string}
+				 */
 				const ppFix = pp.toString().split(' ');
+
+				/**
+				 * The max pp score split from the string
+				 * @const {string}
+				 */
 				const maxFix = maxPP.toString().split(' ');
+
+				/**
+				 * The pp score parsed to show decimals
+				 * @const {number}
+				 */
 				const ppNum = parseFloat(ppFix[0]);
+
+				/**
+				 * The max pp score parsed to show decimals
+				 * @const {number}
+				 */
 				const maxNum = parseFloat(maxFix[0]);
 
-				const rDate = timeSince(recent.date);
+				/**
+				 * The time since the recent score was completed
+				 * @const {string}
+				 */
+				const rDate = timeSince(recent.date.getTime());
 
 				if (recent.pp) {
 					recent.pp.toFixed(2);

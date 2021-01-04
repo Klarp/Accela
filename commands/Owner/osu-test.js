@@ -8,9 +8,11 @@ module.exports = {
 	module: 'Owner',
 	owner: true,
 	async execute(message, args) {
-		let member = message.member;
+		let member;
 
-		if (message.mentions.members) member = message.mentions.members.first() || message.guild.member(args[0]);
+		if (message.mentions.members) member = message.mentions.members.first();
+		if (args[0] && !member) member = message.guild.member(args[0]).user;
+		if (!member) message.member;
 
 		const user = await Users.findOne({ where: { user_id: member.id } });
 		if (!user) return message.reply('Could not find user!');

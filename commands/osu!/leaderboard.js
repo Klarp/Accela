@@ -46,7 +46,7 @@ module.exports = {
 			const leaderList = newList.first(10);
 
 			for (let i = 0; i < leaderList.length; i++) {
-				table += getRow(i + 1, leaderList[i], nameColumnWidth, rankColumnWidth, nameColumnWidth) + '\n';
+				table += getRow(i + 1, leaderList[i], nameColumnWidth, rankColumnWidth) + '\n';
 			}
 
 			const listArray = newList.array();
@@ -88,7 +88,7 @@ ${table}
 			const leaderList = newList.first(10);
 
 			for (let i = 0; i < leaderList.length; i++) {
-				table += getRow(i + 1, leaderList[i], nameColumnWidth, rankColumnWidth, nameColumnWidth) + '\n';
+				table += getRow(i + 1, leaderList[i], nameColumnWidth, rankColumnWidth) + '\n';
 			}
 
 			const listArray = newList.array();

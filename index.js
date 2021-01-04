@@ -496,6 +496,7 @@ client.on('messageDelete', async message => {
 			.setTitle('Message Deleted')
 			.setDescription(message)
 			.setTimestamp();
+
 		client.channels.cache.get(logChannel).send(delEmbed);
 	}
 });
@@ -556,10 +557,13 @@ client.on('guildBanAdd', async (guild, user) => {
 				.setTitle(`Banned ${user.tag}`)
 				.setDescription(`:lock: ${user}`)
 				.setTimestamp();
+
 			if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
+
 			guild.channels.cache.get(modChannel).send(banEmbed);
 		} else {
 			const { executor, target, reason } = banLog;
+
 
 			if (target.id === user.id && reason) {
 				const banEmbed = new Discord.MessageEmbed()
@@ -572,7 +576,9 @@ client.on('guildBanAdd', async (guild, user) => {
 **Reason:** ${reason}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
+
 				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
+
 				guild.channels.cache.get(modChannel).send(banEmbed);
 			} else if(reason) {
 				const banEmbed = new Discord.MessageEmbed()
@@ -584,7 +590,9 @@ client.on('guildBanAdd', async (guild, user) => {
 **Reason:** ${reason}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
+
 				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
+
 				guild.channels.cache.get(modChannel).send(banEmbed);
 			} else {
 				const banEmbed = new Discord.MessageEmbed()
@@ -594,7 +602,9 @@ client.on('guildBanAdd', async (guild, user) => {
 					.setDescription(`:lock: ${user}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
+
 				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
+
 				guild.channels.cache.get(modChannel).send(banEmbed);
 			}
 		}
@@ -632,10 +642,13 @@ client.on('guildBanRemove', async (guild, user) => {
 				.setDescription(`:unlock: ${user}`)
 				.setFooter(`ID: ${user.id}`)
 				.setTimestamp();
+
 			if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(unbanEmbed);
+
 			guild.channels.cache.get(modChannel).send(unbanEmbed);
 		} else {
 			const { executor, target } = unBanLog;
+
 
 			if (target.id === user.id) {
 				const unbanEmbed = new Discord.MessageEmbed()
@@ -647,7 +660,9 @@ client.on('guildBanRemove', async (guild, user) => {
 **Moderator:** ${executor}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
+
 				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(unbanEmbed);
+
 				guild.channels.cache.get(modChannel).send(unbanEmbed);
 			} else {
 				const unbanEmbed = new Discord.MessageEmbed()
@@ -657,7 +672,9 @@ client.on('guildBanRemove', async (guild, user) => {
 					.setDescription(`:unlock: ${user}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
+
 				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(unbanEmbed);
+
 				guild.channels.cache.get(modChannel).send(unbanEmbed);
 			}
 		}
@@ -698,7 +715,7 @@ client.on('guildMemberAdd', async member => {
 	member.roles.add(muteRole.id).then(() => {
 		member.send(`You have been muted in ${member.guild.name}! Reason: Mute Evasion`);
 	});
-	util.modAction(client.user, member, 'Mute', 'Mute Evasion');
+	util.modAction(client.user, member, 'Mute', 'Mute Evasion', undefined);
 });
 
 process.on('unhandledRejection', error => {
@@ -725,6 +742,7 @@ client.on('guildMemberRemove', async (member) => {
 
 	const firstLog = firstFetch.entries.first();
 
+
 	if (firstLog.action === 'MEMBER_BAN_ADD' && firstLog.target.id === member.id) return;
 
 	await util.sleep(1000);
@@ -741,6 +759,7 @@ client.on('guildMemberRemove', async (member) => {
 		if (kickLog) {
 			const { executor, target, reason } = kickLog;
 
+
 			if (target.id === member.id) {
 				const kickEmbed = new Discord.MessageEmbed()
 					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
@@ -752,7 +771,9 @@ client.on('guildMemberRemove', async (member) => {
 **Reason:** ${reason}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
+
 				if (member.guild.id === '98226572468690944') return member.guild.channels.cache.get('158484765136125952').send(kickEmbed);
+
 				member.guild.channels.cache.get(modChannel).send(kickEmbed);
 			} else if (!reason) {
 				const kickEmbed = new Discord.MessageEmbed()
@@ -764,7 +785,9 @@ client.on('guildMemberRemove', async (member) => {
 **Moderator**: ${executor}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
+
 				if (member.guild.id === '98226572468690944') return member.guild.channels.cache.get('158484765136125952').send(kickEmbed);
+
 				member.guild.channels.cache.get(modChannel).send(kickEmbed);
 			}
 		}

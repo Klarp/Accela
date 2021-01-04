@@ -16,7 +16,13 @@ module.exports = {
 	async execute(message, args) {
 		// Access the api
 		const osuApi = new osu.Api(osu_key);
+
+		/**
+		 * The osu! beatmap
+		 * @type {Object}
+		 */
 		let bMap;
+
 		let mods = '';
 
 		if (args[0] && !args[0].startsWith('+')) {
@@ -42,14 +48,14 @@ module.exports = {
 			const map = beatmap[0];
 			osuApi.getUser({ u: map.creator }).then(u => {
 				curl.get(`https://osu.ppy.sh/osu/${map.id}`, function(err, response, body) {
-					mods = oj.modbits.from_string(mods);
+					const ojmods = oj.modbits.from_string(mods);
 
 					const parser = new oj.parser().feed(body);
 					const pMap = parser.map;
-					const maxPP = oj.ppv2({ map: pMap, mods: mods }).toString();
+					const maxPP = oj.ppv2({ map: pMap, mods: ojmods }).toString();
 					const ppFix = maxPP.split(' ');
 					const ppNum = parseFloat(ppFix[0]);
-					const stars = new oj.diff().calc({ map: pMap, mods: mods });
+					const stars = new oj.diff().calc({ map: pMap, mods: ojmods });
 					const star = stars.toString().split(' ');
 
 					const diff = getDiff(star[0]);
@@ -70,7 +76,7 @@ module.exports = {
 					const udate = map.lastUpdate;
 					const [{ value: umonth },, { value: uday },, { value: uyear }] = dateTimeFormat.formatToParts(udate);
 
-					if (oj.modbits.string(mods).includes('DT') || oj.modbits.string(mods).includes('NC')) {
+					if (oj.modbits.string(ojmods).includes('DT') || oj.modbits.string(ojmods).includes('NC')) {
 						const bpmLength = map.length.total * 0.67;
 						const bpmDrain = map.length.drain * 0.67;
 						lenMinutes = Math.floor(bpmLength / 60);
@@ -87,7 +93,7 @@ module.exports = {
 						}
 					}
 
-					if (oj.modbits.string(mods).includes('HT')) {
+					if (oj.modbits.string(ojmods).includes('HT')) {
 						let bpmLength = (1 / 3) * map.length.total;
 						let bpmDrain = (1 / 3) * map.length.drain;
 						const totalTime = parseInt(map.length.total);
@@ -110,14 +116,14 @@ module.exports = {
 						}
 					}
 
-					if (oj.modbits.string(mods).includes('EZ')) {
+					if (oj.modbits.string(ojmods).includes('EZ')) {
 						cs = map.difficulty.size / 2;
 						ar = map.difficulty.approach / 2;
 						od = map.difficulty.overall / 2;
 						hp = map.difficulty.drain / 2;
 					}
 
-					if (oj.modbits.string(mods).includes('HR')) {
+					if (oj.modbits.string(ojmods).includes('HR')) {
 						cs = map.difficulty.size * 1.3;
 						ar = map.difficulty.approach * 1.4;
 						od = map.difficulty.overall * 1.4;
@@ -134,10 +140,8 @@ module.exports = {
 						if (hp > 10) hp = 10;
 					}
 
-					let bpmNum = parseInt(newBPM);
-
-					if (isNaN(bpmNum)) {
-						bpmNum = parseInt(map.bpm);
+					if (isNaN(newBPM)) {
+						newBPM = parseInt(map.bpm);
 					}
 
 					// Create the embed
@@ -147,8 +151,8 @@ module.exports = {
 						.setTitle(`${map.artist} - ${map.title} (${map.version})`)
 						.setThumbnail(`https://b.ppy.sh/thumb/${map.beatmapSetId}l.jpg`)
 						.setURL(`https://osu.ppy.sh/b/${map.id}`)
-						.setDescription(`${diff} ${star[0]}★ | **Length**: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds}) | **BPM:** ${bpmNum}
-**Combo:** ${map.maxCombo}x | **Max PP:** ${ppNum.toFixed(2)}pp | **Mods:** ${oj.modbits.string(mods) || 'NoMod'}
+						.setDescription(`${diff} ${star[0]}★ | **Length**: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds}) | **BPM:** ${newBPM}
+**Combo:** ${map.maxCombo}x | **Max PP:** ${ppNum.toFixed(2)}pp | **Mods:** ${oj.modbits.string(ojmods) || 'NoMod'}
 
 CS: ${cs} | AR: ${ar} | OD: ${od} | HP: ${hp}
 Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${map.objects.spinner}`)

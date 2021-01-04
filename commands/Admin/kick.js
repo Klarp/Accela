@@ -11,6 +11,10 @@ module.exports = {
 	modCmd: true,
 	usage: '<member> <reason>',
 	execute(message, args) {
+		/**
+		 * Member to be kicked
+		 * @const {Object}
+		 */
 		const toKick = message.mentions.members.first() || message.guild.member(args[0]);
 
 		if (!message.member.hasPermission('KICK_MEMBERS')) return message.channel.send('You do not have permission to perform this command!');
@@ -47,7 +51,7 @@ module.exports = {
 			});
 		}, 1000);
 
-		modAction(message.author, toKick, 'Kick', reason);
+		modAction(message.author, toKick, 'Kick', reason, undefined);
 
 		message.channel.send(`Kicked ${toKick.user.username} ${reason ? 'with reason: ' + reason : 'with no reason given!'}`);
 	},

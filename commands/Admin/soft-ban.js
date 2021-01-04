@@ -12,6 +12,10 @@ module.exports = {
 	modCmd: true,
 	usage: '<member> <reason>',
 	execute(message, args) {
+		/**
+		 * Member to be soft banned
+		 * @const toSF
+		 */
 		const toSF = message.mentions.members.first() || message.guild.member(args[0]);
 
 		if (!message.member.hasPermission('BAN_MEMBERS')) return message.channel.send('You do not have permission to perform this command!');
@@ -49,7 +53,7 @@ module.exports = {
 			message.guild.members.unban(toSF.id, { reason: 'softban' });
 		}, 1000);
 
-		modAction(message.author, toSF, 'SoftBan', reason);
+		modAction(message.author, toSF, 'SoftBan', reason, undefined);
 
 		message.channel.send(`Softbanned ${toSF.user.username} ${reason ? 'with reason: ' + reason : 'with no reason given!'}`);
 	},

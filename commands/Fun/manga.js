@@ -10,23 +10,77 @@ module.exports = {
 	args: true,
 	usage: '[manga]',
 	execute(message, args) {
+		/**
+		 * The manga name
+		 * @const {string}
+		 */
 		const manga = args.join(' ');
 		aniList.search('manga', manga).then(res => {
 			aniList.media.manga(res.media[0].id).then(aniRes => {
+
+				/**
+				 * Adds truncate to end of string if it passes character limit
+				 * @param {string} str The string to truncate
+				 * @param {number} n The number of characters before truncate
+				 */
 				function truncate(str, n) {
 					return (str.length > n) ? str.substr(0, n - 1) + '...' : str;
 				}
 
 				if (aniRes.isAdult) return message.reply('NSFW searches are not allowed!');
 
+				/**
+				 * Long description of the manga
+				 * @type {string}
+				 */
 				let descLong = aniRes.description.replace(/<\/?[^>]+(>|$)/g, '').replace(/&lsquo;/g, '').replace(/\n/g, '');
+
+				/**
+				 * Status of the manga
+				 * @const {string}
+				 */
 				const status = getStatus(aniRes.status);
+
+				/**
+				 * Type of manga
+				 * @const {string}
+				 */
 				const type = aniRes.format || 'Unknown';
+
+				/**
+				 * Average score of the manga
+				 * @const {string}
+				 */
 				const avgScore = aniRes.averageScore || '0';
+
+				/**
+				 * Volumes in the manga
+				 * @const {string}
+				 */
 				const volumes = aniRes.volumes || 'Unknown';
+
+				/**
+				 * Chapters in the manga
+				 * @const {string}
+				 */
 				const chapters = aniRes.chapters || 'Unknown';
+
+				/**
+				 * Genres of the manga
+				 * @const {string}
+				 */
 				const genres = aniRes.genres.join(' | ') || 'Unknown';
+
+				/**
+				 * Start date of the manga
+				 * @type {string}
+				 */
 				let startDate = `${aniRes.startDate.year}-${aniRes.startDate.month}-${aniRes.startDate.day}`;
+
+				/**
+				 * End date of the manga
+				 * @type {string}
+				 */
 				let endDate = `${aniRes.endDate.year}-${aniRes.endDate.month}-${aniRes.endDate.day}`;
 
 				if (aniRes.startDate.year === null) {
@@ -58,6 +112,11 @@ ${descLong}`);
 			});
 		});
 
+		/**
+		 * Returns status as cleaner strings
+		 * @param {string} status Default status
+		 * @returns {string}
+		 */
 		function getStatus(status) {
 			const statusRaw = {
 				'FINISHED': 'Finished',

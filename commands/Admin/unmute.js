@@ -13,21 +13,32 @@ module.exports = {
 	modCmd: true,
 	usage: '<member>',
 	async execute(message, args) {
-		// >>unmute [user] [reason]
-
-		// Stop if no mentions found
 		if (!message.mentions.members.first()) return message.reply('Please mention a user.');
-		// Grab the first mention in the message
-		const tag = message.mentions.members.first();
+
+		/**
+		 * Member to be unmuted
+		 * @const {Object}
+		 */
+		const tag = message.mentions.members.first() || message.guild.member(args[0]);
+
 		// Stop if the mention is the message author
 		if (message.member === tag) return message.reply('You can not use this on yourself');
+
 		// Remove the mention from the arguments
 		args.shift();
-		// Join the arguments to make the reason
+
+		/**
+		 * @arg reason The unmute reason
+		 */
 		let reason = args.join(' ');
+
 		// If no reason is found defaul to this
 		if (!reason) reason = 'No Reason Given';
-		// Find the muted role in the server
+
+		/**
+		 * Find muted role in the server
+		 * @type {Object}
+		 */
 		const muteRole = message.guild.roles.cache.find(r => r.name === 'muted');
 
 		// Error if no muted role is found
@@ -47,9 +58,13 @@ module.exports = {
 			});
 			message.channel.send(`Unmuted: ${tag.user}`);
 			// Log the unmute
-			modAction(message.author, tag, 'Unmute', reason);
+			modAction(message.author, tag, 'Unmute', reason, undefined);
 			// Remove the user from the muted database
 			try {
+				/**
+				 * If the user entry was destroyed
+				 * @const {boolean}
+				 */
 				const unMuted = await Muted.destroy({ where: { user_id: tag.id } });
 				if (!unMuted) return console.log(`Failed to unmute ${tag.username}`);
 			}catch(e) {

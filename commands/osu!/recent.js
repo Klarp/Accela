@@ -26,7 +26,7 @@ module.exports = {
 		let prefix = '>>';
 		let findUser;
 		let menUser = message.mentions.users.first();
-		if (args[0]) menUser = message.guild.member(args[0]).user;
+		if (args[0] && !menUser) menUser = message.guild.member(args[0]).user;
 
 		if (message.channel.type !== 'dm') {
 			const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
@@ -40,7 +40,7 @@ module.exports = {
 
 		let name;
 		let id;
-		let mods = oj.modbits.none;
+		let mods = oj.modbits.nomod;
 		let acc_percent;
 		let combo;
 		let nmiss;
@@ -93,11 +93,6 @@ module.exports = {
 		// Find user through the api
 		osuApi.getUserRecent({ u: search }).then(async r => {
 			const recent = r[0];
-			Number.prototype.toFixedDown = function(digits) {
-				const re = new RegExp('(\\d+\\.\\d{' + digits + '})(\\d)'),
-					m = this.toString().match(re);
-				return m ? parseFloat(m[1]) : this.valueOf();
-			};
 			let acc = recent.accuracy;
 			acc = acc.toFixed(4);
 			// Calculate acc
@@ -140,12 +135,12 @@ module.exports = {
 				const max_combo = pMap.max_combo();
 				combo = combo || max_combo;
 
-				const ppFix = pp.toString().split(' ');
-				const maxFix = maxPP.toString().split(' ');
-				const ppNum = parseFloat(ppFix);
-				const maxNum = parseFloat(maxFix);
+				const ppFix = pp.toString().split(' ').pop();
+				const maxFix = maxPP.toString().split(' ').pop();
+				const ppNum = parseInt(ppFix);
+				const maxNum = parseInt(maxFix);
 
-				const rDate = timeSince(recent.date);
+				const rDate = timeSince(recent.date.getTime());
 
 				const hitobj = [];
 

@@ -8,22 +8,55 @@ module.exports = {
 	guildOnly: true,
 	perms: 'MANAGE_GUILD',
 	async execute(message) {
-		// >>config
 
 		// I need to make this a command a bit more simpler the set up is a bit spammy
 
-		// DEFAULT VALUES
+		/**
+		 * Default Prefix
+		 * @type {string}
+		*/
 		let prefix = '>>';
+
+		/**
+		 * Default Mod Channel ID
+		 * @type {string}
+		 */
 		let modChannel = '';
+
+		/**
+		 * Default Message Log Channel ID
+		 * @type {string}
+		 */
 		let msgLogChannel = '';
+
+		/**
+		 * Default Mod Channel
+		 * @type {Object}
+		 */
 		let modChannelClean = '';
+
+		/**
+		 * Default Log Channel
+		 * @type {Object}
+		 */
 		let logChannelClean = '';
+
+		/** @type {boolean} */
 		let modCommands = false;
+
+		/** @type {boolean} */
 		let modLogging = false;
+
+		/** @type {boolean} */
 		let msgLogging = false;
+
+		/** @type {boolean} */
 		let noPrefix = false;
 
-		// Only accept messages from the message author
+		/**
+		 * Filter only the message author
+		 * @const {Object} filter
+		 */
 		const filter = m => m.author === message.author;
 
 		// SET COMMAND PREFIX
@@ -44,7 +77,10 @@ module.exports = {
 					}
 				});
 		});
-		// SET MOD COMMANDS
+
+		/**
+		 * Sets moderation commands
+		 */
 		async function modCommandsFunc() {
 			await message.channel.send('Would you like to have mod commands active? (Yes or No)').then(() => {
 				// Await the next message
@@ -70,7 +106,11 @@ module.exports = {
 					});
 			});
 		}
-		// SET MOD LOGGING
+
+		/**
+		 * Sets moderation logging
+		 * @param {boolean} modFlag If moderator commands are active
+		 */
 		async function modLoggingFunc(modFlag) {
 			// Only continue if mod commands are allowed
 			if(modFlag) {
@@ -102,7 +142,11 @@ module.exports = {
 				msgLoggingFunc();
 			}
 		}
-		// SET MOD CHANNEL
+
+		/**
+		 * Sets moderation channel
+		 * @param {boolean} modFlag If moderator commands are active
+		 */
 		async function modChannelFunc(modFlag) {
 			// Only continue if mod logging is allowed
 			if (modFlag) {
@@ -130,7 +174,10 @@ module.exports = {
 				msgLoggingFunc();
 			}
 		}
-		// SET MESSAGE LOGGING
+
+		/**
+		 * Sets message logging
+		 */
 		async function msgLoggingFunc() {
 			await message.channel.send('Would you like to log messages? (Yes or No)').then(() => {
 				// Await the next message
@@ -156,7 +203,11 @@ module.exports = {
 					});
 			});
 		}
-		// SET MESSAGE LOG CHANNEL
+
+		/**
+		 * Sets message logging channel
+		 * @param {boolean} logFlag If message logging is active
+		 */
 		async function msgLogChannelFunc(logFlag) {
 			// Only continue if message logging is allowed
 			if (logFlag) {
@@ -184,7 +235,10 @@ module.exports = {
 				noPrefixFunc();
 			}
 		}
-		// SET NO PREFIX COMMANDS
+
+		/**
+		 * Sets no prefix commands
+		 */
 		async function noPrefixFunc() {
 			await message.channel.send('Would you like the commands with no prefix? (Yes or No)').then(() => {
 				// Await the next message
@@ -210,7 +264,10 @@ module.exports = {
 					});
 			});
 		}
-		// SET CONFIG
+
+		/**
+		 * Sets the config
+		 */
 		async function configFunc() {
 			// Create new database entry
 			try {

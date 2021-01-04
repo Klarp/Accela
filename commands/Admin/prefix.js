@@ -10,9 +10,9 @@ module.exports = {
 	args: true,
 	usage: '<prefix>',
 	async execute(message, args) {
-		// >>prefix [prefix]
-
-		// Set the first argument as the prefix
+		/**
+		 * @arg prefix Prefix to be set
+		 */
 		const prefix = args[0];
 
 		try {
