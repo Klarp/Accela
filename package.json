@@ -21,7 +21,7 @@
   "dependencies": {
     "3": "^2.1.0",
     "anilist-node": "^1.4.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "canvas": "^2.6.1",
     "curl": "^0.1.4",
