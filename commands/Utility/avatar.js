@@ -9,9 +9,9 @@ module.exports = {
 		let memberFlag = false;
 		if (!menUser && args[0]) {
 			memberFlag = true;
-			menUser = message.guild.member(args[0]);
+			menUser = message.guild.member(args[0]).user;
 		}
-		if (!menUser && memberFlag) menUser = message.member;
+		if (!menUser && memberFlag) menUser = message.user;
 
 		if(menUser) {
 			message.channel.send(menUser.displayAvatarURL({ size:4096, dynamic:true }));
