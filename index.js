@@ -100,9 +100,6 @@ client.once('ready', async () => {
 		const osuID = u.get('verified_id');
 		const userID = u.get('user_id');
 		const mode = u.get('osu_mode');
-		const osuGame = client.guilds.cache.get('98226572468690944');
-		const osuMember = osuGame.members.cache.get(userID);
-		if (!osuMember) return;
 		let std_rank = null;
 		let taiko_rank = null;
 		let ctb_rank = null;
@@ -145,6 +142,9 @@ client.once('ready', async () => {
 				if (mode === 1 && taiko_rank !== null) rank = taiko_rank;
 				if (mode === 2 && ctb_rank !== null) rank = ctb_rank;
 				if (mode === 3 && mania_rank !== null) rank = mania_rank;
+				const osuGame = client.guilds.cache.get('98226572468690944');
+				const osuMember = osuGame.members.cache.get(userID);
+				if (!osuMember) return;
 				util.getRankRole(osuMember, rank, mode);
 			}
 		} catch (err) {
@@ -580,14 +580,15 @@ client.on('guildBanAdd', async (guild, user) => {
 				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
 
 				guild.channels.cache.get(modChannel).send(banEmbed);
-			} else if(reason) {
+			} else if(target.id === user.id && !reason) {
 				const banEmbed = new Discord.MessageEmbed()
 					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 					.setColor('#EA4D4B')
 					.setTitle(`Banned ${user.tag}`)
 					.setDescription(`:lock: ${user}
 
-**Reason:** ${reason}`)
+**Moderator:** ${executor}
+**Reason:** No Reason Given`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
 

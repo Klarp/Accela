@@ -19,9 +19,9 @@ module.exports = {
 		let memberFlag = false;
 		if (!menUser && args[0]) {
 			memberFlag = true;
-			menUser = message.guild.member(args[0]);
+			if (message.guild.member(args[0])) menUser = message.guild.member(args[0]);
 		}
-		if (!menUser && memberFlag) menUser = message.member;
+		if (!menUser && !memberFlag) menUser = message.member;
 
 		let prefix = '>>';
 

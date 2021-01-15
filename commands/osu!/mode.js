@@ -14,9 +14,22 @@ module.exports = {
 	async execute(message, args) {
 		const osuApi = new osu.Api(osu_key);
 
+		/**
+		 * osu! Game Discord
+		 * @const {Object}
+		 */
 		const osuGame = Client.guilds.cache.get('98226572468690944');
+
+		/**
+		 * Member of the osu! Game Discord
+		 * @const {Object}
+		 */
 		const osuMember = osuGame.members.cache.get(message.author.id);
 
+		/**
+		 * The osu! gamemode conversion
+		 * @const {Object}
+		 */
 		const modeNums = {
 			'std': 0,
 			'taiko': 1,
@@ -24,13 +37,25 @@ module.exports = {
 			'mania': 3,
 		};
 
+		/**
+		 * The osu! gamemodes
+		 * @const {string[]}
+		 */
 		const modes = ['std', 'taiko', 'ctb', 'mania'];
 
+		/**
+		 * The embed if the user is not verified
+		 * @const {MessageEmbed}
+		 */
 		const noVerifyEmbed = new MessageEmbed()
 			.setTitle('Please Verify Your osu! Account!')
 			.setDescription('https://accela.xyz/verify.html')
 			.setColor('#af152a');
 
+		/**
+		 * The user in the database
+		 * @const {Object}
+		 */
 		const user = await Users.findOne({ where: { user_id: message.author.id } });
 
 		if (!user) return message.channel.send(noVerifyEmbed);
@@ -38,8 +63,16 @@ module.exports = {
 		if (!osuMember) return message.reply('You cannot do that yet.');
 
 		if (!args[0]) {
+			/**
+			 * The default mode (osu!std)
+			 * @const {number|string}
+			 */
 			let mode = 0;
 
+			/**
+			 * Filter to only allow the message author to respond
+			 * @param {Object} m the sent message
+			 */
 			const filter = m => m.author === message.author;
 
 			const modeEmbed = new MessageEmbed()
@@ -57,8 +90,22 @@ module.exports = {
 
 						if (!modes.includes(mode)) return message.channel.send('Invalid Mode! Please try again.');
 
+						/**
+						 * The mode the user has selected
+						 * @const {number}
+						 */
 						const userMode = modeNums[mode];
+
+						/**
+						 * The verified ID of the user
+						 * @const {string}
+						 */
 						const id = user.get('verified_id');
+
+						/**
+						 * The rank of the user
+						 * @type {string}
+						 */
 						let rank = null;
 
 						await osuApi.getUser({ u: id, m: userMode }).then(async u => {
@@ -144,13 +191,32 @@ module.exports = {
 					});
 			});
 		} else {
+			/**
+			 * The mode the user selected
+			 * @const {string}
+			 */
 			const mode = args[0].toLowerCase();
 
 			if (!modes.includes(mode)) return message.channel.send('Invalid Mode! Please try again.');
 
+			/**
+			 * The mode number the user selected
+			 * @const {number}
+			 */
 			const userMode = modeNums[mode];
+
+			/**
+			 * The verified ID of the user
+			 * @const {string}
+			 */
 			const id = user.get('verified_id');
+
+			/**
+			 * The rank of the user
+			 * @const {string}
+			 */
 			let rank = null;
+
 			await osuApi.getUser({ u: id, m: userMode }).then(async u => {
 				rank = u.pp.rank;
 				if (rank === '0') rank = null;
