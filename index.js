@@ -107,6 +107,9 @@ client.once('ready', async () => {
 		.filter(user => client.users.cache.has(user.user_id));
 
 	const worker = async (u) => {
+		const osuGame = client.guilds.cache.get('98226572468690944');
+		const logChannel = osuGame.channels.cache.get('776522946872344586');
+		logChannel.send(`Updating ${u.osu_name} with osu! ID: ${u.verified_id}`);
 		const osuID = u.get('verified_id');
 		const userID = u.get('user_id');
 		const mode = u.get('osu_mode');
@@ -152,7 +155,6 @@ client.once('ready', async () => {
 				if (mode === 1 && taiko_rank !== null) rank = taiko_rank;
 				if (mode === 2 && ctb_rank !== null) rank = ctb_rank;
 				if (mode === 3 && mania_rank !== null) rank = mania_rank;
-				const osuGame = client.guilds.cache.get('98226572468690944');
 				const osuMember = osuGame.members.cache.get(userID);
 				if (!osuMember) return;
 				util.getRankRole(osuMember, rank, mode);
@@ -184,7 +186,6 @@ client.once('ready', async () => {
 
 		for (let i = 0; i < osuUsers.length; i++) {
 			q.push(osuUsers[i]);
-			logChannel.send(`Updating ${osuUsers[i].osu_name} (osu ID: ${osuUsers[i].verified_id})`);
 		}
 	}, 60 * 60 * 1000);
 
