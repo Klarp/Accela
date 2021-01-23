@@ -22,9 +22,11 @@ const Discord = require('discord.js');
 const axios = require('axios');
 const osu = require('node-osu');
 const qrate = require('qrate');
+const Sentry = require('@sentry/node');
 
 const { token, owners, osu_key, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL } = require('./config.json');
 const { Users, Muted, sConfig } = require('./dbObjects');
+const { version } = require('./package.json');
 
 const configs = new Discord.Collection();
 const client = new Discord.Client();
@@ -46,8 +48,16 @@ const osuApi = new osu.Api(osu_key);
 
 const modules = ['Admin', 'osu!', 'Fun', 'Utility', 'Owner'];
 
+Sentry.init({
+	dsn: 'https://066bf6b764814b3995ce8b814cd190da@o509887.ingest.sentry.io/5604935',
+	release: 'Accela@' + version,
+	tracesSampleRate: 1.0,
+	autoSessionTracking: true,
+});
+
 client.on('error', error => {
 	client.users.cache.get('186493565445079040').send('An error occured - check the console.');
+	Sentry.captureException(error);
 	console.log(error);
 	console.error();
 });
@@ -174,6 +184,7 @@ client.once('ready', async () => {
 
 		for (let i = 0; i < osuUsers.length; i++) {
 			q.push(osuUsers[i]);
+			logChannel.send(`Updating ${osuUsers[i].osu_name} (osu ID: ${osuUsers[i].verified_id})`);
 		}
 	}, 60 * 60 * 1000);
 
@@ -460,6 +471,7 @@ client.on('message', async message => {
 	} catch (error) {
 		// If failed to execute console log the error
 		console.error(error);
+		Sentry.captureException(error);
 		// Creation of error embed
 		const errorEmbed = new Discord.MessageEmbed()
 			.setTitle('An Error Has Occurred')
