@@ -1,6 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const { modAction } = require('../../utils');
 const { Muted } = require('../../dbObjects');
+const Sentry = require('../../log');
 
 module.exports = {
 	name: 'mute',
@@ -58,6 +59,7 @@ module.exports = {
 						}, 'Removing permissions for muted role');
 				});
 			} catch(e) {
+				Sentry.captureException(e);
 				console.log(e.stack);
 			}
 		}
@@ -88,6 +90,7 @@ module.exports = {
 					// If user is already in database send an error
 					console.log(`${tag.username} has been tried to be muted.`);
 				} else {
+					Sentry.captureException(e);
 					console.error(e);
 					return message.reply('Error: "Something" wen\'t wrong.');
 				}

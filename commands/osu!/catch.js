@@ -1,5 +1,6 @@
 const osu = require('node-osu');
 const Discord = require('discord.js');
+const Sentry = require('../../log');
 
 const { Client } = require('../../index');
 const { osu_key } = require('../../config.json');
@@ -171,6 +172,7 @@ ${verified}`)
 			if (e.name == 'Error') {
 				return message.reply(`No user was found named ${name}!`);
 			}
+			Sentry.captureException(e);
 			console.error(e);
 			return message.reply('An error has occured!');
 		});

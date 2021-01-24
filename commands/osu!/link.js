@@ -1,6 +1,7 @@
 const osu = require('node-osu');
 const { Users } = require('../../dbObjects');
 const { osu_key } = require('../../config.json');
+const Sentry = require('../../log');
 
 module.exports = {
 	name: 'link',
@@ -61,6 +62,7 @@ module.exports = {
 					return message.reply('Could not find a link!');
 				}
 			}
+			Sentry.captureException(e);
 			console.error(e);
 			return message.reply('Error: "Something" wen\'t wrong.');
 		}

@@ -1,5 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const { modAction } = require('../../utils');
+const Sentry = require('../../log');
 
 module.exports = {
 	name: 'ban',
@@ -41,11 +42,13 @@ module.exports = {
 			toBan.send(banEmbed);
 		} catch (err) {
 			console.log(err);
+			Sentry.captureException(err);
 			message.channel.send('Could not send a DM to the member.');
 		}
 
 		setTimeout(() => {
 			toBan.ban({ days: 1, reason: reason }).catch(err => {
+				Sentry.captureException(err);
 				console.log(err);
 				message.channel.send('An error occured.');
 			});

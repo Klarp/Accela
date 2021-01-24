@@ -1,5 +1,6 @@
 const osu = require('node-osu');
 const discord = require('discord.js');
+const Sentry = require('../../log');
 
 const { Client } = require('../../index');
 const { osu_key } = require('../../config.json');
@@ -207,9 +208,11 @@ ${verified}`)
 			message.channel.send(osuEmbed);
 		}).catch(e => {
 			if (e.name == 'Error') {
+				Sentry.captureException(e);
 				console.error(e);
 				return message.reply(`No recent play was found for ${name}!`);
 			}
+			Sentry.captureException(e);
 			console.error(e);
 			return message.reply('An error has occured!');
 		});

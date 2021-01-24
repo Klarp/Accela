@@ -2,6 +2,7 @@ const osu = require('node-osu');
 const discord = require('discord.js');
 const oj = require('ojsama');
 const curl = require('curl');
+const Sentry = require('../../log');
 
 const { Client } = require('../../index');
 const { osu_key } = require('../../config.json');
@@ -200,6 +201,7 @@ ${verified}`)
 			if (e.name == 'Error') {
 				return message.reply(`No top play was found for ${name}!`);
 			}
+			Sentry.captureException(e);
 			console.error(e);
 			return message.reply('An error has occured!');
 		});

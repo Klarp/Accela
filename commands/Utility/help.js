@@ -2,6 +2,7 @@ const { prefix } = require('../../config.json');
 const { checkPerm } = require('../../utils');
 const { owners } = require('../../config.json');
 const { MessageEmbed } = require('discord.js');
+const Sentry = require('../../log');
 
 function ucFirst(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
@@ -76,6 +77,7 @@ module.exports = {
 						message.reply('I\'ve sent you a DM with the commands!');
 					})
 					.catch(error => {
+						Sentry.captureException(error);
 						console.error(`Could not send help DM to ${message.author.tag}.\n`, error);
 						message.reply('it seems like I can\'t DM you! Do you have DMs disabled?');
 					});

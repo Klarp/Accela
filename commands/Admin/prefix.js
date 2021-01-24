@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const { sConfig } = require('../../dbObjects');
+const Sentry = require('../../log');
 
 module.exports = {
 	name: 'prefix',
@@ -36,6 +37,7 @@ module.exports = {
 						console.log(`Updated server config on ${message.guild.name}`);
 					}
 				} catch(err) {
+					Sentry.captureException(err);
 					console.error(err);
 				}
 			}

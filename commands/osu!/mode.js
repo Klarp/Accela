@@ -1,4 +1,6 @@
 const osu = require('node-osu');
+const Sentry = require('../../log');
+
 const { MessageEmbed } = require('discord.js');
 const { Client } = require('../../index');
 const { Users } = require('../../dbObjects');
@@ -177,6 +179,7 @@ module.exports = {
 									}
 								}
 							} catch(e) {
+								Sentry.captureException(e);
 								console.error(e);
 								return message.reply('Error: "Something" wen\'t wrong.');
 							}
@@ -283,6 +286,7 @@ module.exports = {
 						}
 					}
 				} catch(e) {
+					Sentry.captureException(e);
 					console.error(e);
 					return message.reply('Error: "Something" wen\'t wrong.');
 				}

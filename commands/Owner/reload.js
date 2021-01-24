@@ -1,3 +1,5 @@
+const Sentry = require('../../log');
+
 module.exports = {
 	name: 'reload',
 	description: 'Reloads a command',
@@ -19,6 +21,7 @@ module.exports = {
 			message.client.commands.set(newCommand.name, newCommand);
 			message.channel.send(`Command \`${command.name}\` was reloaded!`);
 		} catch (error) {
+			Sentry.captureException(error);
 			console.log(error);
 			message.channel.send(`There was an error while reloading a command \`${command.name}\`:\n\`${error.message}\``);
 		}

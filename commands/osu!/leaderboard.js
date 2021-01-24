@@ -1,5 +1,4 @@
 const { timeSince } = require('../../utils');
-
 const { upDate } = require('../../index');
 const { Users, sConfig } = require('../../dbObjects');
 const { MessageEmbed, Collection } = require('discord.js');

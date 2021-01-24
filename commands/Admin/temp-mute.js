@@ -1,6 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const { modAction } = require('../../utils');
 const ms = require('ms');
+const Sentry = require('../../log');
 
 module.exports = {
 	name: 'temp-mute',
@@ -70,6 +71,7 @@ module.exports = {
 						}, 'Removing permissions for muted role');
 				});
 			} catch(e) {
+				Sentry.captureException(e);
 				console.log(e.stack);
 			}
 		}

@@ -1,6 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const { modAction } = require('../../utils');
 const { Muted } = require('../../dbObjects');
+const Sentry = require('../../log');
 
 module.exports = {
 	name: 'unmute',
@@ -68,6 +69,7 @@ module.exports = {
 				const unMuted = await Muted.destroy({ where: { user_id: tag.id } });
 				if (!unMuted) return console.log(`Failed to unmute ${tag.username}`);
 			}catch(e) {
+				Sentry.captureException(e);
 				console.error(e);
 				return message.reply('An error has occurred');
 			}

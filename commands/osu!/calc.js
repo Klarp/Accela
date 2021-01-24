@@ -3,6 +3,7 @@ const oj = require('ojsama');
 const Discord = require('discord.js');
 const curl = require('curl');
 const { osu_key } = require('../../config.json');
+const Sentry = require('../../log');
 
 module.exports = {
 	name: 'calc',
@@ -156,6 +157,7 @@ module.exports = {
 				message.channel.send({ embed: osuEmbed });
 			});
 		}).catch(e => {
+			Sentry.captureException(e);
 			console.error(e);
 			return message.reply('No map was found!');
 		});

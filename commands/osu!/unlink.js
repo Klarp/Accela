@@ -1,4 +1,5 @@
 const { Users } = require('../../dbObjects');
+const Sentry = require('../../log');
 
 module.exports = {
 	name: 'unlink',
@@ -17,6 +18,7 @@ module.exports = {
 
 			return message.reply('Successfully unlinked!');
 		}catch(e) {
+			Sentry.captureException(e);
 			console.error(e);
 			return message.reply('An error has occurred');
 		}

@@ -1,5 +1,7 @@
 const axios = require('axios');
 const osu = require('node-osu');
+const Sentry = require('../../log');
+
 const { getRankRole } = require('../../utils');
 const { MessageEmbed } = require('discord.js');
 const { osu_key, osu_key_v2 } = require('../../config.json');
@@ -171,10 +173,12 @@ Rank (osu!std): ${userStat.pp_rank}`)
 											return message.channel.send(userEmbed);
 										}
 									} catch (err) {
+										Sentry.captureException(err);
 										console.error(err);
 										return message.reply('**ERROR**: Unable to verify!');
 									}
 								}
+								Sentry.captureException(e);
 								console.error(e);
 								return message.reply('**Error**: "Something" wen\'t wrong.');
 							}
@@ -191,6 +195,7 @@ Rank (osu!std): ${userStat.pp_rank}`)
 							} else {
 								console.error('Error:', err.message);
 							}
+							Sentry.captureException(err);
 							console.error(err.config);
 						});
 				})
@@ -203,6 +208,7 @@ Rank (osu!std): ${userStat.pp_rank}`)
 						.setDescription('Please try again with a new code.');
 					message.channel.send(errorEmbed);
 					logChannel.send(`:x: ${message.author} failed to verify`);
+					Sentry.captureException(err);
 					console.log(err.response.status);
 				});
 		}

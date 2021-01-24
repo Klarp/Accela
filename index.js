@@ -22,11 +22,10 @@ const Discord = require('discord.js');
 const axios = require('axios');
 const osu = require('node-osu');
 const qrate = require('qrate');
-const Sentry = require('@sentry/node');
+const Sentry = require('./log');
 
 const { token, owners, osu_key, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL } = require('./config.json');
 const { Users, Muted, sConfig } = require('./dbObjects');
-const { version } = require('./package.json');
 
 const configs = new Discord.Collection();
 const client = new Discord.Client();
@@ -48,13 +47,6 @@ const osuApi = new osu.Api(osu_key);
 
 const modules = ['Admin', 'osu!', 'Fun', 'Utility', 'Owner'];
 
-Sentry.init({
-	dsn: 'https://066bf6b764814b3995ce8b814cd190da@o509887.ingest.sentry.io/5604935',
-	release: 'Accela@' + version,
-	tracesSampleRate: 1.0,
-	autoSessionTracking: true,
-});
-
 client.on('error', error => {
 	client.users.cache.get('186493565445079040').send('An error occured - check the console.');
 	Sentry.captureException(error);
@@ -66,7 +58,10 @@ client.on('error', error => {
 
 modules.forEach(c => {
 	fs.readdir(`./commands/${c}`, (err, files) => {
-		if (err) throw err;
+		if (err) {
+			Sentry.captureException(err);
+			throw err;
+		}
 
 		console.log(`[Command Logs] Loaded ${files.length} commands of module ${c}`);
 
@@ -108,8 +103,9 @@ client.once('ready', async () => {
 
 	const worker = async (u) => {
 		const osuGame = client.guilds.cache.get('98226572468690944');
-		const logChannel = osuGame.channels.cache.get('776522946872344586');
-		logChannel.send(`Updating ${u.osu_name} with osu! ID: ${u.verified_id}`);
+		// const logChannel = osuGame.channels.cache.get('776522946872344586');
+		// logChannel.send(`Updating ${u.osu_name} with osu! ID: ${u.verified_id}`);
+
 		const osuID = u.get('verified_id');
 		const userID = u.get('user_id');
 		const mode = u.get('osu_mode');
@@ -160,6 +156,7 @@ client.once('ready', async () => {
 				util.getRankRole(osuMember, rank, mode);
 			}
 		} catch (err) {
+			Sentry.captureException(err);
 			console.error(err);
 		}
 	};
@@ -240,12 +237,14 @@ client.once('ready', async () => {
 	)
 		.then((err, res) => {
 			if (err) {
+				Sentry.captureException(err);
 				console.error(err);
 				return;
 			}
 			console.log(`DiscordBotList.com: ${res.status}`);
 		})
 		.catch(function(error) {
+			Sentry.captureException(error);
 			if (error.response) {
 				console.log(`DiscordBotList.com: ${error.response.status}`);
 			} else if (error.request) {
@@ -267,12 +266,14 @@ client.once('ready', async () => {
 	)
 		.then((err, res) => {
 			if (err) {
+				Sentry.captureException(err);
 				console.error(err);
 				return;
 			}
 			console.log(`discord.bots.gg: ${res.status}`);
 		})
 		.catch(function(error) {
+			Sentry.captureException(error);
 			if (error.response) {
 				console.log(`discord.bots.gg: ${error.response.status}`);
 			} else if (error.request) {
@@ -294,12 +295,14 @@ client.once('ready', async () => {
 	)
 		.then((err, res) => {
 			if (err) {
+				Sentry.captureException(err);
 				console.error(err);
 				return;
 			}
 			console.log(`botsfordiscord.com: ${res.status}`);
 		})
 		.catch(function(error) {
+			Sentry.captureException(error);
 			if (error.response) {
 				console.log(`botsfordiscord.com: ${error.response.status}`);
 			} else if (error.request) {
@@ -535,6 +538,7 @@ client.on('guildCreate', async (guild) => {
 		if (e.name === 'SequelizeUniqueConstraintError') {
 			console.log(`Using old config for ${guild.name}`);
 		}
+		Sentry.captureException(e);
 		// Send any other errors to console
 		console.error(e);
 	}
@@ -710,6 +714,7 @@ client.on('guildBanRemove', async (guild, user) => {
 		if (!unMuted) return console.log(`Failed to unmute ${user.username}`);
 	}catch(e) {
 		// Console log any other errors
+		Sentry.captureException(e);
 		console.error(e);
 	}
 });
@@ -734,6 +739,7 @@ client.on('guildMemberAdd', async member => {
 
 process.on('unhandledRejection', error => {
 	console.error('Unhandled promise rejection:', error);
+	Sentry.captureException(error);
 });
 
 // MEMBER LEAVE START

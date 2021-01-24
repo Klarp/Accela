@@ -2,6 +2,7 @@ const osu = require('node-osu');
 const oj = require('ojsama');
 const Discord = require('discord.js');
 const curl = require('curl');
+const Sentry = require('../../log');
 
 const { osu_key } = require('../../config.json');
 const { getDiff } = require('../../utils');
@@ -284,9 +285,11 @@ Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${ma
 					message.channel.send({ embed: osuEmbed });
 				});
 			}).catch(e => {
+				Sentry.captureException(e);
 				console.error(e);
 			});
 		}).catch(e => {
+			Sentry.captureException(e);
 			console.error(e);
 			return message.reply('No map was found!');
 		});

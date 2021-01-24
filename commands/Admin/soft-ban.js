@@ -1,5 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const { modAction } = require('../../utils');
+const Sentry = require('../../log');
 
 module.exports = {
 	name: 'soft-ban',
@@ -41,12 +42,14 @@ module.exports = {
 		try {
 			toSF.send(sfEmbed);
 		} catch (err) {
+			Sentry.captureException(err);
 			console.log(err);
 			message.channel.send('Could not send a DM to the member.');
 		}
 
 		setTimeout(() => {
 			toSF.ban({ days: 1, reason: reason }).catch(err => {
+				Sentry.captureException(err);
 				console.log(err);
 				message.channel.send('An error occured.');
 			});

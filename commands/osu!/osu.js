@@ -1,5 +1,7 @@
 const osu = require('node-osu');
 const Discord = require('discord.js');
+const Sentry = require('../../log');
+
 const { Client } = require('../../index');
 const { osu_key } = require('../../config.json');
 const { Users, sConfig } = require('../../dbObjects');
@@ -107,6 +109,7 @@ ${verified}`)
 
 			message.channel.send({ embed: osuEmbed });
 		}).catch(e => {
+			Sentry.captureException(e);
 			console.error(e);
 			return message.reply(`No user was found with name/id ${name}!`);
 		});
