@@ -14,7 +14,7 @@ module.exports = {
 			memberFlag = true;
 			menUser = message.guild.member(args[0]);
 		}
-		if (!menUser && memberFlag) menUser = message.member;
+		if (!menUser && !memberFlag) menUser = message.member;
 
 		const user = await Users.findOne({ where: { user_id: menUser.id } });
 		if (!user) return message.reply('Could not find user!');

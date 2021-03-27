@@ -63,6 +63,7 @@ module.exports = {
 						}
 
 						if (c.osuDiscord) {
+							if (!message.guild) return;
 							if (message.guild.id !== '98226572468690944') return;
 						}
 

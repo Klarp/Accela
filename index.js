@@ -101,6 +101,7 @@ client.once('ready', async () => {
 		.filter(user => user.verified_id !== null)
 		.filter(user => client.users.cache.has(user.user_id));
 
+	// Both name and rank are coming out null in output. Need to fix.
 	const worker = async (u) => {
 		const osuGame = client.guilds.cache.get('98226572468690944');
 		// const logChannel = osuGame.channels.cache.get('776522946872344586');

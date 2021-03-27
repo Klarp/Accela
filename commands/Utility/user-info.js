@@ -20,15 +20,15 @@ module.exports = {
 			memberFlag = true;
 			member = message.guild.member(args[0]);
 		}
-		if (!member && memberFlag) member = message.member;
+		if (!member && !memberFlag) member = message.member;
 
 		let target = message.mentions.users.first();
 		let targetFlag = false;
-		if (!member && args[0]) {
+		if (!target && args[0]) {
 			targetFlag = true;
-			target = message.guild.member(args[0]);
+			target = message.guild.member(args[0]).user;
 		}
-		if (!target && targetFlag) target = message.member.user;
+		if (!target && !targetFlag) target = message.member.user;
 
 		const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' });
 		let lastSeen;
@@ -64,22 +64,38 @@ module.exports = {
 
 		let game = 'None';
 		let gameState = 'None';
-		let activity = 'None';
-
+		let customStatus = 'None';
 		if (target.presence.activities[0]) {
-			activity = target.presence.activities[0].state;
-			if (activity === null) activity = 'None';
-		}
-
-		if (target.presence.activities[1]) {
-			game = target.presence.activities[1].name;
-			if (game === null) game = 'None';
-			if (target.presence.activities[1].state) {
-				gameState = target.presence.activities[1].state;
-				if (gameState === null) gameState = 'None';
-			}
-			if (target.presence.activities[1].name === 'Spotify') {
-				gameState = `${target.presence.activities[1].state} - ${target.presence.activities[1].details}`;
+			if (target.presence.activities[0].type === 'CUSTOM_STATUS') {
+				customStatus = target.presence.activities[0].state;
+				if (customStatus === null) customStatus = 'None';
+				if (target.presence.activities[1]) {
+					game = target.presence.activities[1].name;
+					if (game === null) game = 'None';
+					if (target.presence.activities[1].state) {
+						gameState = target.presence.activities[1].state;
+						if (gameState === null) gameState = 'None';
+					}
+					if (target.presence.activities[1].details) {
+						gameState = target.presence.activities[1].details;
+					}
+					if (target.presence.activities[1].name === 'Spotify') {
+						gameState = `${target.presence.activities[1].state} - ${target.presence.activities[1].details}`;
+					}
+				}
+			} else {
+				game = target.presence.activities[0].name;
+				if (game === null) game = 'None';
+				if (target.presence.activities[0].state) {
+					gameState = target.presence.activities[0].state;
+					if (gameState === null) gameState = 'None';
+				}
+				if (target.presence.activities[0].details) {
+					gameState = target.presence.activities[0].details;
+				}
+				if (target.presence.activities[0].name === 'Spotify') {
+					gameState = `${target.presence.activities[0].state} - ${target.presence.activities[0].details}`;
+				}
 			}
 		}
 
@@ -100,7 +116,7 @@ module.exports = {
 			.setColor('BLUE')
 			.setDescription(`**Nickname:** ${name} 
 **Status:** ${status[target.presence.status]}
-**Activity:** ${activity}
+**Custom Status:** ${customStatus}
 **Playing:** ${game} (${gameState})
 			
 **Joined Server:** ${joinSince} \`${jday} ${jmonth} ${jyear} ${joinTime}\`

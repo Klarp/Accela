@@ -7,6 +7,7 @@ const userList = new Collection();
 
 module.exports = {
 	name: 'leaderboard',
+	guildOnly: true,
 	aliases: 'lb',
 	description: 'Leaderboard of verified osu! accounts in the server',
 	module: 'Osu!',
