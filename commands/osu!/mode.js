@@ -14,7 +14,7 @@ module.exports = {
 	guildOnly: true,
 	usage: '<mode>',
 	async execute(message, args) {
-		const osuApi = new osu.api(osu_key);
+		const osuApi = new osu.Api(osu_key);
 
 		const osuGame = Client.guilds.cache.get('98226572468690944');
 		const osuMember = osuGame.members.cache.get(message.author.id);
@@ -46,8 +46,8 @@ module.exports = {
 				.setDescription(`**std (Standard)**
 **mania**
 **taiko**
-**ctb (Catch The Beat)**
-Use >>mode [mode]`);
+**ctb (Catch The Beat)**`)
+				.setFooter('Use >>mode [mode]');
 			message.channel.send(modeEmbed);
 		} else {
 			const mode = args[0].toLowerCase();
