@@ -136,15 +136,16 @@ module.exports = {
 					acc_percent: acc_percent,
 				});
 
+				console.log(pp);
+
 				const maxPP = oj.ppv2({ map: pMap, mods: mods });
 
 				const max_combo = pMap.max_combo();
 				combo = combo || max_combo;
 
-				const ppFix = pp.toString().split(' ').pop();
-				const maxFix = maxPP.toString().split(' ').pop();
-				const ppNum = parseInt(ppFix);
-				const maxNum = parseInt(maxFix);
+				const ppFix = pp.total.toFixed(2);
+				console.log(ppFix);
+				const maxFix = maxPP.total.toFixed(2);
 
 				const rDate = timeSince(recent.date.getTime());
 
@@ -182,7 +183,7 @@ module.exports = {
 						.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
 						.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${hit300}/${hit100}/${hit50}/${hitmiss}}
 
-**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${recent.pp || ppNum.toFixed(2)}pp**/${maxNum.toFixed(2)}PP
+**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${ppFix || recent.pp}pp**/${maxFix}PP
 
 ${acc}% | ${oj.modbits.string(mods) || 'NoMod'} | Map Completion: ${failPercent}%
 
@@ -197,7 +198,7 @@ ${verified}`)
 						.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
 						.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${hit300}/${hit100}/${hit50}/${hitmiss}}
 
-**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${recent.pp || ppNum.toFixed(2)}pp**/${maxNum.toFixed(2)}PP
+**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${ppFix || recent.pp}pp**/${maxFix}PP
 
 ${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 					

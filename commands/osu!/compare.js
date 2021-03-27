@@ -257,25 +257,13 @@ module.exports = {
 				 * The pp score split from the string
 				 * @const {string[]}
 				 */
-				const ppFix = pp.toString().split(' ');
+				const ppFix = pp.total.toFixed(2);
 
 				/**
 				 * The max pp score split from the string
 				 * @const {string}
 				 */
-				const maxFix = maxPP.toString().split(' ');
-
-				/**
-				 * The pp score parsed to show decimals
-				 * @const {number}
-				 */
-				const ppNum = parseFloat(ppFix[0]);
-
-				/**
-				 * The max pp score parsed to show decimals
-				 * @const {number}
-				 */
-				const maxNum = parseFloat(maxFix[0]);
+				const maxFix = maxPP.total.toFixed(2);
 
 				/**
 				 * The time since the recent score was completed
@@ -294,7 +282,7 @@ module.exports = {
 					.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
 					.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${recent.counts['300']}/${recent.counts['100']}/${recent.counts['50']}/${recent.counts.miss}}
 
-**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${recent.pp || ppNum.toFixed(2)}pp**/${maxNum.toFixed(2)}PP
+**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${ppFix || recent.pp}pp**/${maxFix}PP
 
 ${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 					

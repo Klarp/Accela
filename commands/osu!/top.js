@@ -161,11 +161,8 @@ module.exports = {
 				const max_combo = pMap.max_combo();
 				combo = combo || max_combo;
 
-				const ppFix = pp.toString().split(' ');
-				const maxFix = maxPP.toString().split(' ');
-
-				const ppNum = parseFloat(ppFix[0]);
-				const maxNum = parseFloat(maxFix[0]);
+				const ppFix = pp.total.toFixed(2);
+				const maxFix = maxPP.total.toFixed(2);
 
 				const rDate = timeSince(recent.date.getTime());
 
@@ -177,7 +174,7 @@ module.exports = {
 					.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
 					.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${recent.counts['300']}/${recent.counts['100']}/${recent.counts['50']}/${recent.counts.miss}}
 
-**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${ppNum.toFixed(2)}pp**/${maxNum.toFixed(2)}PP
+**${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${ppFix}pp**/${maxFix}PP
 
 ${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 					

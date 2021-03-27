@@ -80,19 +80,13 @@ module.exports = {
 					 * The maxPP of the beatmap
 					 * @const {string}
 					 */
-					const maxPP = oj.ppv2({ map: pMap, mods: ojmods }).toString();
+					const maxPP = oj.ppv2({ map: pMap, mods: ojmods });
 
 					/**
 					 * The pp score split from the string
 					 * @const {string[]}
 					 */
-					const ppFix = maxPP.split(' ');
-
-					/**
-					 * The pp score parsed to show decimals
-					 * @const {number}
-					 */
-					const ppNum = parseFloat(ppFix[0]);
+					const ppFix = maxPP.total.toFixed(2);
 
 					/**
 					 * The calculated star difficulty of the beatmap
@@ -276,7 +270,7 @@ module.exports = {
 						.setThumbnail(`https://b.ppy.sh/thumb/${map.beatmapSetId}l.jpg`)
 						.setURL(`https://osu.ppy.sh/b/${map.id}`)
 						.setDescription(`${diff} ${star[0]}★ | **Length**: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds}) | **BPM:** ${newBPM}
-**Combo:** ${map.maxCombo}x | **Max PP:** ${ppNum.toFixed(2)}pp | **Mods:** ${oj.modbits.string(ojmods) || 'NoMod'}
+**Combo:** ${map.maxCombo}x | **Max PP:** ${ppFix}pp | **Mods:** ${oj.modbits.string(ojmods) || 'NoMod'}
 
 CS: ${cs} | AR: ${ar} | OD: ${od} | HP: ${hp}
 Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${map.objects.spinner}`)

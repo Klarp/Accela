@@ -111,25 +111,13 @@ module.exports = {
 				 * The pp score split from the string
 				 * @const {string}
 				 */
-				const ppFix = pp.toString().split(' ');
-
-				/**
-				 * The pp score parsed to show decimals
-				 * @const {number}
-				 */
-				const ppNum = parseFloat(ppFix[0]);
+				const ppFix = pp.total.toFixed(2);
 
 				/**
 				 * The max pp score split from the string
 				 * @const {string}
 				 */
-				const maxppFix = maxPP.toString().split(' ');
-
-				/**
-				 * The max pp score parsed to show decimals
-				 * @const {number}
-				 */
-				const maxppNum = parseFloat(maxppFix[0]);
+				const maxppFix = maxPP.total.toFixed(2);
 
 				/**
 				 * Time format for score dates
@@ -151,7 +139,7 @@ module.exports = {
 					.setDescription(`Combo: ${combo}x | Missed: ${miss}x
 					Mods: ${oj.modbits.string(mods) || 'NoMod'} | Accuracy: ${acc_percent || '100'}%
 					
-					Total PP: **${ppNum.toFixed(2)}pp**/${maxppNum.toFixed(2)}PP`)
+					Total PP: **${ppFix}pp**/${maxppFix}PP`)
 					.setFooter(`${map.approvalStatus} on ${amonth} ${aday} ${ayear} | Mapped by: ${map.creator}`);
 
 				message.channel.send({ embed: osuEmbed });
