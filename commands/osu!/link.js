@@ -1,3 +1,5 @@
+// Copyright (C) 2021 Brody Jagoe
+
 const osu = require('node-osu');
 const { Users } = require('../../dbObjects');
 const { osu_key } = require('../../config.json');
@@ -12,24 +14,12 @@ module.exports = {
 	async execute(message, args) {
 		const osuApi = new osu.Api(osu_key);
 
-		/**
-		 * The name of the user to link
-		 * @const {string}
-		 */
 		const user = args.join(' ').replace(/[^\w\s]/gi, '');
 
 		if (user === '') return message.reply('Error: No special characters allowed!');
 
-		/**
-		 * The ID of the user
-		 * @type {string}
-		 */
 		let osuID = null;
 
-		/**
-		 * The name of the user
-		 * @type {string}
-		 */
 		let osuName = '';
 
 		await osuApi.getUser({ u: user }).then(u => {

@@ -1,3 +1,5 @@
+// Copyright (C) 2021 Brody Jagoe
+
 const { MessageEmbed } = require('discord.js');
 const { modAction } = require('../../utils');
 const { Muted } = require('../../dbObjects');
@@ -16,10 +18,6 @@ module.exports = {
 	async execute(message, args) {
 		if (!message.mentions.members.first()) return message.reply('Please mention a user.');
 
-		/**
-		 * Member to be unmuted
-		 * @const {Object}
-		 */
 		const tag = message.mentions.members.first() || message.guild.member(args[0]);
 
 		// Stop if the mention is the message author
@@ -28,18 +26,11 @@ module.exports = {
 		// Remove the mention from the arguments
 		args.shift();
 
-		/**
-		 * @arg reason The unmute reason
-		 */
 		let reason = args.join(' ');
 
 		// If no reason is found defaul to this
 		if (!reason) reason = 'No Reason Given';
 
-		/**
-		 * Find muted role in the server
-		 * @type {Object}
-		 */
 		const muteRole = message.guild.roles.cache.find(r => r.name === 'muted');
 
 		// Error if no muted role is found
@@ -62,10 +53,6 @@ module.exports = {
 			modAction(message.author, tag, 'Unmute', reason, undefined);
 			// Remove the user from the muted database
 			try {
-				/**
-				 * If the user entry was destroyed
-				 * @const {boolean}
-				 */
 				const unMuted = await Muted.destroy({ where: { user_id: tag.id } });
 				if (!unMuted) return console.log(`Failed to unmute ${tag.username}`);
 			}catch(e) {

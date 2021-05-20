@@ -1,3 +1,5 @@
+// Copyright (C) 2021 Brody Jagoe
+
 const { timeSince } = require('../../utils');
 const { upDate } = require('../../index');
 const { Users, sConfig } = require('../../dbObjects');

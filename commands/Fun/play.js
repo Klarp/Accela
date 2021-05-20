@@ -1,3 +1,5 @@
+// Copyright (C) 2021 Brody Jagoe
+
 module.exports = {
 	name: 'play',
 	aliases: 'playmore',

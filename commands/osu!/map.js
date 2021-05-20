@@ -1,3 +1,5 @@
+// Copyright (C) 2021 Brody Jagoe
+
 const osu = require('node-osu');
 const oj = require('ojsama');
 const Discord = require('discord.js');
@@ -18,16 +20,8 @@ module.exports = {
 		// Access the api
 		const osuApi = new osu.Api(osu_key);
 
-		/**
-		 * The osu! beatmap
-		 * @type {Object}
-		 */
 		let bMap;
 
-		/**
-		 * The mods used for the calculation
-		 * @type {string}
-		 */
 		let mods = '';
 
 		if (args[0] && !args[0].startsWith('+')) {
@@ -50,142 +44,54 @@ module.exports = {
 
 		// Find user through the api
 		osuApi.getBeatmaps({ b: bMap }).then(beatmap => {
-			/**
-			 * The beatmap chosen by the user
-			 * @const {Object}
-			 */
 			const map = beatmap[0];
 
 			osuApi.getUser({ u: map.creator }).then(u => {
 				curl.get(`https://osu.ppy.sh/osu/${map.id}`, function(err, response, body) {
-					/**
-					 * The modbits used for calculation
-					 * @const {modbits}
-					 */
 					const ojmods = oj.modbits.from_string(mods);
 
-					/**
-					 * The parsed body of the beatmap
-					 * @const {Object}
-					 */
 					const parser = new oj.parser().feed(body);
 
-					/**
-					 * The parsed beatmap
-					 * @const {Object}
-					 */
 					const pMap = parser.map;
 
-					/**
-					 * The maxPP of the beatmap
-					 * @const {string}
-					 */
 					const maxPP = oj.ppv2({ map: pMap, mods: ojmods });
 
-					/**
-					 * The pp score split from the string
-					 * @const {string[]}
-					 */
 					const ppFix = maxPP.total.toFixed(2);
 
-					/**
-					 * The calculated star difficulty of the beatmap
-					 * @const {Object}
-					 */
 					const stars = new oj.diff().calc({ map: pMap, mods: ojmods });
 
-					/**
-					 * The star difficulty split from the string
-					 * @const {string[]}
-					 */
 					const star = stars.toString().split(' ');
 
-					/**
-					 * The emoji used for the star level
-					 * @const {Object}
-					 */
 					const diff = getDiff(star[0]);
 
-					/**
-					 * The minutes of the beatmap length
-					 * @type {number}
-					 */
 					let lenMinutes = Math.floor(map.length.total / 60);
 
-					/**
-					 * The seconds of the beatmap length
-					 * @type {number}
-					 */
 					let lenSeconds = map.length.total - lenMinutes * 60;
 
-					/**
-					 * The minutes of the beatmap drain length
-					 * @type {number}
-					 */
 					let drainMinutes = Math.floor(map.length.drain / 60);
 
-					/**
-					 * The seconds of the beatmap drain length
-					 * @type {number}
-					 */
 					let drainSeconds = map.length.drain - drainMinutes * 60;
 
-					/**
-					 * The BPM of the beatmap
-					 * @type {number}
-					 */
 					let newBPM;
 
-					/**
-					 * The circle size of the beatmap
-					 * @type {number}
-					 */
 					let cs = map.difficulty.size;
 
-					/**
-					 * The approach rate of the beatmap
-					 * @type {number}
-					 */
 					let ar = map.difficulty.approach;
 
-					/**
-					 * The overall difficulty of the beatmap
-					 * @type {number}
-					 */
 					let od = map.difficulty.overall;
 
-					/**
-					 * The health drain of the beatmap
-					 * @type {number}
-					 */
 					let hp = map.difficulty.drain;
 
-					/**
-					 * The date the beatmap was approved
-					 * @const {Date}
-					 */
 					const adate = map.approvedDate;
 					const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' });
 					const [{ value: amonth },, { value: aday },, { value: ayear }] = dateTimeFormat.formatToParts(adate);
 
-					/**
-					 * The date the beatmap was last updated
-					 * @const {Date}
-					 */
 					const udate = map.lastUpdate;
 					const [{ value: umonth },, { value: uday },, { value: uyear }] = dateTimeFormat.formatToParts(udate);
 
 					if (oj.modbits.string(ojmods).includes('DT') || oj.modbits.string(ojmods).includes('NC')) {
-						/**
-						 * The length of the beatmap with the new BPM (Double-Time)
-						 * @const {number}
-						 */
 						const bpmLength = map.length.total * 0.67;
 
-						/**
-						 * The drain of the beatmap with the new BPM (Double-Time)
-						 * @const {number}
-						 */
 						const bpmDrain = map.length.drain * 0.67;
 
 						lenMinutes = Math.floor(bpmLength / 60);
@@ -203,16 +109,8 @@ module.exports = {
 					}
 
 					if (oj.modbits.string(ojmods).includes('HT')) {
-						/**
-						 * The length of the beatmap with the new BPM (Half-Time)
-						 * @const {number}
-						 */
 						let bpmLength = (1 / 3) * map.length.total;
 
-						/**
-						 * The drain of the beatmap with the new BPM (Half-Time)
-						 * @const {number}
-						 */
 						let bpmDrain = (1 / 3) * map.length.drain;
 						const totalTime = parseInt(map.length.total);
 						const drainTime = parseInt(map.length.drain);

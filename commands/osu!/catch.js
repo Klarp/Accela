@@ -1,3 +1,5 @@
+// Copyright (C) 2021 Brody Jagoe
+
 const osu = require('node-osu');
 const Discord = require('discord.js');
 const Sentry = require('../../log');
@@ -20,22 +22,10 @@ module.exports = {
 			parseNumeric: true,
 		});
 
-		/**
-		 * The prefix of the server
-		 * @type {string}
-		 */
 		let prefix = '>>';
 
-		/**
-		 * Whether the user is in the database
-		 * @type {boolean}
-		 */
 		let findUser;
 
-		/**
-		 * First user mentioned in the message
-		 * @type {Object}
-		 */
 		let menUser = message.mentions.users.first();
 		let memberFlag = false;
 		if (!menUser && args[0]) {
@@ -51,28 +41,12 @@ module.exports = {
 			}
 		}
 
-		/**
-		 * Guild with required emotes
-		 * @const {Object}
-		 */
 		const cyberia = Client.guilds.cache.get('687858540425117755');
 
-		/**
-		 * The verified emote
-		 * @const {Object}
-		 */
 		const verifiedEmote = cyberia.emojis.cache.find(emoji => emoji.name === 'verified');
 
-		/**
-		 * The name of the osu! user
-		 * @type {string}
-		 */
 		let name;
 
-		/**
-		 * The verified text for the embed
-		 * @type {string}
-		 */
 		let verified = `:x: Not Verified [use ${prefix}verify]`;
 
 		// Access database
@@ -115,35 +89,15 @@ module.exports = {
 
 		// Find user through the api
 		osuApi.getUser({ m: 2, u: name }).then(async user => {
-			/**
-			 * The date the user joined osu!
-			 * @const {string}
-			 */
 			let d = user.raw_joinDate;
 			d = d.split(' ')[0];
 
-			/**
-			 * The osu! rank of the user
-			 * @const {string}
-			 */
 			const rank = user.pp.rank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-			/**
-			 * The country rank of the user
-			 * @const {string}
-			 */
 			const crank = user.pp.countryRank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-			/**
-			 * The country of the user
-			 * @const {string}
-			 */
 			const country = user.country.toLowerCase();
 
-			/**
-			 * The country emote of the user
-			 * @const {string}
-			 */
 			const countryEmote = `:flag_${country}:`;
 
 			// Create the embed

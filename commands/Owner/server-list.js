@@ -1,3 +1,5 @@
+// Copyright (C) 2021 Brody Jagoe
+
 const { Client } = require('../../index');
 const { MessageEmbed } = require('discord.js');
 

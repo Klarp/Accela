@@ -1,3 +1,5 @@
+// Copyright (C) 2021 Brody Jagoe
+
 const { MessageEmbed } = require('discord.js');
 const { modAction } = require('../../utils');
 const ms = require('ms');
@@ -17,10 +19,6 @@ module.exports = {
 		// Stop if no mentions found
 		if (!message.mentions.members.first()) return message.reply('Please mention a user.');
 
-		/**
-		 * Member to be temp-muted
-		 * @const {Object}
-		 */
 		const tag = message.mentions.members.first() || message.guild.member(args[0]);
 
 		// Stop if the mention is the message author
@@ -29,24 +27,13 @@ module.exports = {
 		// Remove the mention from the arguments
 		args.shift();
 
-		/**
-		 * Time to be muted
-		 * @const {string} muteTime
-		 */
 		const muteTime = args.shift();
 
-		/**
-		 * @arg reason The temp-mute reason
-		 */
 		let reason = args.join(' ');
 
 		// If no reason is found default to this
 		if (!reason) reason = 'No Reason Given';
 
-		/**
-		 * Find muted role in the server
-		 * @type {Object}
-		 */
 		let muteRole = message.guild.roles.cache.find(r => r.name === 'muted');
 
 		// MUTE ROLE CREATION START

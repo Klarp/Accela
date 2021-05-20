@@ -1,3 +1,5 @@
+// Copyright (C) 2021 Brody Jagoe
+
 const { MessageEmbed } = require('discord.js');
 const { modAction } = require('../../utils');
 const { Muted } = require('../../dbObjects');
@@ -17,10 +19,6 @@ module.exports = {
 		// Stop if no mentions found
 		if (!message.mentions.members.first()) return message.reply('Please mention a user.');
 
-		/**
-		 * Member to be muted
-		 * @const {Object}
-		 */
 		const tag = message.mentions.members.first() || message.guild.member(args[0]);
 
 		// Stop if the mention is the message author

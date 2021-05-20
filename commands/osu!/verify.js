@@ -1,3 +1,5 @@
+// Copyright (C) 2021 Brody Jagoe
+
 const axios = require('axios');
 const osu = require('node-osu');
 const Sentry = require('../../log');

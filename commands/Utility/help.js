@@ -1,3 +1,5 @@
+// Copyright (C) 2021 Brody Jagoe
+
 const { prefix } = require('../../config.json');
 const { checkPerm } = require('../../utils');
 const { owners } = require('../../config.json');

@@ -1,3 +1,4 @@
+// Copyright (C) 2021 Brody Jagoe
 // Special thanks to all those helped me with this such as Stedoss, uyitroa and phil.
 
 module.exports = {

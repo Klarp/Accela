@@ -1,3 +1,5 @@
+// Copyright (C) 2021 Brody Jagoe
+
 const osu = require('node-osu');
 const Discord = require('discord.js');
 const Sentry = require('../../log');
@@ -20,16 +22,8 @@ module.exports = {
 			parseNumeric: true,
 		});
 
-		/**
-		 * Wether the user is in the database
-		 * @type {boolean}
-		 */
 		let findUser;
 
-		/**
-		 * First user mentioned in the message
-		 * @type {Object}
-		 */
 		let menUser = message.mentions.users.first();
 		let memberFlag = false;
 		if (!menUser && args[0]) {
@@ -38,28 +32,12 @@ module.exports = {
 		}
 		if (!menUser && !memberFlag) menUser = message.member;
 
-		/**
-		 * The prefix of the server
-		 * @type {string}
-		 */
 		let prefix = '>>';
 
-		/**
-		 * The name of the osu! user
-		 * @type {string}
-		 */
 		let name;
 
-		/**
-		 * The ID of the the osu! user
-		 * @type {string}
-		 */
 		let id;
 
-		/**
-		 * The verified text for the embed
-		 * @type {string}
-		 */
 		let verified = `:x: Not Verified [use ${prefix}verify]`;
 
 		if (message.channel.type !== 'dm') {
@@ -69,16 +47,8 @@ module.exports = {
 			}
 		}
 
-		/**
-		 * Guild with required emotes
-		 * @const {Object}
-		 */
 		const cyberia = Client.guilds.cache.get('687858540425117755');
 
-		/**
-		 * The verified emote
-		 * @const {Object}
-		 */
 		const verifiedEmbed = cyberia.emojis.cache.find(emoji => emoji.name === 'verified');
 
 		// Access database
@@ -121,43 +91,19 @@ module.exports = {
 			message.channel.send(`No link found: use ${prefix}link [osu user] to link your osu! account!`);
 		}
 
-		/**
-		 * Use either the name or ID to search
-		 * @const {string}
-		 */
 		const search = name || id;
 
 		// Find user through the api
 		osuApi.getUser({ m: 3, u: search }).then(async user => {
-			/**
-			 * The date the user joined osu!
-			 * @const {string}
-			 */
 			let d = user.raw_joinDate;
 			d = d.split(' ')[0];
 
-			/**
-			 * The osu! rank of the user
-			 * @const {string}
-			 */
 			const rank = user.pp.rank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-			/**
-			 * The country rank of the user
-			 * @const {string}
-			 */
 			const crank = user.pp.countryRank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-			/**
-			 * The country of the user
-			 * @const {string}
-			 */
 			const country = user.country.toLowerCase();
 
-			/**
-			 * The country emote of the user
-			 * @const {string}
-			 */
 			const countryEmote = `:flag_${country}:`;
 
 			// Create the embed

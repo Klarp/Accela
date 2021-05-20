@@ -1,3 +1,4 @@
+// Copyright (C) 2021 Brody Jagoe
 /* eslint-disable no-undef */
 module.exports = {
 	name: 'error',

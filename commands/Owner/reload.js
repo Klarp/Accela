@@ -1,3 +1,5 @@
+// Copyright (C) 2021 Brody Jagoe
+
 const Sentry = require('../../log');
 
 module.exports = {

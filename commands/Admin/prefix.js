@@ -1,3 +1,5 @@
+// Copyright (C) 2021 Brody Jagoe
+
 const Discord = require('discord.js');
 const { sConfig } = require('../../dbObjects');
 const Sentry = require('../../log');
@@ -11,9 +13,6 @@ module.exports = {
 	args: true,
 	usage: '<prefix>',
 	async execute(message, args) {
-		/**
-		 * @arg prefix Prefix to be set
-		 */
 		const prefix = args[0];
 
 		try {

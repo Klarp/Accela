@@ -1,3 +1,5 @@
+// Copyright (C) 2021 Brody Jagoe
+
 const Discord = require('discord.js');
 const { timeSince } = require('../../utils');
 
@@ -26,6 +28,7 @@ module.exports = {
 		let targetFlag = false;
 		if (!target && args[0]) {
 			targetFlag = true;
+			if (!message.guild.member(args[0])) return message.reply('Could not find user.');
 			target = message.guild.member(args[0]).user;
 		}
 		if (!target && !targetFlag) target = message.member.user;

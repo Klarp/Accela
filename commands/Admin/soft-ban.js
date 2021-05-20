@@ -1,3 +1,5 @@
+// Copyright (C) 2021 Brody Jagoe
+
 const { MessageEmbed } = require('discord.js');
 const { modAction } = require('../../utils');
 const Sentry = require('../../log');
@@ -13,10 +15,6 @@ module.exports = {
 	modCmd: true,
 	usage: '<member> <reason>',
 	execute(message, args) {
-		/**
-		 * Member to be soft banned
-		 * @const toSF
-		 */
 		const toSF = message.mentions.members.first() || message.guild.member(args[0]);
 
 		if (!message.member.hasPermission('BAN_MEMBERS')) return message.channel.send('You do not have permission to perform this command!');
