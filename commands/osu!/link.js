@@ -21,7 +21,6 @@ module.exports = {
 		let osuID = null;
 
 		let osuName = '';
-
 		await osuApi.getUser({ u: user }).then(u => {
 			osuID = u.id;
 			osuName = u.name;

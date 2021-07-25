@@ -25,25 +25,25 @@ require('./models/Users.js')(sequelize, Sequelize);
 require('./models/Muted.js')(seqMute, Sequelize);
 require('./models/Config.js')(serverConfig, Sequelize);
 
-const force = process.argv.includes('--force') || process.argv.includes('-f');
+const forceNew = process.argv.includes('--force') || process.argv.includes('-f');
 const osu = process.argv.includes('--osu') || process.argv.includes('-o');
 
 syncData();
 
 function syncData() {
-	sequelize.sync({ force }).then(async () => {
+	sequelize.sync({ force: forceNew }).then(async () => {
 		console.log('osu! users synced');
 		sequelize.close();
 	}).catch(console.error);
 
 	if (osu) return;
 
-	seqMute.sync({ force }).then(async () => {
+	seqMute.sync({ force: forceNew }).then(async () => {
 		console.log('Muted users synced');
 		seqMute.close();
 	}).catch(console.error);
 
-	serverConfig.sync({ force }).then(async () => {
+	serverConfig.sync({ force: forceNew }).then(async () => {
 		console.log('Server config synced');
 		serverConfig.close();
 	}).catch(console.error);

@@ -21,7 +21,14 @@ module.exports = {
 		const user = await Users.findOne({ where: { user_id: menUser.id } });
 		if (!user) return message.reply('Could not find user!');
 
-		const mode = user.get('osu_mode');
+		const modeNums = {
+			0: 'osu!std',
+			1: 'osu!taiko',
+			2: 'osu!ctb',
+			3: 'osu!mania',
+		};
+
+		const mode = modeNums[user.get('osu_mode')];
 		const std_rank = user.get('std_rank');
 		const taiko_rank = user.get('taiko_rank');
 		const ctb_rank = user.get('ctb_rank');

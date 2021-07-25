@@ -16,7 +16,6 @@
 	Contact: admin@accela.xyz
 */
 
-
 const fs = require('fs');
 const Discord = require('discord.js');
 const axios = require('axios');
@@ -153,8 +152,9 @@ client.once('ready', async () => {
 				if (mode === 2 && ctb_rank !== null) rank = ctb_rank;
 				if (mode === 3 && mania_rank !== null) rank = mania_rank;
 				const osuMember = osuGame.members.cache.get(userID);
-				if (!osuMember) return;
-				util.getRankRole(osuMember, rank, mode);
+				if (osuMember) {
+					util.getRankRole(osuMember, rank, mode);
+				}
 			}
 		} catch (err) {
 			Sentry.captureException(err);
@@ -185,7 +185,7 @@ client.once('ready', async () => {
 		for (let i = 0; i < osuUsers.length; i++) {
 			q.push(osuUsers[i]);
 		}
-	}, 60 * 60 * 1000);
+	}, 1000 * 60 * 60 * 24);
 
 	// 60 * 60 * 1000 - One Hour
 
@@ -483,7 +483,7 @@ client.on('message', async message => {
 			.setColor('RED')
 			.setDescription(`OOPSIE WOOPSIE!! Uwu We made a fucky wucky!! A wittle fucko boingo! The code monkeys at our headquarters are working VEWY HAWD to fix this!
 			
-Please contact @Karp#0001 if you see this message`);
+Please contact @Klarp#0001 if you see this message`);
 		// Sends error embed on command failure
 		message.channel.send(errorEmbed);
 	}
@@ -555,7 +555,7 @@ client.on('guildBanAdd', async (guild, user) => {
 	// Get mod channel from config
 	const modChannel = serverConfig.get('mod_channel');
 
-	await util.sleep(1000);
+	await util.sleep(1200);
 
 	if (!guild.me.hasPermission('VIEW_AUDIT_LOG')) return;
 
@@ -640,7 +640,7 @@ client.on('guildBanRemove', async (guild, user) => {
 	// Get mod channel from config
 	const modChannel = serverConfig.get('mod_channel');
 
-	await util.sleep(1000);
+	await util.sleep(1200);
 
 	if (!guild.me.hasPermission('VIEW_AUDIT_LOG')) return;
 
@@ -766,7 +766,7 @@ client.on('guildMemberRemove', async (member) => {
 
 	if (firstLog.action === 'MEMBER_BAN_ADD' && firstLog.target.id === member.id) return;
 
-	await util.sleep(1000);
+	await util.sleep(1200);
 
 	const fetchedLogs = await member.guild.fetchAuditLogs({
 		limit: 1,

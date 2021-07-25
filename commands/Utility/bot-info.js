@@ -57,7 +57,7 @@ module.exports = {
 **Uptime:** ${uptime}
 			
 **Roles:** ${roles}`)
-			.setFooter(`Created by: Karp#0001 | Version: ${version} | Framework: discord.js`);
+			.setFooter(`Created by: Klarp#0001 | Version: ${version} | Framework: discord.js`);
 		message.channel.send(infoEmbed);
 	},
 };

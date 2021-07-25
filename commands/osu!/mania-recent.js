@@ -134,6 +134,7 @@ module.exports = {
 				
 ${verified}`)
 				.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
+				.setThumbnail(`http://a.ppy.sh/${recent.user.id}`)
 				.setFooter(`Completed ${rDate} • osu!mania`);
 			message.channel.send(osuEmbed);
 		}).catch(e => {

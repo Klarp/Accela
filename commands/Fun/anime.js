@@ -44,10 +44,18 @@ module.exports = {
 
 					let endDate = `${aniRes.endDate.year}-${aniRes.endDate.month}-${aniRes.endDate.day}`;
 
-					let longDesc = aniRes.description.replace(/<\/?[^>]+(>|$)/g, '').replace(/&lsquo;/g, '').replace(/\n/g, '');
+					let longDesc = 'No description found';
+
+					if (aniRes.description) {
+						longDesc = aniRes.description.replace(/<\/?[^>]+(>|$)/g, '').replace(/&lsquo;/g, '').replace(/\n/g, '');
+					}
 
 					if (aniRes.startDate.year === null) {
 						startDate = 'Unknown';
+					}
+
+					if (aniRes.startDate.year & !aniRes.startDate.day || !aniRes.startDate.month) {
+						startDate = aniRes.startDate.year;
 					}
 
 					if (aniRes.endDate.year === null) {
@@ -62,7 +70,9 @@ module.exports = {
 						.setTitle(`${aniRes.title.romaji} [${aniRes.title.native}]`)
 						.setURL(aniRes.siteUrl)
 						.setThumbnail(aniRes.coverImage.large)
-						.setDescription(`**Status** ${status} | **Type** ${type} | **Episodes** ${episodes}
+						.setDescription(`${aniRes.title.english ? aniRes.title.english : ''}
+
+**Status** ${status} | **Type** ${type} | **Episodes** ${episodes}
 **Studio** ${studio} | **Average Score** ${avgScore}%
 **Genres** ${genres}
 					

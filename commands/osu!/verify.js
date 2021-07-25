@@ -87,15 +87,15 @@ module.exports = {
 								.setTitle(':white_check_mark: Verfication Accepted!')
 								.setColor('#af152a')
 								.setDescription(`User: ${user.username}
-Rank (osu!std): ${userStat.pp_rank}`)
+Rank (osu!std): ${userStat.global_rank}`)
 								.setFooter(`ID: ${user.id} | Use >>mode to change game modes`);
 
-							let std_rank = userStat.pp_rank;
+							const std_rank = userStat.global_rank;
 							let taiko_rank;
 							let ctb_rank;
 							let mania_rank;
 
-							if (std_rank === '0') std_rank = null;
+							console.log(`Standard: ${std_rank}`);
 
 							await osuApi.getUser({ u: user.id, m: 1 }).then(osuUser => {
 								taiko_rank = osuUser.pp.rank;

@@ -109,7 +109,6 @@ module.exports = {
 	 */
 	async getRankRole(member, rank, mode) {
 		let role;
-
 		if (mode === 0) {
 			if (rank < 100 && rank !== 0) {
 				// 1 - 99

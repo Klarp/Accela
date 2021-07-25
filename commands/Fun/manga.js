@@ -22,8 +22,6 @@ module.exports = {
 
 					if (aniRes.isAdult) return message.reply('NSFW searches are not allowed!');
 
-					let descLong = aniRes.description.replace(/<\/?[^>]+(>|$)/g, '').replace(/&lsquo;/g, '').replace(/\n/g, '');
-
 					const status = getStatus(aniRes.status);
 
 					const type = aniRes.format || 'Unknown';
@@ -36,6 +34,13 @@ module.exports = {
 
 					const genres = aniRes.genres.join(' | ') || 'Unknown';
 
+					let longDesc = 'No description found';
+
+					if (aniRes.description) {
+						longDesc = aniRes.description.replace(/<\/?[^>]+(>|$)/g, '').replace(/&lsquo;/g, '').replace(/\n/g, '');
+					}
+
+
 					let startDate = `${aniRes.startDate.year}-${aniRes.startDate.month}-${aniRes.startDate.day}`;
 
 					let endDate = `${aniRes.endDate.year}-${aniRes.endDate.month}-${aniRes.endDate.day}`;
@@ -44,11 +49,15 @@ module.exports = {
 						startDate = 'Unknown';
 					}
 
+					if (aniRes.startDate.year & !aniRes.startDate.day || !aniRes.startDate.month) {
+						startDate = aniRes.startDate.year;
+					}
+
 					if (aniRes.endDate.year === null) {
 						endDate = 'Unknown';
 					}
 
-					descLong = truncate(descLong, 300);
+					longDesc = truncate(longDesc, 300);
 
 					const aniEmbed = new Discord.MessageEmbed()
 						.setAuthor('AniList [UNOFFICIAL]', 'https://anilist.co/img/icons/android-chrome-512x512.png')
@@ -56,7 +65,9 @@ module.exports = {
 						.setTitle(`${aniRes.title.romaji} [${aniRes.title.native}]`)
 						.setURL(aniRes.siteUrl)
 						.setThumbnail(aniRes.coverImage.large)
-						.setDescription(`**Status** ${status} | **Type** ${type} | **Average Score** ${avgScore}%
+						.setDescription(`${aniRes.title.english ? aniRes.title.english : ''}
+
+**Status** ${status} | **Type** ${type} | **Average Score** ${avgScore}%
 **Volumes** ${volumes} **Chapters** ${chapters}
 **Genres** ${genres}
 					
@@ -64,7 +75,7 @@ module.exports = {
 **End Date** ${endDate}
 					
 **Description**
-${descLong}`);
+${longDesc}`);
 					message.channel.send(aniEmbed);
 				});
 			} else {

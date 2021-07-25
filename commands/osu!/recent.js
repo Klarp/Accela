@@ -191,6 +191,7 @@ ${acc}% | ${oj.modbits.string(mods) || 'NoMod'} | Map Completion: ${failPercent}
 
 ${verified}`)
 						.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
+						.setThumbnail(`http://a.ppy.sh/${recent.user.id}`)
 						.setFooter(`Completed ${rDate}`);
 					message.channel.send(osuFailEmbed);
 				} else {
@@ -206,6 +207,7 @@ ${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
 					
 ${verified}`)
 						.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
+						.setThumbnail(`http://a.ppy.sh/${recent.user.id}`)
 						.setFooter(`Completed ${rDate}`);
 					message.channel.send(osuEmbed);
 				}

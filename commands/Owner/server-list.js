@@ -12,7 +12,7 @@ module.exports = {
 	async execute(message) {
 		const guildCache = Client.guilds.cache;
 		const guildSort = guildCache.sort((a, b) => b.memberCount - a.memberCount);
-		const g = guildSort.map(guild => `${guild.name} | Members: ${guild.memberCount} | Owner: ${guild.owner.user.tag}`).join('\n');
+		const g = guildSort.map(guild => `${guild.name} | Members: ${guild.memberCount} | Owner: ${guild.owner ? guild.owner.user.tag : 'Unknown'}`).join('\n');
 		console.log(g);
 		message.author.send(new MessageEmbed().addField('Servers', g.substring(0, 1000) + (g.length > 1000 ? '...' : '')));
 	},

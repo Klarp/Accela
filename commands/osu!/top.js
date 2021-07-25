@@ -174,6 +174,7 @@ module.exports = {
 					.setColor('#af152a')
 					.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
 					.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
+					.setThumbnail(`http://a.ppy.sh/${recent.user.id}`)
 					.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${recent.counts['300']}/${recent.counts['100']}/${recent.counts['50']}/${recent.counts.miss}}
 
 **${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${ppFix}pp**/${maxFix}PP

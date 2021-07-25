@@ -24,13 +24,15 @@ module.exports = {
 
 		let prefix = '>>';
 		let findUser;
-		let menUser = message.mentions.users.first();
+		const menUser = message.mentions.users.first();
 		let memberFlag = false;
-		if (!menUser && args[0]) {
+
+		if (args[0] && !menUser && !memberFlag) {
 			memberFlag = true;
-			if (message.guild.member(args[0])) menUser = message.guild.member(args[0]);
+			if (message.guild.member(args[0])) findUser = message.guild.member(args[0]);
 		}
-		if (!menUser && !memberFlag) menUser = message.member;
+
+		if (!menUser && !memberFlag) findUser = message.member;
 		let name;
 		let verified = `:x: Not Verified [use ${prefix}verify]`;
 
@@ -47,7 +49,7 @@ module.exports = {
 		// Access database
 		if (menUser) {
 			findUser = await Users.findOne({ where: { user_id: menUser.id } });
-		} else {
+		} else if (!memberFlag) {
 			findUser = await Users.findOne({ where: { user_id: message.author.id } });
 		}
 
@@ -87,11 +89,35 @@ module.exports = {
 		osuApi.getUser({ m: 1, u: name }).then(async user => {
 			// Need to change this to use the date grabber
 			let d = user.raw_joinDate;
+			let rank;
+			let crank;
+			let playCount;
+			let acc;
 			d = d.split(' ')[0];
 
-			const rank = user.pp.rank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-			const crank = user.pp.countryRank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+			if (user.pp.rank) {
+				rank = user.pp.rank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+			} else {
+				rank = '0';
+			}
 
+			if (user.pp.countryRank) {
+				crank = user.pp.countryRank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+			} else {
+				crank = '0';
+			}
+
+			if (user.accuracyFormatted === 'NaN%') {
+				acc = '0%';
+			} else {
+				acc = user.accuracyFormatted;
+			}
+
+			if (user.counts.plays) {
+				playCount = user.counts.plays;
+			} else {
+				playCount = '0';
+			}
 			const country = user.country.toLowerCase();
 			const countryEmote = `:flag_${country}:`;
 
@@ -101,9 +127,10 @@ module.exports = {
 				.setColor('#af152a')
 				.setTitle(`Information On ${user.name}`)
 				.setURL(`https://osu.ppy.sh/u/${user.id}`)
+				.setThumbnail(`http://a.ppy.sh/${user.id}`)
 				.setDescription(`**Level** ${Math.floor(user.level)} | **Global Rank** ${rank} | **[${countryEmote}](https://osu.ppy.sh/rankings/mania/performance?country=${user.country} 'Country Rankings') Rank** ${crank}
 				
-**PP** ${Math.round(user.pp.raw)} | **Accuracy** ${user.accuracyFormatted} | **Play Count** ${user.counts.plays}
+**PP** ${Math.round(user.pp.raw)} | **Accuracy** ${acc} | **Play Count** ${playCount}
 
 ${verified}`)
 				.setFooter(`osu!taiko • Joined ${d}`);
