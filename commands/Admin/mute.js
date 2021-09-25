@@ -1,6 +1,7 @@
 // Copyright (C) 2021 Brody Jagoe
 
 const { MessageEmbed } = require('discord.js');
+
 const { modAction } = require('../../utils');
 const { Muted } = require('../../dbObjects');
 const Sentry = require('../../log');
@@ -19,7 +20,7 @@ module.exports = {
 		// Stop if no mentions found
 		if (!message.mentions.members.first()) return message.reply('Please mention a user.');
 
-		const tag = message.mentions.members.first() || message.guild.member(args[0]);
+		const tag = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
 		// Stop if the mention is the message author
 		if (message.member === tag) return message.reply('You can not use this on yourself');
@@ -71,7 +72,7 @@ module.exports = {
 					.setTitle(`Muted in ${message.guild.name}`)
 					.setDescription(`Reason: ${reason}`);
 
-				tag.send(muteEmbed);
+				tag.send({ embeds: [muteEmbed] });
 			});
 			message.channel.send(`Muted: ${tag.user}`);
 			// Log the mute

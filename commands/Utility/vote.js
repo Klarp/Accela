@@ -16,6 +16,6 @@ module.exports = {
 
 [Discord Bot List](https://discordbotlist.com/bots/accela/upvote)`);
 
-		message.channel.send(voteEmbed);
+		message.channel.send({ embeds: [voteEmbed] });
 	},
 };

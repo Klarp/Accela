@@ -7,7 +7,7 @@ module.exports = {
 	description: 'Get the websocket ping',
 	module: 'Utility',
 	cooldown: 5,
-	execute(message) {
+	async execute(message) {
 		message.channel.send(`Pong: ${Math.round(Client.ws.ping)}ms`);
 	},
 };

@@ -1,9 +1,14 @@
 // Copyright (C) 2021 Brody Jagoe
 
-const osu = require('node-osu');
-const Discord = require('discord.js');
-const Sentry = require('../../log');
+// Shows wrong user (Might need to test on Gavin)
+// Add kiss, hug, slap commands maybe? (this is pretty meta)
+// Fix replies searching for the replied user
 
+const osu = require('node-osu');
+
+const { MessageEmbed } = require('discord.js');
+
+const Sentry = require('../../log');
 const { Client } = require('../../index');
 const { osu_key } = require('../../config.json');
 const { Users, sConfig } = require('../../dbObjects');
@@ -15,6 +20,7 @@ module.exports = {
 	module: 'Osu!',
 	usage: '<user>',
 	async execute(message, args) {
+
 		// Access the api
 		const osuApi = new osu.Api(osu_key, {
 			notFoundAsError: true,
@@ -23,25 +29,28 @@ module.exports = {
 		});
 
 		let findUser;
-		const menUser = message.mentions.users.first();
+		let menUser = message.mentions.users.first();
 		let memberFlag = false;
+
+		if (menUser) {
+			if (message.type === 'REPLY') menUser = null;
+		}
+
+		console.log(menUser);
 
 		if (args[0] && !menUser && !memberFlag) {
 			memberFlag = true;
-			if (message.guild.member(args[0])) findUser = message.guild.member(args[0]);
+			if (message.guild.members.cache.get(args[0])) findUser = message.guild.members.cache.get(args[0]);
 		}
 
 		if (!menUser && !memberFlag) findUser = message.member;
 
 		let prefix = '>>';
-
 		let name;
-
 		let id;
-
 		let verified = `:x: Not Verified [use ${prefix}verify]`;
 
-		if (message.channel.type !== 'dm') {
+		if (message.channel.type !== 'DM') {
 			const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
 			if (serverConfig) {
 				prefix = serverConfig.get('prefix');
@@ -74,7 +83,7 @@ module.exports = {
 				id = findUser.get('osu_id');
 			}
 		} else {
-			name = message.author.username;
+			menUser ? name = menUser.username : name = message.author.username;
 		}
 
 		// Use arguments if applicable
@@ -132,7 +141,7 @@ module.exports = {
 			const countryEmote = `:flag_${country}:`;
 
 			// Create the embed
-			const osuEmbed = new Discord.MessageEmbed()
+			const osuEmbed = new MessageEmbed()
 				.setAuthor(`${user.name || name}`, `http://a.ppy.sh/${user.id}`, `https://osu.ppy.sh/u/${user.id}`)
 				.setColor('#af152a')
 				.setTitle(`Information On ${user.name}`)
@@ -153,10 +162,10 @@ ${verified}`)
 				*/
 
 
-			message.channel.send({ embed: osuEmbed });
+			message.channel.send({ embeds: [osuEmbed] });
 		}).catch(e => {
 			if (e.name == 'Error') {
-				return message.reply('No recent play was found!');
+				return message.reply('No user was found with name/id ${name}!');
 			}
 			Sentry.captureException(e);
 			console.error(e);

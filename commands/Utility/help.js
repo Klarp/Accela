@@ -1,10 +1,11 @@
 // Copyright (C) 2021 Brody Jagoe
 
+const { MessageEmbed } = require('discord.js');
+
+const Sentry = require('../../log');
 const { prefix } = require('../../config.json');
 const { checkPerm } = require('../../utils');
 const { owners } = require('../../config.json');
-const { MessageEmbed } = require('discord.js');
-const Sentry = require('../../log');
 
 function ucFirst(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
@@ -32,7 +33,7 @@ module.exports = {
 				.addField('Utility', `\`${prefix}help utility\``, true)
 				.setFooter(`You can use ${prefix}help [command name] to get info on a specific command!`);
 
-			return message.channel.send(helpEmbed);
+			return message.channel.send({ embeds: [helpEmbed] });
 		}
 
 		const name = args[0].toLowerCase();
@@ -76,7 +77,7 @@ module.exports = {
 				data.push(`You can send \`${prefix}help [command name]\` to get info on a specific command!`);
 				return message.author.send(data, { split: true })
 					.then(() => {
-						if (message.channel.type === 'dm') return;
+						if (message.channel.type === 'DM') return;
 						message.reply('I\'ve sent you a DM with the commands!');
 					})
 					.catch(error => {
@@ -119,7 +120,7 @@ module.exports = {
 
 **Cooldown:** ${command.cooldown || 3} second(s)`);
 
-			message.channel.send(commandEmbed);
+			message.channel.send({ embeds: [commandEmbed] });
 		}
 	},
 };

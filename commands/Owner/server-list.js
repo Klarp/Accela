@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Brody Jagoe
 
-const { Client } = require('../../index');
 const { MessageEmbed } = require('discord.js');
+const { Client } = require('../../index');
 
 module.exports = {
 	name: 'server-list',
@@ -12,9 +12,10 @@ module.exports = {
 	async execute(message) {
 		const guildCache = Client.guilds.cache;
 		const guildSort = guildCache.sort((a, b) => b.memberCount - a.memberCount);
-		const g = guildSort.map(guild => `${guild.name} | Members: ${guild.memberCount} | Owner: ${guild.owner ? guild.owner.user.tag : 'Unknown'}`).join('\n');
+		const g = await guildSort.map(guild => `${guild.name} | Members: ${guild.memberCount}`).join('\n');
 		console.log(g);
-		message.author.send(new MessageEmbed().addField('Servers', g.substring(0, 1000) + (g.length > 1000 ? '...' : '')));
+		const serverEmbed = new MessageEmbed().addField('Servers', g.substring(0, 1000) + (g.length > 1000 ? '...' : ''));
+		message.author.send({ embeds: [serverEmbed] });
 	},
 };
 

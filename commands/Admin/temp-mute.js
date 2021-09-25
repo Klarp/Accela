@@ -1,8 +1,10 @@
 // Copyright (C) 2021 Brody Jagoe
 
-const { MessageEmbed } = require('discord.js');
-const { modAction } = require('../../utils');
 const ms = require('ms');
+
+const { MessageEmbed, Permissions } = require('discord.js');
+
+const { modAction } = require('../../utils');
 const Sentry = require('../../log');
 
 module.exports = {
@@ -11,7 +13,7 @@ module.exports = {
 	description: 'Temporally mutes a member in the server',
 	module: 'Admin',
 	guildOnly: true,
-	perms: 'MANAGE_ROLES',
+	perms: Permissions.FLAGS.MANAGE_ROLES,
 	args: true,
 	modCmd: true,
 	usage: '<member> <time> <reason>',
@@ -19,7 +21,7 @@ module.exports = {
 		// Stop if no mentions found
 		if (!message.mentions.members.first()) return message.reply('Please mention a user.');
 
-		const tag = message.mentions.members.first() || message.guild.member(args[0]);
+		const tag = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
 		// Stop if the mention is the message author
 		if (message.author === tag) return message.reply('You can not use this on yourself');
@@ -77,7 +79,7 @@ module.exports = {
 					.setDescription(`Reason: ${reason}
 Time: ${ms(ms(muteTime))}`);
 
-				tag.send(tempMuteEmbed);
+				tag.send({ embeds: [tempMuteEmbed] });
 			});
 			message.channel.send(`Muted: ${tag.user} for ${ms(ms(muteTime))}`);
 			// Log the mute

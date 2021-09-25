@@ -1,9 +1,10 @@
 // Copyright (C) 2021 Brody Jagoe
 
 const osu = require('node-osu');
-const Sentry = require('../../log');
 
 const { MessageEmbed } = require('discord.js');
+
+const Sentry = require('../../log');
 const { Client } = require('../../index');
 const { Users } = require('../../dbObjects');
 const { osu_key } = require('../../config.json');
@@ -37,8 +38,8 @@ module.exports = {
 
 		const user = await Users.findOne({ where: { user_id: message.author.id } });
 
-		if (!user) return message.channel.send(noVerifyEmbed);
-		if (!user.get('verified_id')) return message.channel.send(noVerifyEmbed);
+		if (!user) return message.channel.send({ embeds: [noVerifyEmbed] });
+		if (!user.get('verified_id')) return message.channel.send({ embeds: [noVerifyEmbed] });
 		if (!osuMember) return message.reply('this is a closed beta feature.');
 
 		if (!args[0]) {
@@ -50,7 +51,7 @@ module.exports = {
 **taiko**
 **ctb (Catch The Beat)**`)
 				.setFooter('Use >>mode [mode]');
-			message.channel.send(modeEmbed);
+			message.channel.send({ embeds: [modeEmbed] });
 		} else {
 			const mode = args[0].toLowerCase();
 

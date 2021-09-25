@@ -1,6 +1,7 @@
 // Copyright (C) 2021 Brody Jagoe
 
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, Permissions } = require('discord.js');
+
 const { modAction } = require('../../utils');
 const Sentry = require('../../log');
 
@@ -14,13 +15,13 @@ module.exports = {
 	modCmd: true,
 	usage: '<member> <reason>',
 	execute(message, args) {
-		const toBan = message.mentions.members.first() || message.guild.member(args[0]);
+		const toBan = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-		if (!message.member.hasPermission('BAN_MEMBERS')) return message.channel.send('You do not have permission to perform this command!');
+		if (!message.member.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) return message.channel.send('You do not have permission to perform this command!');
 		if (!toBan) return message.channel.send('You must provide a valid member to ban.');
 		if (toBan.id == message.author.id) return message.channel.send('You cannot ban yourself!');
 		if (toBan.bannable == false) return message.channel.send('I cannot ban that member!');
-		if (!message.guild.me.hasPermission('BAN_MEMBERS')) return message.channel.send('I do not have permission to ban members!');
+		if (!message.guild.me.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) return message.channel.send('I do not have permission to ban members!');
 		if (message.member.roles.highest.position <= toBan.roles.highest.position) return message.channel.send('You cannot ban someone with the same role or roles above you!');
 
 		/**
@@ -37,7 +38,7 @@ module.exports = {
 			.setDescription(`Reason: ${reason}`);
 
 		try {
-			toBan.send(banEmbed);
+			toBan.send({ embeds: [banEmbed] });
 		} catch (err) {
 			console.log(err);
 			Sentry.captureException(err);

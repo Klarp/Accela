@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Brody Jagoe
 
-const { Client } = require('../../index');
 const { MessageEmbed } = require('discord.js');
+const { Client } = require('../../index');
 
 module.exports = {
 	name: 'fake',
@@ -18,6 +18,6 @@ module.exports = {
 			.setDescription('Open the door to greet them with h!treat')
 			.setImage('https://cdn.discordapp.com/halloween-bot/Man-shark.png');
 
-		offtopic.send(fakeEmbed);
+		offtopic.send({ embeds: [fakeEmbed] });
 	},
 };

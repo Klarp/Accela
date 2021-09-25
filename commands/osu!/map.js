@@ -1,11 +1,12 @@
 // Copyright (C) 2021 Brody Jagoe
 
 const osu = require('node-osu');
-const oj = require('ojsama');
-const Discord = require('discord.js');
 const curl = require('curl');
-const Sentry = require('../../log');
 
+const { modbits, parser, diff, ppv2 } = require('ojsama');
+const { MessageEmbed } = require('discord.js');
+
+const Sentry = require('../../log');
 const { osu_key } = require('../../config.json');
 const { getDiff } = require('../../utils');
 const idGrab = require('../../index.js');
@@ -48,21 +49,21 @@ module.exports = {
 
 			osuApi.getUser({ u: map.creator }).then(u => {
 				curl.get(`https://osu.ppy.sh/osu/${map.id}`, function(err, response, body) {
-					const ojmods = oj.modbits.from_string(mods);
+					const ojmods = modbits.from_string(mods);
 
-					const parser = new oj.parser().feed(body);
+					const parserBody = new parser().feed(body);
 
-					const pMap = parser.map;
+					const pMap = parserBody.map;
 
-					const maxPP = oj.ppv2({ map: pMap, mods: ojmods });
+					const maxPP = ppv2({ map: pMap, mods: ojmods });
 
 					const ppFix = maxPP.total.toFixed(2);
 
-					const stars = new oj.diff().calc({ map: pMap, mods: ojmods });
+					const stars = new diff().calc({ map: pMap, mods: ojmods });
 
 					const star = stars.toString().split(' ');
 
-					const diff = getDiff(star[0]);
+					const diffCalc = getDiff(star[0]);
 
 					let lenMinutes = Math.floor(map.length.total / 60);
 
@@ -89,7 +90,7 @@ module.exports = {
 					const udate = map.lastUpdate;
 					const [{ value: umonth },, { value: uday },, { value: uyear }] = dateTimeFormat.formatToParts(udate);
 
-					if (oj.modbits.string(ojmods).includes('DT') || oj.modbits.string(ojmods).includes('NC')) {
+					if (modbits.string(ojmods).includes('DT') || modbits.string(ojmods).includes('NC')) {
 						const bpmLength = map.length.total * 0.67;
 
 						const bpmDrain = map.length.drain * 0.67;
@@ -108,7 +109,7 @@ module.exports = {
 						}
 					}
 
-					if (oj.modbits.string(ojmods).includes('HT')) {
+					if (modbits.string(ojmods).includes('HT')) {
 						let bpmLength = (1 / 3) * map.length.total;
 
 						let bpmDrain = (1 / 3) * map.length.drain;
@@ -132,14 +133,14 @@ module.exports = {
 						}
 					}
 
-					if (oj.modbits.string(ojmods).includes('EZ')) {
+					if (modbits.string(ojmods).includes('EZ')) {
 						cs = map.difficulty.size / 2;
 						ar = map.difficulty.approach / 2;
 						od = map.difficulty.overall / 2;
 						hp = map.difficulty.drain / 2;
 					}
 
-					if (oj.modbits.string(ojmods).includes('HR')) {
+					if (modbits.string(ojmods).includes('HR')) {
 						cs = map.difficulty.size * 1.3;
 						ar = map.difficulty.approach * 1.4;
 						od = map.difficulty.overall * 1.4;
@@ -161,20 +162,20 @@ module.exports = {
 					}
 
 					// Create the embed
-					const osuEmbed = new Discord.MessageEmbed()
+					const osuEmbed = new MessageEmbed()
 						.setColor('#af152a')
 						.setAuthor(map.creator, `http://a.ppy.sh/${u.id}`)
 						.setTitle(`${map.artist} - ${map.title} (${map.version})`)
 						.setThumbnail(`https://b.ppy.sh/thumb/${map.beatmapSetId}l.jpg`)
 						.setURL(`https://osu.ppy.sh/b/${map.id}`)
-						.setDescription(`${diff} ${star[0]}★ | **Length**: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds}) | **BPM:** ${newBPM}
-**Combo:** ${map.maxCombo}x | **Max PP:** ${ppFix}pp | **Mods:** ${oj.modbits.string(ojmods) || 'NoMod'}
+						.setDescription(`${diffCalc} ${star[0]}★ | **Length**: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds}) | **BPM:** ${newBPM}
+**Combo:** ${map.maxCombo}x | **Max PP:** ${ppFix}pp | **Mods:** ${modbits.string(ojmods) || 'NoMod'}
 
 CS: ${cs} | AR: ${ar} | OD: ${od} | HP: ${hp}
 Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${map.objects.spinner}`)
 						.setFooter(`${map.approvalStatus} on ${aday}-${amonth}-${ayear} | Last Updated: ${uday}-${umonth}-${uyear}`);
 
-					message.channel.send({ embed: osuEmbed });
+					message.channel.send({ embeds: [osuEmbed] });
 				});
 			}).catch(e => {
 				Sentry.captureException(e);

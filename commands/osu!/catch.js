@@ -1,9 +1,10 @@
 // Copyright (C) 2021 Brody Jagoe
 
 const osu = require('node-osu');
-const Discord = require('discord.js');
-const Sentry = require('../../log');
 
+const { MessageEmbed } = require('discord.js');
+
+const Sentry = require('../../log');
 const { Client } = require('../../index');
 const { osu_key } = require('../../config.json');
 const { Users, sConfig } = require('../../dbObjects');
@@ -30,12 +31,12 @@ module.exports = {
 
 		if (args[0] && !menUser && !memberFlag) {
 			memberFlag = true;
-			if (message.guild.member(args[0])) findUser = message.guild.member(args[0]);
+			if (message.guild.members.cache.get(args[0])) findUser = message.guild.members.cache.get(args[0]);
 		}
 
 		if (!menUser && !memberFlag) findUser = message.member;
 
-		if (message.channel.type !== 'dm') {
+		if (message.channel.type !== 'DM') {
 			const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
 			if (serverConfig) {
 				prefix = serverConfig.get('prefix');
@@ -70,7 +71,7 @@ module.exports = {
 				name = findUser.get('osu_id');
 			}
 		} else {
-			name = message.author.username;
+			menUser ? name = menUser.username : name = message.author.username;
 		}
 
 		// Use arguments if applicable
@@ -126,7 +127,7 @@ module.exports = {
 			const countryEmote = `:flag_${country}:`;
 
 			// Create the embed
-			const osuEmbed = new Discord.MessageEmbed()
+			const osuEmbed = new MessageEmbed()
 				.setAuthor(`${user.name || name}`, `http://a.ppy.sh/${user.id}`, `https://osu.ppy.sh/u/${user.id}`)
 				.setColor('#af152a')
 				.setTitle(`Information On ${user.name}`)
@@ -147,7 +148,7 @@ ${verified}`)
 				*/
 
 
-			message.channel.send({ embed: osuEmbed });
+			message.channel.send({ embeds: [osuEmbed] });
 		}).catch(e => {
 			if (e.name == 'Error') {
 				return message.reply(`No user was found named ${name}!`);

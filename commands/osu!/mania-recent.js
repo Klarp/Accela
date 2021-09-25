@@ -1,9 +1,10 @@
 // Copyright (C) 2021 Brody Jagoe
 
 const osu = require('node-osu');
-const discord = require('discord.js');
-const Sentry = require('../../log');
 
+const { MessageEmbed } = require('discord.js');
+
+const Sentry = require('../../log');
 const { Client } = require('../../index');
 const { osu_key } = require('../../config.json');
 const { Users, sConfig } = require('../../dbObjects');
@@ -33,11 +34,11 @@ module.exports = {
 		let memberFlag = false;
 		if (!menUser && args[0]) {
 			memberFlag = true;
-			if (message.guild.member(args[0])) menUser = message.guild.member(args[0]);
+			if (message.guild.members.cache.get(args[0])) menUser = message.guild.members.cache.get(args[0]);
 		}
 		if (!menUser && !memberFlag) menUser = message.member;
 
-		if (message.channel.type !== 'dm') {
+		if (message.channel.type !== 'DM') {
 			const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
 			if (serverConfig) {
 				prefix = serverConfig.get('prefix');
@@ -77,7 +78,7 @@ module.exports = {
 				name = findUser.get('osu_name');
 			}
 		} else {
-			name = message.author.username;
+			menUser ? name = menUser.username : name = message.author.username;
 		}
 
 		// Use arguments if applicable
@@ -124,7 +125,7 @@ module.exports = {
 			const hitmiss = recent.counts.miss;
 
 			// Get the short version of mods (HD, HR etc.)
-			const osuEmbed = new discord.MessageEmbed()
+			const osuEmbed = new MessageEmbed()
 				.setAuthor(recent.user.name || name, `http://a.ppy.sh/${recent.user.id}`)
 				.setColor('#af152a')
 				.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
@@ -136,7 +137,7 @@ ${verified}`)
 				.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
 				.setThumbnail(`http://a.ppy.sh/${recent.user.id}`)
 				.setFooter(`Completed ${rDate} • osu!mania`);
-			message.channel.send(osuEmbed);
+			message.channel.send({ embeds: [osuEmbed] });
 		}).catch(e => {
 			if (e.name == 'Error') {
 				Sentry.captureException(e);

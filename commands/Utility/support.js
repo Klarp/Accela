@@ -15,6 +15,6 @@ module.exports = {
 			.setColor('#2F3136')
 			.setURL('https://discord.gg/jgzXHkU');
 
-		message.channel.send(invEmbed);
+		message.channel.send({ embeds: [invEmbed] });
 	},
 };

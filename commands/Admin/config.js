@@ -1,6 +1,7 @@
 // Copyright (C) 2021 Brody Jagoe
 
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
+
 const { sConfig } = require('../../dbObjects');
 const Sentry = require('../../log');
 
@@ -33,15 +34,12 @@ module.exports = {
 		/** @type {boolean} */
 		let msgLogging = false;
 
-		/** @type {boolean} */
-		let noPrefix = false;
-
 		const filter = m => m.author === message.author;
 
 		// SET COMMAND PREFIX
 		await message.channel.send('What would you like the prefix to be?').then(() => {
 			// Await the next message
-			message.channel.awaitMessages(filter, { max: 1, time: 10000, errors: ['time'] })
+			message.channel.awaitMessages({ filter, max: 1, time: 10000, errors: ['time'] })
 				.then(collected => {
 					// Set collected message content as the prefix
 					prefix = collected.first().content;
@@ -60,7 +58,7 @@ module.exports = {
 		async function modCommandsFunc() {
 			await message.channel.send('Would you like to have mod commands active? (Yes or No)').then(() => {
 				// Await the next message
-				message.channel.awaitMessages(filter, { max: 1, time: 10000, errors: ['time'] })
+				message.channel.awaitMessages({ filter, max: 1, time: 10000, errors: ['time'] })
 					.then(collected => {
 						// If yes turn mod commands on else leave it off
 						if (collected.first().content.toLowerCase() === 'yes') {
@@ -88,7 +86,7 @@ module.exports = {
 			if(modFlag) {
 				await message.channel.send('Would you like to log mod commands? (Yes or No)').then(() => {
 					// Await the next message
-					message.channel.awaitMessages(filter, { max: 1, time: 10000, errors: ['time'] })
+					message.channel.awaitMessages({ filter, max: 1, time: 10000, errors: ['time'] })
 						.then(collected => {
 							// If yes turn mod logging on else leave it off
 							if (collected.first().content.toLowerCase() === 'yes') {
@@ -120,7 +118,7 @@ module.exports = {
 			if (modFlag) {
 				await message.channel.send('What is your moderation channel? (if applicable)').then(() => {
 					// Await the next message
-					message.channel.awaitMessages(filter, { max: 1, time: 10000, errors: ['time'] })
+					message.channel.awaitMessages({ filter, max: 1, time: 10000, errors: ['time'] })
 						.then(collected => {
 							// Find first channel in message content (Channel ID)
 							modChannel = collected.first().content.match(/\d+/)[0];
@@ -146,7 +144,7 @@ module.exports = {
 		async function msgLoggingFunc() {
 			await message.channel.send('Would you like to log messages? (Yes or No)').then(() => {
 				// Await the next message
-				message.channel.awaitMessages(filter, { max: 1, time: 10000, errors: ['time'] })
+				message.channel.awaitMessages({ filter, max: 1, time: 10000, errors: ['time'] })
 					// If yes turn message logging on else leave it off
 					.then(collected => {
 						if (collected.first().content.toLowerCase() === 'yes') {
@@ -174,14 +172,14 @@ module.exports = {
 			if (logFlag) {
 				await message.channel.send('What is your message logging channel? (if applicable)').then(() => {
 					// Await the next message
-					message.channel.awaitMessages(filter, { max: 1, time: 10000, errors: ['time'] })
+					message.channel.awaitMessages({ filter, max: 1, time: 10000, errors: ['time'] })
 						.then(collected => {
 							// Find first channel in message content (Channel ID)
 							msgLogChannel = collected.first().content.match(/\d+/)[0];
 							// Find first channel in message content (Actual Channel)
 							logChannelClean = collected.first().content;
 							// Move to no prefix commands
-							noPrefixFunc();
+							configFunc();
 						})
 						.catch(collected => {
 							if (collected.size == 0) {
@@ -193,34 +191,8 @@ module.exports = {
 				});
 			} else {
 				// Move to no prefix commands
-				noPrefixFunc();
+				configFunc();
 			}
-		}
-
-		async function noPrefixFunc() {
-			await message.channel.send('Would you like the commands with no prefix? (Yes or No)').then(() => {
-				// Await the next message
-				message.channel.awaitMessages(filter, { max: 1, time: 10000, errors: ['time'] })
-					// If yes turn no prefix commands on else leave them off
-					.then(collected => {
-						if (collected.first().content.toLowerCase() === 'yes') {
-							noPrefix = true;
-						} else if (collected.first().content.toLowerCase() === 'no') {
-							noPrefix = false;
-						} else {
-							return message.reply('that is not a valid reply');
-						}
-						// Continue to config creation
-						configFunc();
-					})
-					.catch(collected => {
-						if (collected.size == 0) {
-							return message.reply('you did not answer in time');
-						} else {
-							console.log(collected.size);
-						}
-					});
-			});
 		}
 
 		async function configFunc() {
@@ -234,7 +206,6 @@ module.exports = {
 					mod_commands: modCommands,
 					mod_logging: modLogging,
 					msg_logging: msgLogging,
-					noPrefix_commands: noPrefix,
 				});
 			} catch(e) {
 				// If server is already in the database update the values
@@ -247,7 +218,6 @@ module.exports = {
 							mod_commands: modCommands,
 							mod_logging: modLogging,
 							msg_logging: msgLogging,
-							noPrefix_commands: noPrefix,
 						},
 						{
 							where: { guild_id: message.guild.id },
@@ -263,23 +233,18 @@ module.exports = {
 				}
 			}
 			// Config Embed Start
-			const configEmbed = new Discord.MessageEmbed()
+			const configEmbed = new MessageEmbed()
 				.setTitle('Server Config')
 				.setDescription(`Prefix: ${prefix}
 
 Mod Channel: ${modChannelClean}
-
 Log Channel: ${logChannelClean}
 
 Mod Commands: ${modCommands}
-
 Mod Logging: ${modLogging}
-
-Message Logging: ${msgLogging}
-				
-No Prefix Commands ${noPrefix}`);
+Message Logging: ${msgLogging}`);
 			// Send the config embed
-			message.channel.send(configEmbed);
+			message.channel.send({ embeds: [configEmbed] });
 		}
 	},
 };

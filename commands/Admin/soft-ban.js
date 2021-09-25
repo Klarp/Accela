@@ -1,6 +1,7 @@
 // Copyright (C) 2021 Brody Jagoe
 
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, Permissions } = require('discord.js');
+
 const { modAction } = require('../../utils');
 const Sentry = require('../../log');
 
@@ -15,13 +16,13 @@ module.exports = {
 	modCmd: true,
 	usage: '<member> <reason>',
 	execute(message, args) {
-		const toSF = message.mentions.members.first() || message.guild.member(args[0]);
+		const toSF = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-		if (!message.member.hasPermission('BAN_MEMBERS')) return message.channel.send('You do not have permission to perform this command!');
+		if (!message.member.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) return message.channel.send('You do not have permission to perform this command!');
 		if (!toSF) return message.channel.send('You must provide a valid member to softban.');
 		if (toSF.id == message.author.id) return message.channel.send('You cannot softban yourself!');
 		if (toSF.kickable == false) return message.channel.send('I cannot softban that member!');
-		if (!message.guild.me.hasPermission('KICK_MEMBERS')) return message.channel.send('I do not have permission to softban members!');
+		if (!message.guild.me.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) return message.channel.send('I do not have permission to softban members!');
 		if (message.member.roles.highest.position <= toSF.roles.highest.position) return message.channel.send('You cannot softban someone with the same role or roles above you!');
 
 		/**
@@ -38,7 +39,7 @@ module.exports = {
 			.setDescription(`Reason: ${reason}`);
 
 		try {
-			toSF.send(sfEmbed);
+			toSF.send({ embeds: [sfEmbed] });
 		} catch (err) {
 			Sentry.captureException(err);
 			console.log(err);

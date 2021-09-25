@@ -2,6 +2,7 @@
 
 const { MessageEmbed } = require('discord.js');
 const { inspect } = require('util');
+
 const { Client } = require('../../index');
 
 module.exports = {
@@ -37,7 +38,7 @@ module.exports = {
 				.addField('Error', code('js', error))
 				.setColor('RED');
 		} finally {
-			channel.send(evalEmbed).catch(error => {
+			channel.send({ embeds: [evalEmbed] }).catch(error => {
 				channel.send(`Error: ${error.message}`);
 			});
 		}

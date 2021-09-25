@@ -1,6 +1,6 @@
 // Copyright (C) 2021 Brody Jagoe
 
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
 	name: 'server-info',
@@ -11,30 +11,57 @@ module.exports = {
 		const server = message.guild;
 		const desc = server.description || 'None';
 		const vanity = server.vanityURLCode || 'None';
-		const textChan = server.channels.cache.filter(c => c.type == 'text');
-		const voiceChan = server.channels.cache.filter(c => c.type == 'voice');
+		const textChan = server.channels.cache.filter(c => c.type == 'GUILD_TEXT');
+		const voiceChan = server.channels.cache.filter(c => c.type == 'GUILD_VOICE');
 		const textSize = textChan.size;
 		const voiceSize = voiceChan.size;
 		const totalSize = textSize + voiceSize;
+		const owner = await server.fetchOwner();
+
+		let boost;
+		let verLevel;
+
+		if (server.premiumTier === 'NONE') {
+			boost = 'None';
+		} else if (server.premiumTier === 'TIER_1') {
+			boost = '1';
+		} else if (server.premiumTier === 'TIER_2') {
+			boost = '2';
+		} else {
+			boost = '3';
+		}
+
+		if (server.verificationLevel === 'NONE') {
+			verLevel = 'None';
+		} else if (server.verificationLevel === 'LOW') {
+			verLevel = 'Low';
+		} else if (server.verificationLevel === 'MEDIUM') {
+			verLevel = 'Medium';
+		} else if (server.verificationLevel === 'HIGH') {
+			verLevel = ' High';
+		} else {
+			verLevel = 'Very High';
+		}
 
 		const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' });
 		const [{ value: month },, { value: day },, { value: year }] = dateTimeFormat.formatToParts(server.createdAt);
 
-		const infoEmbed = new Discord.MessageEmbed()
+		const infoEmbed = new MessageEmbed()
 			.setAuthor(server.name, server.iconURL({ dynamic: true }))
 			.setThumbnail(server.bannerURL())
 			.setColor('BLUE')
-			.setDescription(`**Description:** ${desc}
-**Owner:** ${server.owner.user.tag} (${server.ownerID})
+			.setDescription(`**Owner:** ${owner.user.tag} (${server.ownerId})
 
-**Members:** ${server.memberCount} | **Vanity URL:** ${vanity} | **Emoji Count:** ${server.emojis.cache.size}
-**Region:** ${server.region} | **Verification Level:** ${server.verificationLevel}
+**Members:** ${server.memberCount} | **Vanity URL:** ${vanity}
+**Verification Level:** ${verLevel} | **Emoji Count:** ${server.emojis.cache.size}
+
+**Description:** ${desc}
 
 **Channels:** ${totalSize} (Text: ${textSize} | Voice: ${voiceSize})
 
-**Number of Boosts:** ${server.premiumSubscriptionCount} | **Boost Level:** ${server.premiumTier}`)
+**Number of Boosts:** ${server.premiumSubscriptionCount} | **Boost Level:** ${boost}`)
 			.setFooter(`Created On: ${day} ${month} ${year}`);
-		message.channel.send(infoEmbed);
+		message.channel.send({ embeds: [infoEmbed] });
 	},
 };
 

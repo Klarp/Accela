@@ -17,32 +17,37 @@
 */
 
 const fs = require('fs');
-const Discord = require('discord.js');
 const axios = require('axios');
-const osu = require('node-osu');
-const qrate = require('qrate');
+// const osu = require('node-osu');
+// const qrate = require('qrate');
+
+const { Intents, Collection, Client, MessageEmbed, Permissions } = require('discord.js');
+
 const Sentry = require('./log');
+const { token, owners, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL } = require('./config.json');
+// const { token, owners, osu_key, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL } = require('./config.json');
+const { Muted, sConfig } = require('./dbObjects');
+// const { Users, Muted, sConfig } = require('./dbObjects');
 
-const { token, owners, osu_key, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL } = require('./config.json');
-const { Users, Muted, sConfig } = require('./dbObjects');
-
-const configs = new Discord.Collection();
-const client = new Discord.Client();
-client.commands = new Discord.Collection();
-const cooldowns = new Discord.Collection();
+const configs = new Collection();
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] });
+client.commands = new Collection();
+const cooldowns = new Collection();
 exports.Client = client;
 
 const util = require('./utils');
 
-let lbDate = Date.now();
+// let lbDate = Date.now();
 
 module.exports.upDate = () => {
+	/**
 	if (lbDate) {
 		return lbDate;
 	}
+	*/
 };
 
-const osuApi = new osu.Api(osu_key);
+// const osuApi = new osu.Api(osu_key);
 
 const modules = ['Admin', 'osu!', 'Fun', 'Utility', 'Owner'];
 
@@ -94,6 +99,7 @@ const activities_list = [
 
 client.once('ready', async () => {
 	// Initialize osu! Database
+	/**
 	const storedUsers = await Users.findAll();
 	let startDate;
 	storedUsers
@@ -186,6 +192,7 @@ client.once('ready', async () => {
 			q.push(osuUsers[i]);
 		}
 	}, 1000 * 60 * 60 * 24);
+	*/
 
 	// 60 * 60 * 1000 - One Hour
 
@@ -318,7 +325,7 @@ client.once('ready', async () => {
 
 // MESSAGE START
 
-client.on('message', async message => {
+client.on('messageCreate', async message => {
 	// Stop if message is a webhook
 	if (message.webhookID) return;
 
@@ -335,41 +342,17 @@ client.on('message', async message => {
 	let serverConfig;
 
 	// If message isn't in a DM find the server config
-	if (message.channel.type !== 'dm') {
+	if (message.channel.type !== 'DM') {
 		serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
 	}
 
 	let prefix = '>>';
 	let modFlag;
-	let noPrefixFlag;
 
 	// Get values from the server config
 	if (serverConfig) {
 		prefix = serverConfig.get('prefix');
 		modFlag = serverConfig.get('mod_commands');
-		noPrefixFlag = serverConfig.get('noPrefix_commands');
-	}
-
-	// CURRENTLY BROKEN
-	// No Prefix Functions
-	if (!message.author.bot) {
-		if (noPrefixFlag) {
-			// Map Detection
-			if (message.content.startsWith('https://osu.ppy.sh/b/') || message.content.startsWith('https://osu.ppy.sh/beatmapsets/')) {
-				util.mapDetect(message);
-			}
-
-			// Emote Commands
-			const konCha = client.emojis.cache.get('688169982223319072');
-			const yepPride = client.emojis.cache.get('706929594028130304');
-			const YEP = client.emojis.cache.get('734159200564936714');
-			const lowMsg = message.content.toLowerCase();
-
-			// No Prefix Commands
-			if (lowMsg == 'hey accela') message.reply(`Hey there! ${konCha}`);
-			if (lowMsg.includes('gay')) message.react(yepPride.id);
-			if (lowMsg.includes('cock')) message.channel.send(`${YEP}`);
-		}
 	}
 
 	// Stop if user is a bot
@@ -389,6 +372,9 @@ client.on('message', async message => {
 
 	// Stop if the command doesn't have a prefix (default prefix: >>)
 	if (!message.content.startsWith(prefix)) return;
+
+	// For beta testing
+	if (message.channel.guild.id === '98226572468690944') return;
 
 	// Split the content to find command arguments
 	const args = message.content.slice(prefix.length).split(/ +/);
@@ -425,7 +411,7 @@ client.on('message', async message => {
 	}
 
 	// Stop if a command can't be run inside DMs
-	if (command.guildOnly && message.channel.type !== 'text') {
+	if (command.guildOnly && message.channel.type !== 'GUILD_TEXT') {
 		return message.reply('I can\'t execute that command inside DMs!');
 	}
 
@@ -444,7 +430,7 @@ client.on('message', async message => {
 
 	// Set the cooldown after the command is run
 	if(!cooldowns.has(command.name)) {
-		cooldowns.set(command.name, new Discord.Collection());
+		cooldowns.set(command.name, new Collection());
 	}
 
 	// Current date
@@ -478,21 +464,21 @@ client.on('message', async message => {
 		console.error(error);
 		Sentry.captureException(error);
 		// Creation of error embed
-		const errorEmbed = new Discord.MessageEmbed()
+		const errorEmbed = new MessageEmbed()
 			.setTitle('An Error Has Occurred')
 			.setColor('RED')
 			.setDescription(`OOPSIE WOOPSIE!! Uwu We made a fucky wucky!! A wittle fucko boingo! The code monkeys at our headquarters are working VEWY HAWD to fix this!
 			
 Please contact @Klarp#0001 if you see this message`);
 		// Sends error embed on command failure
-		message.channel.send(errorEmbed);
+		message.channel.send({ embeds: [errorEmbed] });
 	}
 });
 
 // MESSAGE DELETE START
 
 client.on('messageDelete', async message => {
-	if (message.channel.type === 'dm') return;
+	if (message.channel.type === 'DM') return;
 	// Find server config
 	const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
 	// Start log flag on false
@@ -507,14 +493,14 @@ client.on('messageDelete', async message => {
 
 	// If log flag is true log the message delete
 	if (logFlag) {
-		const delEmbed = new Discord.MessageEmbed()
+		const delEmbed = new MessageEmbed()
 			.setAuthor(`${message.author.tag} (${message.author.id})`, message.author.displayAvatarURL({ dynamic : true }))
 			.setColor('RED')
 			.setTitle('Message Deleted')
 			.setDescription(message)
 			.setTimestamp();
 
-		client.channels.cache.get(logChannel).send(delEmbed);
+		client.channels.cache.get(logChannel).send({ embeds: [delEmbed] });
 	}
 });
 
@@ -557,7 +543,7 @@ client.on('guildBanAdd', async (guild, user) => {
 
 	await util.sleep(1200);
 
-	if (!guild.me.hasPermission('VIEW_AUDIT_LOG')) return;
+	if (!guild.me.permissions.has(Permissions.FLAGS.VIEW_AUDIT_LOG)) return;
 
 	const fetchedLogs = await guild.fetchAuditLogs({
 		limit: 1,
@@ -569,22 +555,22 @@ client.on('guildBanAdd', async (guild, user) => {
 	// If mod logging is true log the ban
 	if (logFlag || guild.id === '98226572468690944') {
 		if (!banLog) {
-			const banEmbed = new Discord.MessageEmbed()
+			const banEmbed = new MessageEmbed()
 				.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 				.setColor('#EA4D4B')
 				.setTitle(`Banned ${user.tag}`)
 				.setDescription(`:lock: ${user}`)
 				.setTimestamp();
 
-			if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
+			if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send({ embeds: [banEmbed] });
 
-			guild.channels.cache.get(modChannel).send(banEmbed);
+			guild.channels.cache.get(modChannel).send({ embeds: [banEmbed] });
 		} else {
 			const { executor, target, reason } = banLog;
 
 
 			if (target.id === user.id && reason) {
-				const banEmbed = new Discord.MessageEmbed()
+				const banEmbed = new MessageEmbed()
 					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 					.setColor('#EA4D4B')
 					.setTitle(`Banned ${user.tag}`)
@@ -595,11 +581,11 @@ client.on('guildBanAdd', async (guild, user) => {
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
 
-				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
+				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send({ embeds: [banEmbed] });
 
-				guild.channels.cache.get(modChannel).send(banEmbed);
+				guild.channels.cache.get(modChannel).send({ embeds: [banEmbed] });
 			} else if(target.id === user.id && !reason) {
-				const banEmbed = new Discord.MessageEmbed()
+				const banEmbed = new MessageEmbed()
 					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 					.setColor('#EA4D4B')
 					.setTitle(`Banned ${user.tag}`)
@@ -610,11 +596,11 @@ client.on('guildBanAdd', async (guild, user) => {
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
 
-				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
+				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send({ embeds: [banEmbed] });
 
-				guild.channels.cache.get(modChannel).send(banEmbed);
+				guild.channels.cache.get(modChannel).send({ embeds: [banEmbed] });
 			} else {
-				const banEmbed = new Discord.MessageEmbed()
+				const banEmbed = new MessageEmbed()
 					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 					.setColor('#EA4D4B')
 					.setTitle(`Banned ${user.tag}`)
@@ -622,9 +608,9 @@ client.on('guildBanAdd', async (guild, user) => {
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
 
-				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(banEmbed);
+				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send({ embeds: [banEmbed] });
 
-				guild.channels.cache.get(modChannel).send(banEmbed);
+				guild.channels.cache.get(modChannel).send({ embeds: [banEmbed] });
 			}
 		}
 	}
@@ -642,7 +628,7 @@ client.on('guildBanRemove', async (guild, user) => {
 
 	await util.sleep(1200);
 
-	if (!guild.me.hasPermission('VIEW_AUDIT_LOG')) return;
+	if (!guild.me.permissions.has(Permissions.FLAGS.VIEW_AUDIT_LOG)) return;
 
 	const fetchedLogs = await guild.fetchAuditLogs({
 		limit: 1,
@@ -654,7 +640,7 @@ client.on('guildBanRemove', async (guild, user) => {
 	// If mod logging is true log the unban
 	if (logFlag || guild.id === '98226572468690944') {
 		if (!unBanLog) {
-			const unbanEmbed = new Discord.MessageEmbed()
+			const unbanEmbed = new MessageEmbed()
 				.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 				.setColor('#4BB580')
 				.setTitle(`Unbanned ${user.tag}`)
@@ -662,15 +648,15 @@ client.on('guildBanRemove', async (guild, user) => {
 				.setFooter(`ID: ${user.id}`)
 				.setTimestamp();
 
-			if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(unbanEmbed);
+			if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send({ embeds: [unbanEmbed] });
 
-			guild.channels.cache.get(modChannel).send(unbanEmbed);
+			guild.channels.cache.get(modChannel).send({ embeds: [unbanEmbed] });
 		} else {
 			const { executor, target } = unBanLog;
 
 
 			if (target.id === user.id) {
-				const unbanEmbed = new Discord.MessageEmbed()
+				const unbanEmbed = new MessageEmbed()
 					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 					.setColor('#4BB580')
 					.setTitle(`Unbanned ${user.tag}`)
@@ -680,11 +666,11 @@ client.on('guildBanRemove', async (guild, user) => {
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
 
-				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(unbanEmbed);
+				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send({ embeds: [unbanEmbed] });
 
-				guild.channels.cache.get(modChannel).send(unbanEmbed);
+				guild.channels.cache.get(modChannel).send({ embeds: [unbanEmbed] });
 			} else {
-				const unbanEmbed = new Discord.MessageEmbed()
+				const unbanEmbed = new MessageEmbed()
 					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 					.setColor('#4BB580')
 					.setTitle(`Unbanned ${user.tag}`)
@@ -692,9 +678,9 @@ client.on('guildBanRemove', async (guild, user) => {
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
 
-				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send(unbanEmbed);
+				if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send({ embeds: [unbanEmbed] });
 
-				guild.channels.cache.get(modChannel).send(unbanEmbed);
+				guild.channels.cache.get(modChannel).send({ embeds: [unbanEmbed] });
 			}
 		}
 	}
@@ -755,7 +741,7 @@ client.on('guildMemberRemove', async (member) => {
 
 	const user = member.user;
 
-	if (!member.guild.me.hasPermission('VIEW_AUDIT_LOG')) return;
+	if (!member.guild.me.permissions.has(Permissions.FLAGS.VIEW_AUDIT_LOG)) return;
 
 	const firstFetch = await member.guild.fetchAuditLogs({
 		limit: 1,
@@ -782,7 +768,7 @@ client.on('guildMemberRemove', async (member) => {
 
 
 			if (target.id === member.id) {
-				const kickEmbed = new Discord.MessageEmbed()
+				const kickEmbed = new MessageEmbed()
 					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 					.setColor('#F5E44D')
 					.setTitle(`Kicked ${user.tag}`)
@@ -793,11 +779,11 @@ client.on('guildMemberRemove', async (member) => {
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
 
-				if (member.guild.id === '98226572468690944') return member.guild.channels.cache.get('158484765136125952').send(kickEmbed);
+				if (member.guild.id === '98226572468690944') return member.guild.channels.cache.get('158484765136125952').send({ embeds: [kickEmbed] });
 
-				member.guild.channels.cache.get(modChannel).send(kickEmbed);
+				member.guild.channels.cache.get(modChannel).send({ embeds: [kickEmbed] });
 			} else if (!reason) {
-				const kickEmbed = new Discord.MessageEmbed()
+				const kickEmbed = new MessageEmbed()
 					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 					.setColor('#F5E44D')
 					.setTitle(`Kicked ${user.tag}`)
@@ -807,9 +793,9 @@ client.on('guildMemberRemove', async (member) => {
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
 
-				if (member.guild.id === '98226572468690944') return member.guild.channels.cache.get('158484765136125952').send(kickEmbed);
+				if (member.guild.id === '98226572468690944') return member.guild.channels.cache.get('158484765136125952').send({ embeds: [kickEmbed] });
 
-				member.guild.channels.cache.get(modChannel).send(kickEmbed);
+				member.guild.channels.cache.get(modChannel).send({ embeds: [kickEmbed] });
 			}
 		}
 	}

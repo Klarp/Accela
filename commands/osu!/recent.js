@@ -1,11 +1,12 @@
 // Copyright (C) 2021 Brody Jagoe
 
 const osu = require('node-osu');
-const discord = require('discord.js');
-const oj = require('ojsama');
 const curl = require('curl');
-const Sentry = require('../../log');
 
+const { modbits, parser, diff, ppv2 } = require('ojsama');
+const { MessageEmbed } = require('discord.js');
+
+const Sentry = require('../../log');
 const { Client } = require('../../index');
 const { osu_key } = require('../../config.json');
 const { Users, sConfig } = require('../../dbObjects');
@@ -32,11 +33,11 @@ module.exports = {
 		let memberFlag = false;
 		if (!menUser && args[0]) {
 			memberFlag = true;
-			if (message.guild.member(args[0])) menUser = message.guild.member(args[0]);
+			if (message.guild.members.cache.get(args[0])) menUser = message.guild.members.cache.get(args[0]);
 		}
 		if (!menUser && !memberFlag) menUser = message.member;
 
-		if (message.channel.type !== 'dm') {
+		if (message.channel.type !== 'DM') {
 			const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
 			if (serverConfig) {
 				prefix = serverConfig.get('prefix');
@@ -48,7 +49,7 @@ module.exports = {
 
 		let name;
 		let id;
-		let mods = oj.modbits.nomod;
+		let mods = modbits.nomod;
 		let acc_percent;
 		let combo;
 		let nmiss;
@@ -78,7 +79,7 @@ module.exports = {
 				name = findUser.get('osu_name');
 			}
 		} else {
-			name = message.author.username;
+			menUser ? name = menUser.username : name = message.author.username;
 		}
 
 		// Use arguments if applicable
@@ -117,21 +118,22 @@ module.exports = {
 
 			// PP calculation starts
 			curl.get(`https://osu.ppy.sh/osu/${recent.beatmapId}`, async function(err, response, body) {
-				mods = oj.modbits.from_string(shortMods);
+				mods = modbits.from_string(shortMods);
 				acc_percent = parseFloat(acc);
 				combo = parseInt(recent.maxCombo);
 				nmiss = parseInt(recent.counts.miss);
 
-				const parser = new oj.parser().feed(body);
+				const parserBody = new parser().feed(body);
 
-				const pMap = parser.map;
+				const pMap = parserBody.map;
 
-				const stars = new oj.diff().calc({ map: pMap, mods: mods });
+				const stars = new diff().calc({ map: pMap, mods: mods });
+
 				const star = stars.toString().split(' ');
 
-				const diff = getDiff(star[0]);
+				const diffCalc = getDiff(star[0]);
 
-				const pp = oj.ppv2({
+				const pp = ppv2({
 					stars: stars,
 					combo: combo,
 					nmiss: nmiss,
@@ -140,13 +142,12 @@ module.exports = {
 
 				console.log(pp);
 
-				const maxPP = oj.ppv2({ map: pMap, mods: mods });
+				const maxPP = ppv2({ map: pMap, mods: mods });
 
 				const max_combo = pMap.max_combo();
 				combo = combo || max_combo;
 
 				const ppFix = pp.total.toFixed(2);
-				console.log(ppFix);
 				const maxFix = maxPP.total.toFixed(2);
 
 				const rDate = timeSince(recent.date.getTime());
@@ -179,37 +180,37 @@ module.exports = {
 				if (recent.rank == 'F') {
 					const failPercent = mapCompletion.toFixed(2);
 
-					const osuFailEmbed = new discord.MessageEmbed()
+					const osuFailEmbed = new MessageEmbed()
 						.setAuthor(recent.user.name || name, `http://a.ppy.sh/${recent.user.id}`, `https://osu.ppy.sh/u/${recent.user.id}`)
 						.setColor('#af152a')
 						.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
-						.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${hit300}/${hit100}/${hit50}/${hitmiss}}
+						.setDescription(`${rank} | ${diffCalc} ${star[0]}★ | ${score} | {${hit300}/${hit100}/${hit50}/${hitmiss}}
 
 **${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${ppFix || recent.pp}pp**/${maxFix}PP
 
-${acc}% | ${oj.modbits.string(mods) || 'NoMod'} | Map Completion: ${failPercent}%
+${acc}% | ${modbits.string(mods) || 'NoMod'} | Map Completion: ${failPercent}%
 
 ${verified}`)
 						.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
 						.setThumbnail(`http://a.ppy.sh/${recent.user.id}`)
 						.setFooter(`Completed ${rDate}`);
-					message.channel.send(osuFailEmbed);
+					message.channel.send({ embeds: [osuFailEmbed] });
 				} else {
-					const osuEmbed = new discord.MessageEmbed()
+					const osuEmbed = new MessageEmbed()
 						.setAuthor(recent.user.name || name, `http://a.ppy.sh/${recent.user.id}`)
 						.setColor('#af152a')
 						.setTitle(`${recent.beatmap.artist} - ${recent.beatmap.title} [${recent.beatmap.version}]`)
-						.setDescription(`${rank} | ${diff} ${star[0]}★ | ${score} | {${hit300}/${hit100}/${hit50}/${hitmiss}}
+						.setDescription(`${rank} | ${diffCalc} ${star[0]}★ | ${score} | {${hit300}/${hit100}/${hit50}/${hitmiss}}
 
 **${recent.maxCombo}x**/${recent.beatmap.maxCombo}X | **${ppFix || recent.pp}pp**/${maxFix}PP
 
-${acc}% | ${oj.modbits.string(mods) || 'NoMod'}
+${acc}% | ${modbits.string(mods) || 'NoMod'}
 					
 ${verified}`)
 						.setURL(`https://osu.ppy.sh/b/${recent.beatmapId}`)
 						.setThumbnail(`http://a.ppy.sh/${recent.user.id}`)
 						.setFooter(`Completed ${rDate}`);
-					message.channel.send(osuEmbed);
+					message.channel.send({ embeds: [osuEmbed] });
 				}
 			});
 		}).catch(e => {

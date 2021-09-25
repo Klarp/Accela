@@ -1,6 +1,7 @@
 // Copyright (C) 2021 Brody Jagoe
 
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
+
 const { Client } = require('../../index');
 const { sConfig } = require('../../dbObjects');
 const { version } = require('../../package.json');
@@ -47,7 +48,7 @@ module.exports = {
 
 		const uptime = dhm(Client.uptime);
 
-		const infoEmbed = new Discord.MessageEmbed()
+		const infoEmbed = new MessageEmbed()
 			.setAuthor(bot.username, bot.displayAvatarURL())
 			.setColor('BLUE')
 			.setDescription(`**Prefix:** ${prefix}
@@ -58,6 +59,6 @@ module.exports = {
 			
 **Roles:** ${roles}`)
 			.setFooter(`Created by: Klarp#0001 | Version: ${version} | Framework: discord.js`);
-		message.channel.send(infoEmbed);
+		message.channel.send({ embeds: [infoEmbed] });
 	},
 };

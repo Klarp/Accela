@@ -1,12 +1,15 @@
 // Copyright (C) 2021 Brody Jagoe
 const qrate = require('qrate');
 const osu = require('node-osu');
+
+const { MessageEmbed } = require('discord.js');
+
 const Sentry = require('../../log');
 const util = require('../../utils');
 const { osu_key, owners } = require('../../config.json');
 const { Users, sConfig } = require('../../dbObjects');
 const { Client } = require('../../index');
-const { MessageEmbed } = require('discord.js');
+
 
 module.exports = {
 	name: 'update',
@@ -20,7 +23,7 @@ module.exports = {
 		const startDate = Date.now();
 		let prefix = '>>';
 		let serverConfig;
-		if (message.channel.type !== 'dm') {
+		if (message.channel.type !== 'DM') {
 			serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
 		}
 
@@ -113,7 +116,7 @@ osu!taiko: ${taiko_rank}
 osu!ctb: ${ctb_rank}
 osu!mania: ${mania_rank}`);
 
-					message.channel.send(updateEmbed);
+					message.channel.send({ embeds: [updateEmbed] });
 				} catch (err) {
 					Sentry.captureException(err);
 					console.error(err);

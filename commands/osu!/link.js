@@ -1,9 +1,11 @@
 // Copyright (C) 2021 Brody Jagoe
 
 const osu = require('node-osu');
+
+const Sentry = require('../../log');
 const { Users } = require('../../dbObjects');
 const { osu_key } = require('../../config.json');
-const Sentry = require('../../log');
+
 
 module.exports = {
 	name: 'link',

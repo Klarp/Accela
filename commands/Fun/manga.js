@@ -1,7 +1,8 @@
 // Copyright (C) 2021 Brody Jagoe
 
+const { MessageEmbed } = require('discord.js');
+
 const anilist_node = require('anilist-node');
-const Discord = require('discord.js');
 const aniList = new anilist_node();
 
 module.exports = {
@@ -23,15 +24,10 @@ module.exports = {
 					if (aniRes.isAdult) return message.reply('NSFW searches are not allowed!');
 
 					const status = getStatus(aniRes.status);
-
 					const type = aniRes.format || 'Unknown';
-
 					const avgScore = aniRes.averageScore || '0';
-
 					const volumes = aniRes.volumes || 'Unknown';
-
 					const chapters = aniRes.chapters || 'Unknown';
-
 					const genres = aniRes.genres.join(' | ') || 'Unknown';
 
 					let longDesc = 'No description found';
@@ -42,7 +38,6 @@ module.exports = {
 
 
 					let startDate = `${aniRes.startDate.year}-${aniRes.startDate.month}-${aniRes.startDate.day}`;
-
 					let endDate = `${aniRes.endDate.year}-${aniRes.endDate.month}-${aniRes.endDate.day}`;
 
 					if (aniRes.startDate.year === null) {
@@ -59,7 +54,7 @@ module.exports = {
 
 					longDesc = truncate(longDesc, 300);
 
-					const aniEmbed = new Discord.MessageEmbed()
+					const aniEmbed = new MessageEmbed()
 						.setAuthor('AniList [UNOFFICIAL]', 'https://anilist.co/img/icons/android-chrome-512x512.png')
 						.setColor('BLUE')
 						.setTitle(`${aniRes.title.romaji} [${aniRes.title.native}]`)
@@ -76,7 +71,7 @@ module.exports = {
 					
 **Description**
 ${longDesc}`);
-					message.channel.send(aniEmbed);
+					message.channel.send({ embeds: [aniEmbed] });
 				});
 			} else {
 				message.reply(`No manga was found with name ${manga}`);

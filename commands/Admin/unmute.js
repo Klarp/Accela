@@ -1,6 +1,7 @@
 // Copyright (C) 2021 Brody Jagoe
 
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, Permissions } = require('discord.js');
+
 const { modAction } = require('../../utils');
 const { Muted } = require('../../dbObjects');
 const Sentry = require('../../log');
@@ -11,14 +12,14 @@ module.exports = {
 	description: 'Unmute a member in the server',
 	module: 'Admin',
 	guildOnly: true,
-	perms: 'MANAGE_ROLES',
+	perms: Permissions.FLAGS.MANAGE_ROLES,
 	args: true,
 	modCmd: true,
 	usage: '<member>',
 	async execute(message, args) {
 		if (!message.mentions.members.first()) return message.reply('Please mention a user.');
 
-		const tag = message.mentions.members.first() || message.guild.member(args[0]);
+		const tag = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
 		// Stop if the mention is the message author
 		if (message.member === tag) return message.reply('You can not use this on yourself');
@@ -46,7 +47,7 @@ module.exports = {
 					.setTitle(`Unmuted in ${message.guild.name}`)
 					.setColor('#4BB580')
 					.setDescription(`Reason: ${reason}`);
-				tag.send(unMuteEmbed);
+				tag.send({ embeds: [unMuteEmbed] });
 			});
 			message.channel.send(`Unmuted: ${tag.user}`);
 			// Log the unmute

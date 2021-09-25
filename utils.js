@@ -1,8 +1,11 @@
 /* eslint-disable no-case-declarations */
-const Discord = require('discord.js');
+
 const curl = require('curl');
-const oj = require('ojsama');
 const osu = require('node-osu');
+
+const { MessageEmbed } = require('discord.js');
+const { parser, diff, ppv2 } = require('ojsama');
+
 const { Client } = require('./index.js');
 const { osu_key } = require('./config.json');
 const { sConfig } = require('./dbObjects.js');
@@ -16,8 +19,8 @@ module.exports = {
 	 * @returns {boolean}
 	 */
 	checkPerm(user, perm, message) {
-		if (message.channel.type === 'dm') return true;
-		if (user.hasPermission(perm)) {
+		if (message.channel.type === 'DM') return true;
+		if (user.permissions.has(perm)) {
 			return true;
 		} else {
 			return false;
@@ -33,29 +36,29 @@ module.exports = {
 		/** @const {Object} emoji Discord Emoji */
 		const emoji = Client.emojis.cache;
 
-		let diff;
+		let diffEmote;
 
 		if (star < '2') {
 			// Easy
-			diff = emoji.get('738125708802654322');
+			diffEmote = emoji.get('738125708802654322');
 		} else if (star < '2.7') {
 			// Normal
-			diff = emoji.get('738125709180010557');
+			diffEmote = emoji.get('738125709180010557');
 		} else if (star < '4') {
 			// Hard
-			diff = emoji.get('738125709113032716');
+			diffEmote = emoji.get('738125709113032716');
 		} else if (star < '5.3') {
 			// Insane
-			diff = emoji.get('738125709129547947');
+			diffEmote = emoji.get('738125709129547947');
 		} else if (star < '6.5') {
 			// Expert
-			diff = emoji.get('738125708810780744');
+			diffEmote = emoji.get('738125708810780744');
 		} else {
 			// Expert+
-			diff = emoji.get('738125708781682719');
+			diffEmote = emoji.get('738125708781682719');
 		}
 
-		return diff;
+		return diffEmote;
 	},
 
 	/**
@@ -309,6 +312,7 @@ module.exports = {
 	 * @returns {string} Short mods
 	 */
 	getShortMods(mods) {
+		console.log(mods);
 		/** @const {string[]} osu_mods osu! long form mods */
 		const osu_mods = [
 			'None',
@@ -323,6 +327,7 @@ module.exports = {
 			'Flashlight',
 			'Autoplay',
 			'SpunOut',
+			'TouchDevice',
 		];
 
 		/** @const {Object} mod_sh osu! mod list */
@@ -339,6 +344,7 @@ module.exports = {
 			'Flashlight': 'FL',
 			'Autoplay': 'Auto',
 			'SpunOut': 'SO',
+			'TouchDevice': 'TD',
 		};
 
 		/** @const {Object} modsOnly Filters mods */
@@ -370,19 +376,19 @@ module.exports = {
 			osuApi.getUser({ u: map.creator }).then(u => {
 				curl.get(`https://osu.ppy.sh/osu/${map.id}`, function(err, response, body) {
 					/** @const {Object} parser Parsed body of beatmap */
-					const parser = new oj.parser().feed(body);
+					const parserBody = new parser().feed(body);
 
 					/** @const {Object} pMap Parsed osu! beatmap */
-					const pMap = parser.map;
+					const pMap = parserBody.map;
 
 					/** @const {string} maxPP Max pp gainable on beatmap */
-					const maxPP = oj.ppv2({ map: pMap }).toString();
+					const maxPP = ppv2({ map: pMap }).toString();
 
 					/** @const {string} ppFix Splits maxPP */
 					const ppFix = maxPP.split(' ');
 
 					/** @const {string} stars Calculated star level of beatmap*/
-					const stars = new oj.diff().calc({ map: pMap });
+					const stars = new diff().calc({ map: pMap });
 
 					/** @const {string[]} star Star level of string split */
 					const star = stars.toString().split(' ');
@@ -393,26 +399,26 @@ module.exports = {
 					/** @const {Object} emoji Discord Emoji */
 					const emoji = client.emojis.cache;
 
-					let diff;
+					let diffEmote;
 
 					if (s < '2') {
 						// Easy
-						diff = emoji.get('738125708802654322');
+						diffEmote = emoji.get('738125708802654322');
 					} else if (s < '2.7') {
 						// Normal
-						diff = emoji.get('738125709180010557');
+						diffEmote = emoji.get('738125709180010557');
 					} else if (s < '4') {
 						// Hard
-						diff = emoji.get('738125709113032716');
+						diffEmote = emoji.get('738125709113032716');
 					} else if (s < '5.3') {
 						// Insane
-						diff = emoji.get('738125709129547947');
+						diffEmote = emoji.get('738125709129547947');
 					} else if (s < '6.5') {
 						// Expert
-						diff = emoji.get('738125708810780744');
+						diffEmote = emoji.get('738125708810780744');
 					} else {
 						// Expert+
-						diff = emoji.get('738125708781682719');
+						diffEmote = emoji.get('738125708781682719');
 					}
 
 					const lenMinutes = Math.floor(map.length.total / 60);
@@ -427,18 +433,18 @@ module.exports = {
 					const [{ value: umonth },, { value: uday },, { value: uyear }] = dateTimeFormat.formatToParts(udate);
 
 					// Create the embed
-					const osuEmbed = new Discord.MessageEmbed()
+					const osuEmbed = new MessageEmbed()
 						.setColor('0xff69b4')
 						.setAuthor(map.creator, `http://a.ppy.sh/${u.id}`)
 						.setTitle(`${map.artist} - ${map.title} (${map.version})`)
 						.setThumbnail(`https://b.ppy.sh/thumb/${map.beatmapSetId}l.jpg`)
 						.setURL(`https://osu.ppy.sh/b/${map.id}`)
-						.setDescription(`${diff} ${star[0]}★ | Length: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds})
+						.setDescription(`${diffEmote} ${star[0]}★ | Length: ${lenMinutes}:${lenSeconds} (${drainMinutes}:${drainSeconds})
 BPM: ${map.bpm} | Combo: ${map.maxCombo}x | Max PP: ${ppFix[0]}pp
 Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${map.objects.spinner}`)
 						.setFooter(`${map.approvalStatus} on ${aday}-${amonth}-${ayear} | Last Updated: ${uday}-${umonth}-${uyear}`);
 
-					msg.channel.send({ embed: osuEmbed });
+					msg.channel.send({ embeds: [osuEmbed] });
 				});
 			}).catch(e => {
 				console.error(e);
@@ -471,59 +477,59 @@ Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${ma
 
 			switch(action) {
 			case 'Kick':
-				const kickEmbed = new Discord.MessageEmbed()
+				const kickEmbed = new MessageEmbed()
 					.setAuthor(`${mod.tag} (${mod.id})`, mod.displayAvatarURL())
 					.setDescription(`**Action**: Kick
 **User**: ${member.user.tag} (${member.user.id})
 **Reason**: ${reason}`)
 					.setTimestamp();
-				modC.send({ embed: kickEmbed });
+				modC.send({ embeds: [kickEmbed] });
 				break;
 			case 'Ban':
-				const banEmbed = new Discord.MessageEmbed()
+				const banEmbed = new MessageEmbed()
 					.setAuthor(`${mod.tag} (${mod.id})`, mod.displayAvatarURL())
 					.setDescription(`**Action**: ${action}
 **User**: ${member.user.tag} (${member.user.id})
 **Reason**: ${reason}`)
 					.setTimestamp();
-				modC.send({ embed: banEmbed });
+				modC.send({ embeds: [banEmbed] });
 				break;
 			case 'SoftBan':
-				const softBanEmbed = new Discord.MessageEmbed()
+				const softBanEmbed = new MessageEmbed()
 					.setAuthor(`${mod.tag} (${mod.id})`, mod.displayAvatarURL())
 					.setDescription(`**Action**: ${action}
 **User**: ${member.user.tag} (${member.user.id})
 **Reason**: ${reason}`)
 					.setTimestamp();
-				modC.send({ embed: softBanEmbed });
+				modC.send({ embeds: [softBanEmbed] });
 				break;
 			case 'Mute':
-				const muteEmbed = new Discord.MessageEmbed()
+				const muteEmbed = new MessageEmbed()
 					.setAuthor(`${mod.tag} (${mod.id})`, mod.displayAvatarURL())
 					.setDescription(`**Action**: ${action}
 **User**: ${member.user.tag} (${member.user.id})
 **Reason**: ${reason}`)
 					.setTimestamp();
-				modC.send({ embed: muteEmbed });
+				modC.send({ embeds: [muteEmbed] });
 				break;
 			case 'TempMute':
-				const tempMuteEmbed = new Discord.MessageEmbed()
+				const tempMuteEmbed = new MessageEmbed()
 					.setAuthor(`${mod.tag} (${mod.id})`, mod.displayAvatarURL())
 					.setDescription(`**Action**: ${action}
 **User**: ${member.user.tag} (${member.user.id})
 **Length**: ${length}
 **Reason**: ${reason}`)
 					.setTimestamp();
-				modC.send({ embed: tempMuteEmbed });
+				modC.send({ embeds: [tempMuteEmbed] });
 				break;
 			case 'Unmute':
-				const unmuteEmbed = new Discord.MessageEmbed()
+				const unMuteEmbed = new MessageEmbed()
 					.setAuthor(`${mod.tag} (${mod.id})`, mod.displayAvatarURL())
 					.setDescription(`**Action**: ${action}
 **User**: ${member.user.tag} (${member.user.id})
 **Reason**: ${reason}`)
 					.setTimestamp();
-				modC.send({ embed: unmuteEmbed });
+				modC.send({ embeds: [unMuteEmbed] });
 				break;
 			default:
 				console.log('[ERROR] Couldn\'t find moderator action.');

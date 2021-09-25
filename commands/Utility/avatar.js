@@ -11,7 +11,7 @@ module.exports = {
 		let memberFlag = false;
 		if (!menUser && args[0]) {
 			memberFlag = true;
-			menUser = message.guild.member(args[0]).user;
+			menUser = message.guild.members.cache.get(args[0]).user;
 		}
 		if (!menUser && memberFlag) menUser = message.user;
 

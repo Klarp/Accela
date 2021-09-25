@@ -1,6 +1,7 @@
 // Copyright (C) 2021 Brody Jagoe
 
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
+
 const { sConfig } = require('../../dbObjects');
 const Sentry = require('../../log');
 
@@ -42,10 +43,10 @@ module.exports = {
 			}
 		}
 		// Config Embed Start
-		const configEmbed = new Discord.MessageEmbed()
+		const configEmbed = new MessageEmbed()
 			.setTitle('Server Config')
 			.setDescription(`Prefix: ${prefix}`);
 		// Send config embed
-		message.channel.send(configEmbed);
+		message.channel.send({ embeds: [configEmbed] });
 	},
 };

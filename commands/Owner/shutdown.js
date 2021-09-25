@@ -1,6 +1,6 @@
 // Copyright (C) 2021 Brody Jagoe
 
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { Client } = require('../../index');
 
 module.exports = {
@@ -10,10 +10,10 @@ module.exports = {
 	module: 'Owner',
 	owner: true,
 	async execute(message) {
-		const sdEmbed = new Discord.MessageEmbed()
+		const sdEmbed = new MessageEmbed()
 			.setTitle('EMERGANCY SHUTDOWN COMMENCED')
 			.setDescription('Shutting down...');
-		await message.channel.send(sdEmbed);
+		await message.channel.send({ embeds: [sdEmbed] });
 		Client.destroy();
 	},
 };

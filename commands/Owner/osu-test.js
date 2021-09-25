@@ -14,7 +14,7 @@ module.exports = {
 		let memberFlag = false;
 		if (!menUser && args[0]) {
 			memberFlag = true;
-			menUser = message.guild.member(args[0]);
+			menUser = message.guild.members.cache.get(args[0]);
 		}
 		if (!menUser && !memberFlag) menUser = message.member;
 
@@ -44,6 +44,6 @@ osu!taiko: ${taiko_rank}
 osu!ctb: ${ctb_rank}
 osu!mania: ${mania_rank}`);
 
-		message.channel.send(searchEmbed);
+		message.channel.send({ embeds: [searchEmbed] });
 	},
 };

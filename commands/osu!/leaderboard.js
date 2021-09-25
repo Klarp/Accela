@@ -1,9 +1,10 @@
 // Copyright (C) 2021 Brody Jagoe
 
+const { MessageEmbed, Collection } = require('discord.js');
+
 const { timeSince } = require('../../utils');
 const { upDate } = require('../../index');
 const { Users, sConfig } = require('../../dbObjects');
-const { MessageEmbed, Collection } = require('discord.js');
 
 const userList = new Collection();
 
@@ -23,7 +24,7 @@ module.exports = {
 		const modes = ['std', 'taiko', 'ctb', 'mania'];
 
 		let prefix = '>>';
-		if (message.channel.type !== 'dm') {
+		if (message.channel.type !== 'DM') {
 			const serverConfig = await sConfig.findOne({ where: { guild_id: message.guild.id } });
 			if (serverConfig) {
 				prefix = serverConfig.get('prefix');
@@ -64,7 +65,7 @@ ${table}
 				.setColor('#af152a')
 				.setFooter(`Last Updated ${timeSince(newDate)} • ${prefix}lb [mode] for other gamemodes`);
 
-			message.channel.send(leaderEmbed);
+			message.channel.send({ embeds: [leaderEmbed] });
 		} else {
 			mode = args[0].toLowerCase();
 			if (!modes.includes(mode)) return message.channel.send('Invalid Mode! Please try again.');
@@ -106,7 +107,7 @@ ${table}
 				.setColor('#af152a')
 				.setFooter(`Last Updated ${timeSince(newDate)}`);
 
-			message.channel.send(leaderEmbed);
+			message.channel.send({ embeds: [leaderEmbed] });
 		}
 
 		/*

@@ -2,10 +2,11 @@
 
 const axios = require('axios');
 const osu = require('node-osu');
-const Sentry = require('../../log');
 
+const { MessageEmbed, Permissions } = require('discord.js');
+
+const Sentry = require('../../log');
 const { getRankRole } = require('../../utils');
-const { MessageEmbed } = require('discord.js');
 const { osu_key, osu_key_v2 } = require('../../config.json');
 const { Users } = require('../../dbObjects');
 const { Client } = require('../../index');
@@ -26,15 +27,15 @@ module.exports = {
 				.setDescription('https://accela.xyz/verify.html')
 				.setColor('#af152a');
 
-			message.channel.send(noVerifyEmbed);
+			message.channel.send({ embeds: [noVerifyEmbed] });
 		}
 
 		// VERIFICATION CODE GIVEN
 		if (args[0]) {
 
 			// DELETES MESSAGE IF USED IN GUILD
-			if (message.channel.type !== 'dm') {
-				if (!message.guild.me.hasPermission('MANAGE_MESSAGES')) return message.channel.send('Please use this command inside my DMs!');
+			if (message.channel.type !== 'DM') {
+				if (!message.guild.me.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return message.channel.send('Please use this command inside my DMs! (codes are private and one time use)');
 				message.delete();
 				return message.reply('Please use another code inside my DMs');
 			}
@@ -141,7 +142,7 @@ Rank (osu!std): ${userStat.global_rank}`)
 									}
 								}
 
-								return message.channel.send(userEmbed);
+								return message.channel.send({ embeds: [userEmbed] });
 							} catch (e) {
 								if (e.name === 'SequelizeUniqueConstraintError') {
 									try {
@@ -172,7 +173,7 @@ Rank (osu!std): ${userStat.global_rank}`)
 													logChannel.send(`:white_check_mark: ${message.author} verified with ${user.username}`);
 												}
 											}
-											return message.channel.send(userEmbed);
+											return message.channel.send({ embeds: [userEmbed] });
 										}
 									} catch (err) {
 										Sentry.captureException(err);
@@ -208,7 +209,7 @@ Rank (osu!std): ${userStat.global_rank}`)
 						.setTitle(':x: Error: Could Not Verify!')
 						.setColor('RED')
 						.setDescription('Please try again with a new code.');
-					message.channel.send(errorEmbed);
+					message.channel.send({ embeds: [errorEmbed] });
 					logChannel.send(`:x: ${message.author} failed to verify`);
 					Sentry.captureException(err);
 					console.log(err.response.status);

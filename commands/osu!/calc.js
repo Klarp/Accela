@@ -1,11 +1,13 @@
 // Copyright (C) 2021 Brody Jagoe
 
 const osu = require('node-osu');
-const oj = require('ojsama');
-const Discord = require('discord.js');
 const curl = require('curl');
-const { osu_key } = require('../../config.json');
+
+const { modbits, parser, diff, ppv2 } = require('ojsama');
+const { MessageEmbed } = require('discord.js');
+
 const Sentry = require('../../log');
+const { osu_key } = require('../../config.json');
 
 module.exports = {
 	name: 'calc',
@@ -17,7 +19,7 @@ module.exports = {
 		// Access the api
 		const osuApi = new osu.Api(osu_key);
 
-		let mods = oj.modbits.nomod;
+		let mods = modbits.nomod;
 		let acc_percent;
 		let combo;
 		let miss;
@@ -30,27 +32,27 @@ module.exports = {
 
 			curl.get(`https://osu.ppy.sh/osu/${map.id}`, function(err, response, body) {
 				if (args[4]) {
-					mods = oj.modbits.from_string(args[4]);
+					mods = modbits.from_string(args[4]);
 				}
 
 				acc_percent = parseFloat(args[1]);
 				combo = parseInt(args[2]);
 				miss = parseInt(args[3]);
 
-				const parser = new oj.parser().feed(body);
+				const parserBody = new parser().feed(body);
 
-				const pMap = parser.map;
+				const pMap = parserBody.map;
 
-				const stars = new oj.diff().calc({ map: pMap, mods: mods });
+				const stars = new diff().calc({ map: pMap, mods: mods });
 
-				const pp = oj.ppv2({
+				const pp = ppv2({
 					stars: stars,
 					combo: combo,
 					nmiss: miss,
 					acc_percent: acc_percent,
 				});
 
-				const maxPP = oj.ppv2({
+				const maxPP = ppv2({
 					map: pMap,
 				});
 
@@ -66,17 +68,17 @@ module.exports = {
 				const [{ value: amonth },, { value: aday },, { value: ayear }] = dateTimeFormat.formatToParts(map.approvedDate);
 
 				// Create the embed
-				const osuEmbed = new Discord.MessageEmbed()
+				const osuEmbed = new MessageEmbed()
 					.setColor('#af152a')
 					.setURL(`https://osu.ppy.sh/b/${map.id}`)
 					.setTitle(`${map.artist} - ${map.title} (${map.version})`)
 					.setDescription(`Combo: ${combo}x | Missed: ${miss}x
-					Mods: ${oj.modbits.string(mods) || 'NoMod'} | Accuracy: ${acc_percent || '100'}%
+					Mods: ${modbits.string(mods) || 'NoMod'} | Accuracy: ${acc_percent || '100'}%
 					
 					Total PP: **${ppFix}pp**/${maxppFix}PP`)
 					.setFooter(`${map.approvalStatus} on ${amonth} ${aday} ${ayear} | Mapped by: ${map.creator}`);
 
-				message.channel.send({ embed: osuEmbed });
+				message.channel.send({ embeds: [osuEmbed] });
 			});
 		}).catch(e => {
 			Sentry.captureException(e);
