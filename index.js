@@ -30,7 +30,7 @@ const { Muted, sConfig } = require('./dbObjects');
 // const { Users, Muted, sConfig } = require('./dbObjects');
 
 const configs = new Collection();
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] }, { partials: ['CHANNEL'] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES], partials: ['CHANNEL'] });
 client.commands = new Collection();
 const cooldowns = new Collection();
 exports.Client = client;
