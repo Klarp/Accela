@@ -30,7 +30,7 @@ const { Muted, sConfig } = require('./dbObjects');
 // const { Users, Muted, sConfig } = require('./dbObjects');
 
 const configs = new Collection();
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] }, { partials: ['CHANNEL'] });
 client.commands = new Collection();
 const cooldowns = new Collection();
 exports.Client = client;
@@ -533,7 +533,11 @@ client.on('guildCreate', async (guild) => {
 
 // BAN START
 
-client.on('guildBanAdd', async (guild, user) => {
+client.on('guildBanAdd', async (ban) => {
+
+	const guild = ban.guild;
+	const user = ban.user;
+
 	// Find server config
 	const serverConfig = await sConfig.findOne({ where: { guild_id: guild.id } });
 	// Get mod logging value from config
@@ -618,7 +622,13 @@ client.on('guildBanAdd', async (guild, user) => {
 
 // UNBAN START
 
-client.on('guildBanRemove', async (guild, user) => {
+client.on('guildBanRemove', async (ban) => {
+
+	console.log(ban);
+
+	const guild = ban.guild;
+	const user = ban.user;
+
 	// Find server config
 	const serverConfig = await sConfig.findOne({ where: { guild_id: guild.id } });
 	// Get mod logging value from config
@@ -738,6 +748,8 @@ client.on('guildMemberRemove', async (member) => {
 	const logFlag = serverConfig.get('mod_logging');
 	// Get mod channel from config
 	const modChannel = serverConfig.get('mod_channel');
+
+	if (!serverConfig) return;
 
 	const user = member.user;
 

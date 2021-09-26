@@ -199,7 +199,7 @@ module.exports = {
 			// Create new database entry
 			try {
 				await sConfig.create({
-					guild_id: message.guild.id,
+					guild_id: message.guildId,
 					prefix: prefix,
 					mod_channel: modChannel,
 					msgLog_channel: msgLogChannel,
