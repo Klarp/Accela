@@ -1,6 +1,6 @@
 {
   "name": "accela",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "osu! and moderation bot",
   "main": "index.js",
   "scripts": {
