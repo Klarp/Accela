@@ -17,6 +17,7 @@ module.exports = {
 	aliases: ['r', 'rs'],
 	description: 'Gets the recently completed score on osu!',
 	module: 'Osu!',
+	disableOsu: true,
 	perms: '',
 	usage: '<user>',
 	async execute(message, args) {

@@ -14,6 +14,7 @@ module.exports = {
 	aliases: 'lb',
 	description: 'Leaderboard of verified osu! accounts in the server',
 	module: 'Osu!',
+	disableOsu: true,
 	async execute(message, args) {
 		const users = await Users.findAll();
 		const server = message.guild;

@@ -15,6 +15,7 @@ module.exports = {
 	description: 'Changes mode for rank role system (Beta Feature)',
 	module: 'Osu!',
 	guildOnly: true,
+	disableOsu: true,
 	usage: '<mode>',
 	async execute(message, args) {
 		const osuApi = new osu.Api(osu_key);

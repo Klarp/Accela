@@ -17,6 +17,7 @@ module.exports = {
 	module: 'Osu!',
 	perms: '',
 	owner: true,
+	disableOsu: true,
 	usage: '<user>',
 	async execute(message, args) {
 		// Access the api

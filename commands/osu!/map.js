@@ -16,6 +16,7 @@ module.exports = {
 	aliases: ['beatmap', 'bmap'],
 	description: 'Gets the requested beatmap information',
 	module: 'Osu!',
+	disableOsu: true,
 	usage: '<beatmap> +<mods>',
 	async execute(message, args) {
 		// Access the api

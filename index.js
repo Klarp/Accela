@@ -391,6 +391,9 @@ client.on('messageCreate', async message => {
 	// Stop if a command wasn't found
 	if (!command) return;
 
+	// Private Test
+	// if (message.author.id !== '186493565445079040') return;
+
 	// If command is a mod cmd check if mod cmds are allowed
 	if (command.modCmd) {
 		if (!modFlag) return;
@@ -398,6 +401,10 @@ client.on('messageCreate', async message => {
 
 	if (command.osuDiscord) {
 		if (message.guild.id !== '98226572468690944') return;
+	}
+
+	if (command.disableOsu) {
+		if (message.channelId === '98226572468690944') return;
 	}
 
 	// If command is owner only check if user is owner

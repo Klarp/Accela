@@ -17,6 +17,7 @@ module.exports = {
 	aliases: 't',
 	description: 'Gets the top score of the user',
 	module: 'Osu!',
+	disableOsu: true,
 	usage: '<user>',
 	async execute(message, args) {
 		// Access the api

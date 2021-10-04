@@ -14,6 +14,7 @@ module.exports = {
 	aliases: 'oss',
 	description: 'Gets the requested osu! user information',
 	module: 'Osu!',
+	disableOsu: true,
 	usage: '<user>',
 	async execute(message, args) {
 		// Access the api

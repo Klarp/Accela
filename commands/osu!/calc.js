@@ -14,6 +14,7 @@ module.exports = {
 	description: 'Calculates pp from map',
 	module: 'Osu!',
 	args: true,
+	disableOsu: true,
 	usage: '<beatmap> <acc> <combo> <missed> <mods>',
 	execute(message, args) {
 		// Access the api

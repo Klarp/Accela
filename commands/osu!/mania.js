@@ -18,6 +18,7 @@ module.exports = {
 	aliases: ['piano'],
 	description: 'Gets the requested osu! user information for mania',
 	module: 'Osu!',
+	disableOsu: true,
 	usage: '<user>',
 	async execute(message, args) {
 
