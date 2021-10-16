@@ -544,6 +544,7 @@ client.on('guildBanAdd', async (ban) => {
 
 	const guild = ban.guild;
 	const user = ban.user;
+	const member = guild.members.cache.get(user.id);
 
 	// Find server config
 	const serverConfig = await sConfig.findOne({ where: { guild_id: guild.id } });
@@ -570,7 +571,9 @@ client.on('guildBanAdd', async (ban) => {
 				.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 				.setColor('#EA4D4B')
 				.setTitle(`Banned ${user.tag}`)
-				.setDescription(`:lock: ${user}`)
+				.setDescription(`:lock: ${user}
+
+**Highest Role:** ${member.roles.highest}`)
 				.setTimestamp();
 
 			if (guild.id === '98226572468690944') return guild.channels.cache.get('158484765136125952').send({ embeds: [banEmbed] });
@@ -586,6 +589,8 @@ client.on('guildBanAdd', async (ban) => {
 					.setColor('#EA4D4B')
 					.setTitle(`Banned ${user.tag}`)
 					.setDescription(`:lock: ${user}
+					
+**Highest Role:** ${member.roles.highest}
 
 **Moderator:** ${executor}
 **Reason:** ${reason}`)
@@ -602,6 +607,8 @@ client.on('guildBanAdd', async (ban) => {
 					.setTitle(`Banned ${user.tag}`)
 					.setDescription(`:lock: ${user}
 
+**Highest Role:** ${member.roles.highest}
+
 **Moderator:** ${executor}
 **Reason:** No Reason Given`)
 					.setFooter(`ID: ${user.id}`)
@@ -615,7 +622,9 @@ client.on('guildBanAdd', async (ban) => {
 					.setThumbnail(user.displayAvatarURL({ dynamic : true }))
 					.setColor('#EA4D4B')
 					.setTitle(`Banned ${user.tag}`)
-					.setDescription(`:lock: ${user}`)
+					.setDescription(`:lock: ${user}
+
+**Highest Role:** ${member.roles.highest}`)
 					.setFooter(`ID: ${user.id}`)
 					.setTimestamp();
 

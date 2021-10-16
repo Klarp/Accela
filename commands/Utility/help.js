@@ -18,7 +18,7 @@ module.exports = {
 	module: 'Utility',
 	usage: '[command]',
 	cooldown: 5,
-	execute(message, args) {
+	async execute(message, args) {
 		const data = [];
 		const { commands } = message.client;
 		const modules = ['admin', 'osu!', 'fun', 'utility', 'owner'];
@@ -75,14 +75,23 @@ module.exports = {
 				});
 				data.push('');
 				data.push(`You can send \`${prefix}help [command name]\` to get info on a specific command!`);
-				return message.author.send(data, { split: true })
+
+				const text = data.join('\n');
+
+				const helpEmbed = new MessageEmbed()
+					.setColor('BLUE')
+					.setDescription(text);
+
+				console.log(helpEmbed.description);
+
+				return message.author.send({ embeds: [helpEmbed] })
 					.then(() => {
 						if (message.channel.type === 'DM') return;
 						message.reply('I\'ve sent you a DM with the commands!');
 					})
 					.catch(error => {
+						console.error(error);
 						Sentry.captureException(error);
-						console.error(`Could not send help DM to ${message.author.tag}.\n`, error);
 						message.reply('it seems like I can\'t DM you! Do you have DMs disabled?');
 					});
 			}
