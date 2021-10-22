@@ -132,6 +132,7 @@ osu!mania: ${mania_rank}`);
 			logChannel.send(`**Started processing of ${storedUsers.length} members**`);
 
 			const worker = async (u) => {
+				logChannel.send(`Updating ${u.osu_name} with osu! ID: ${u.verified_id}`);
 				const osuID = u.get('verified_id');
 				const userID = u.get('user_id');
 				const mode = u.get('osu_mode');
