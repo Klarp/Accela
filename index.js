@@ -404,7 +404,7 @@ client.on('messageCreate', async message => {
 	}
 
 	if (command.disableOsu) {
-		if (message.channelId === '98226572468690944') return;
+		if (message.channelId === '98226572468690944' || message.channelId === '896868398544347166') return;
 	}
 
 	// If command is owner only check if user is owner
