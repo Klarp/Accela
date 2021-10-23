@@ -3,18 +3,22 @@ module.exports = (sequelize, DataTypes) => {
 		user_id: {
 			type: DataTypes.STRING,
 			primaryKey: true,
+			allowNull: false,
 			unique: false,
 		},
 		osu_name: {
 			type: DataTypes.STRING,
+			allowNull: false,
 			unique: false,
 		},
 		osu_id: {
 			type: DataTypes.STRING,
+			allowNull: false,
 			unique: false,
 		},
 		verified_id: {
 			type: DataTypes.STRING,
+			allowNull: false,
 			unique: false,
 		},
 		osu_mode: {

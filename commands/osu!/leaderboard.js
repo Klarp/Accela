@@ -53,7 +53,7 @@ module.exports = {
 				table += getRow(i + 1, leaderList[i], nameColumnWidth, rankColumnWidth) + '\n';
 			}
 
-			const listArray = newList.array();
+			const listArray = new Array(newList);
 			const posNumber = listArray.findIndex(u => u.user_id === message.author.id) + 1;
 			const listUser = newList.get(message.author.id);
 

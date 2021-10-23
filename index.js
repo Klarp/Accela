@@ -18,33 +18,30 @@
 
 const fs = require('fs');
 const axios = require('axios');
-// const osu = require('node-osu');
-// const qrate = require('qrate');
+const osu = require('node-osu');
+const qrate = require('qrate');
 
 const { Intents, Collection, Client, MessageEmbed, Permissions } = require('discord.js');
 
 const Sentry = require('./log');
-const { token, owners, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL } = require('./config.json');
-// const { token, owners, osu_key, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL } = require('./config.json');
-const { Muted, sConfig } = require('./dbObjects');
-// const { Users, Muted, sConfig } = require('./dbObjects');
+const { token, owners, osu_key, AuthToken_BFD, AuthToken_botgg, AuthToken_DBL } = require('./config.json');
+const { Users, Muted, sConfig } = require('./dbObjects');
 
 const configs = new Collection();
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES], partials: ['CHANNEL'] });
 client.commands = new Collection();
 const cooldowns = new Collection();
 exports.Client = client;
+const osuApi = new osu.Api(osu_key);
 
 const util = require('./utils');
 
-// let lbDate = Date.now();
+let lbDate = Date.now();
 
 module.exports.upDate = () => {
-	/**
 	if (lbDate) {
 		return lbDate;
 	}
-	*/
 };
 
 // const osuApi = new osu.Api(osu_key);
@@ -99,7 +96,6 @@ const activities_list = [
 
 client.once('ready', async () => {
 	// Initialize osu! Database
-	/**
 	const storedUsers = await Users.findAll();
 	let startDate;
 	storedUsers
@@ -192,9 +188,6 @@ client.once('ready', async () => {
 			q.push(osuUsers[i]);
 		}
 	}, 1000 * 60 * 60 * 24);
-	*/
-
-	// 60 * 60 * 1000 - One Hour
 
 	// Initialize Server Database
 	const serverConfigs = await sConfig.findAll();
@@ -374,7 +367,9 @@ client.on('messageCreate', async message => {
 	if (!message.content.startsWith(prefix)) return;
 
 	// For beta testing
-	// if (message.channel.guild.id === '98226572468690944') return;
+	if (!message.channel.type === 'DM') {
+		if (message.channel.guild.id === '98226572468690944') return;
+	}
 
 	// Split the content to find command arguments
 	const args = message.content.slice(prefix.length).split(/ +/);
