@@ -2,7 +2,6 @@
 
 // Shows wrong user (Might need to test on Gavin)
 // Add kiss, hug, slap commands maybe? (this is pretty meta)
-// Fix replies searching for the replied user
 
 const osu = require('node-osu');
 

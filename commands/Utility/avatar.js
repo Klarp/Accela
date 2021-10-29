@@ -11,6 +11,7 @@ module.exports = {
 		let memberFlag = false;
 		if (!menUser && args[0]) {
 			memberFlag = true;
+			if (!message.guild.members.cache.get(args[0])) return message.reply('Could not find that user!');
 			menUser = message.guild.members.cache.get(args[0]).user;
 		}
 		if (!menUser && memberFlag) menUser = message.user;

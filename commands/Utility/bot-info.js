@@ -1,6 +1,6 @@
 // Copyright (C) 2021 Brody Jagoe
 
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 
 const { Client } = require('../../index');
 const { sConfig } = require('../../dbObjects');
@@ -48,6 +48,26 @@ module.exports = {
 
 		const uptime = dhm(Client.uptime);
 
+		const binfoButtons = new MessageActionRow()
+			.addComponents(
+				new MessageButton()
+					.setURL('https://discordapp.com/oauth2/authorize?client_id=687856844848234502&scope=bot&permissions=805383190')
+					.setLabel('Invite')
+					.setStyle('LINK'),
+				new MessageButton()
+					.setURL('https://top.gg/bot/687856844848234502')
+					.setLabel('Vote')
+					.setStyle('LINK'),
+				new MessageButton()
+					.setURL('https://discord.gg/jgzXHkU')
+					.setLabel('Support')
+					.setStyle('LINK'),
+				new MessageButton()
+					.setURL('https://github.com/Klarp/Accela')
+					.setLabel('GitHub')
+					.setStyle('LINK'),
+			);
+
 		const infoEmbed = new MessageEmbed()
 			.setAuthor(bot.username, bot.displayAvatarURL())
 			.setColor('BLUE')
@@ -59,6 +79,6 @@ module.exports = {
 			
 **Roles:** ${roles}`)
 			.setFooter(`Created by: Klarp#0001 | Version: ${version} | Framework: discord.js`);
-		message.channel.send({ embeds: [infoEmbed] });
+		message.channel.send({ embeds: [infoEmbed], components: [binfoButtons] });
 	},
 };
