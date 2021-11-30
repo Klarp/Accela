@@ -2,6 +2,7 @@
 
 module.exports = {
 	name: 'mapmore',
+	aliases: ['mapm'],
 	description: 'How to get better at mapping!',
 	module: 'Fun',
 	cooldown: 60,

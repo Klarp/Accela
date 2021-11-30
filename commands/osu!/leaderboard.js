@@ -44,6 +44,7 @@ module.exports = {
 
 			const newList = userList.sort((a, b) => a.rank - b.rank)
 				.filter(user => server.members.cache.has(user.user_id))
+				.filter(user => message.guild.members.cache.get(user.user_id))
 				.filter(user => user.verified_id !== null)
 				.filter(user => user.rank !== null && user.rank > 0);
 
@@ -199,6 +200,7 @@ ${table}
 			let posHolder = '';
 			if (!user) return posHolder;
 			const rank = user.rank;
+			console.log(pos);
 
 			let positionText = `Your Position: ${pos}/${list.length}`;
 

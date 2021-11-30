@@ -581,4 +581,21 @@ Circles: ${map.objects.normal} | Sliders: ${map.objects.slider} | Spinners: ${ma
 			currentDate = Date.now();
 		} while (currentDate - date < milliseconds);
 	},
+
+	// Next and Prev Page for Multi-Page Commands
+	nextPage(currentPage, pages) {
+		if (currentPage + 1 === pages) {
+			return 0;
+		}
+		currentPage += 1;
+		return currentPage;
+	},
+
+	prevPage(currentPage, pages) {
+		if (currentPage === 0) {
+			return pages - 1;
+		}
+		currentPage -= 1;
+		return currentPage;
+	},
 };

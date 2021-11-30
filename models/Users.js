@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		verified_id: {
 			type: DataTypes.STRING,
-			allowNull: false,
+			allowNull: true,
 			unique: false,
 		},
 		osu_mode: {
