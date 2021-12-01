@@ -367,11 +367,11 @@ client.on('messageCreate', async message => {
 	if (!message.content.startsWith(prefix)) return;
 
 	// For beta testing
-	/*
+
 	if (message.channel.type === 'GUILD_TEXT') {
-		if (message.channel.guild.id === '98226572468690944' && !testers.includes(message.author.id)) return;
+		if (message.channel.guild.id === '98226572468690944') return;
 	}
-	*/
+
 
 	// Split the content to find command arguments
 	const args = message.content.slice(prefix.length).split(/ +/);

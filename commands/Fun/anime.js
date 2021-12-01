@@ -43,13 +43,16 @@ module.exports = {
 				let startDate;
 				let endDate;
 				let longDesc;
+				let change;
 
 				aniList.media.anime(res.media[0].id).then(aniRes => {
 					function truncate(str, n) {
 						return (str.length > n) ? str.substr(0, n - 1) + '...' : str;
 					}
 
-					if (aniRes.isAdult) return message.reply('NSFW searches are not allowed!');
+					if (page === 0) {
+						if (aniRes.isAdult) return message.reply('NSFW searches are not allowed!');
+					}
 
 					status = getStatus(aniRes.status);
 					type = aniRes.format || 'Unknown';
@@ -109,77 +112,93 @@ ${longDesc}`)
 						const collector = msg.createMessageComponentCollector({ componentType: 'BUTTON' });
 
 						collector.on('collect', button => {
+
 							if (button.user.id === message.author.id) {
 								if (button.customId === 'next') {
+									change = 'next';
 									page = nextPage(page, maxPage);
 								} else {
+									change = 'prev';
 									page = prevPage(page, maxPage);
 								}
 
-								aniList.media.anime(res.media[page].id).then(aniResEdit => {
-									if (aniResEdit.isAdult) return message.reply('NSFW searches are not allowed!');
-
-									status = getStatus(aniResEdit.status);
-									type = aniResEdit.format || 'Unknown';
-									episodes = aniResEdit.episodes || 'Unknown';
-
-									if (aniResEdit.studios[0]) {
-										studio = aniResEdit.studios[0].name || 'Unknown';
-									} else {
-										studio = 'Unknown';
-									}
-
-									avgScore = aniResEdit.averageScore || '0';
-									genres = aniResEdit.genres.join(' | ');
-
-									startDate = `${aniResEdit.startDate.year}-${aniResEdit.startDate.month}-${aniResEdit.startDate.day}`;
-									endDate = `${aniResEdit.endDate.year}-${aniResEdit.endDate.month}-${aniResEdit.endDate.day}`;
-
-									longDesc = 'No description found';
-
-									if (aniResEdit.description) {
-										longDesc = aniResEdit.description.replace(/<\/?[^>]+(>|$)/g, '').replace(/&lsquo;/g, '').replace(/\n/g, '');
-									}
-
-									if (aniResEdit.startDate.year === null) {
-										startDate = 'Unknown';
-									}
-
-									if (aniResEdit.startDate.year & !aniResEdit.startDate.day || !aniResEdit.startDate.month) {
-										startDate = aniResEdit.startDate.year;
-									}
-
-									if (aniResEdit.endDate.year === null) {
-										endDate = 'Unknown';
-									}
-
-									longDesc = truncate(longDesc, 300);
-
-									const aniEmbedEdit = new MessageEmbed()
-										.setAuthor('AniList [UNOFFICIAL]', 'https://anilist.co/img/icons/android-chrome-512x512.png')
-										.setColor('BLUE')
-										.setTitle(`${aniResEdit.title.romaji} [${aniResEdit.title.native}]`)
-										.setURL(aniResEdit.siteUrl)
-										.setThumbnail(aniResEdit.coverImage.large)
-										.setDescription(`${aniResEdit.title.english ? aniResEdit.title.english : ''}
-				
-				**Status** ${status} | **Type** ${type} | **Episodes** ${episodes}
-				**Studio** ${studio} | **Average Score** ${avgScore}%
-				**Genres** ${genres}
-									
-				**Start Date** ${startDate}
-				**End Date** ${endDate}
-									
-				**Description**
-				${longDesc}`)
-										.setFooter(`Page: ${page + 1}/${maxPage}`);
-
-									msg.edit({ embeds: [aniEmbedEdit], components: [row] });
-								});
+								pageSwitch();
 							} else {
 								button.reply({ content: 'Only the message author can switch pages!', ephemeral: true });
 							}
 						});
+						function pageSwitch() {
+							aniList.media.anime(res.media[page].id).then(aniResEdit => {
+
+								if (aniResEdit.isAdult === true) {
+									if (change === 'next') {
+										page = nextPage(page, maxPage);
+										return pageSwitch();
+									}
+									if (change === 'prev') {
+										page = prevPage(page, maxPage);
+										return pageSwitch();
+									}
+								}
+
+								status = getStatus(aniResEdit.status);
+								type = aniResEdit.format || 'Unknown';
+								episodes = aniResEdit.episodes || 'Unknown';
+
+								if (aniResEdit.studios[0]) {
+									studio = aniResEdit.studios[0].name || 'Unknown';
+								} else {
+									studio = 'Unknown';
+								}
+
+								avgScore = aniResEdit.averageScore || '0';
+								genres = aniResEdit.genres.join(' | ');
+
+								startDate = `${aniResEdit.startDate.year}-${aniResEdit.startDate.month}-${aniResEdit.startDate.day}`;
+								endDate = `${aniResEdit.endDate.year}-${aniResEdit.endDate.month}-${aniResEdit.endDate.day}`;
+
+								longDesc = 'No description found';
+
+								if (aniResEdit.description) {
+									longDesc = aniResEdit.description.replace(/<\/?[^>]+(>|$)/g, '').replace(/&lsquo;/g, '').replace(/\n/g, '');
+								}
+
+								if (aniResEdit.startDate.year === null) {
+									startDate = 'Unknown';
+								}
+
+								if (aniResEdit.startDate.year & !aniResEdit.startDate.day || !aniResEdit.startDate.month) {
+									startDate = aniResEdit.startDate.year;
+								}
+
+								if (aniResEdit.endDate.year === null) {
+									endDate = 'Unknown';
+								}
+
+								longDesc = truncate(longDesc, 300);
+
+								const aniEmbedEdit = new MessageEmbed()
+									.setAuthor('AniList [UNOFFICIAL]', 'https://anilist.co/img/icons/android-chrome-512x512.png')
+									.setColor('BLUE')
+									.setTitle(`${aniResEdit.title.romaji} [${aniResEdit.title.native}]`)
+									.setURL(aniResEdit.siteUrl)
+									.setThumbnail(aniResEdit.coverImage.large)
+									.setDescription(`${aniResEdit.title.english ? aniResEdit.title.english : ''}
+			
+			**Status** ${status} | **Type** ${type} | **Episodes** ${episodes}
+			**Studio** ${studio} | **Average Score** ${avgScore}%
+			**Genres** ${genres}
+								
+			**Start Date** ${startDate}
+			**End Date** ${endDate}
+								
+			**Description**
+			${longDesc}`)
+									.setFooter(`Page: ${page + 1}/${maxPage}`);
+
+								msg.edit({ embeds: [aniEmbedEdit], components: [row] });
+							});
+						}
 					});
 				});
 			} else {

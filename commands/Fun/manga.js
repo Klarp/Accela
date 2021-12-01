@@ -42,6 +42,7 @@ module.exports = {
 				let longDesc;
 				let startDate;
 				let endDate;
+				let change;
 
 				aniList.media.manga(res.media[0].id).then(aniRes => {
 					function truncate(str, n) {
@@ -105,14 +106,28 @@ ${longDesc}`)
 						collector.on('collect', button => {
 							if (button.user.id === message.author.id) {
 								if (button.customId === 'next') {
+									change = 'next';
 									page = nextPage(page, maxPage);
 								} else {
+									change = 'prev';
 									page = prevPage(page, maxPage);
 								}
-							}
 
+								pageSwitch();
+							}
+						});
+						function pageSwitch() {
 							aniList.media.manga(res.media[page].id).then(aniResEdit => {
-								if (aniResEdit.isAdult) return message.reply('NSFW searches are not allowed!');
+								if (aniResEdit.isAdult === true) {
+									if (change === 'next') {
+										page = nextPage(page, maxPage);
+										return pageSwitch();
+									}
+									if (change === 'prev') {
+										page = prevPage(page, maxPage);
+										return pageSwitch();
+									}
+								}
 
 								status = getStatus(aniResEdit.status);
 								type = aniResEdit.format || 'Unknown';
@@ -166,7 +181,7 @@ ${longDesc}`)
 
 								msg.edit({ embeds: [aniEmbedEdit], components: [row] });
 							});
-						});
+						}
 					});
 				});
 			} else {
