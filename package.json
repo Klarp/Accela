@@ -31,7 +31,7 @@
     "osu-pp-calculator": "^0.1.7",
     "prom-client": "^14.0.1",
     "qrate": "^1.2.1",
-    "sequelize": "^6.12.0-alpha.1",
+    "sequelize": "^7.0.0-alpha.1",
     "sqlite3": "^5.0.2"
   }
 }
