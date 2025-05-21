@@ -1,0 +1,22 @@
+{
+  "name": "accela",
+  "version": "4.0.0",
+  "description": "Your new anime bot!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Klarp",
+  "license": "ISC",
+  "dependencies": {
+    "@shineiichijo/marika": "^3.0.1",
+    "anilist": "^0.12.4",
+    "discord.js": "^14.19.3",
+    "dotenv": "^16.5.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.26.0",
+    "eslint": "^9.26.0",
+    "nodemon": "^3.1.10"
+  }
+}
