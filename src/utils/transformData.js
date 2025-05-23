@@ -1,4 +1,10 @@
 async function transformData(data, type) {
+	const titles = {
+		english: data.title_english,
+		romaji: data.title,
+		native: data.title_japanese,
+	};
+
 	const genres = [];
 	if (Array.isArray(data.genres)) {
 		for (const genre of data.genres) genres.push(genre.name);
@@ -34,12 +40,12 @@ async function transformData(data, type) {
 	const dataObject = {
 		coverImage: data.images.jpg.image_url,
 		siteUrl: data.url,
-		englishTitle: data.title_english,
-		romajiTitle: data.title,
-		nativeTitle: data.title_japanese,
+		title: titles,
 		status: data.status,
 		format: data.type,
 		episodes: data.episodes,
+		volumes: data.volumes,
+		chapters: data.chapters,
 		averageScore: data.score,
 		genres: genres,
 		startDate: startDate,
