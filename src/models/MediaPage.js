@@ -18,6 +18,7 @@ class MediaPage {
 
 	async createMessage(pageNumber) {
 		try {
+			let embed;
 			const media = await this.getMedia(pageNumber);
 
 			this.menuId === 'ani_menu'

@@ -1,4 +1,4 @@
-const { statusMap, formatMap } = require('../utils/constants');
+const { STATUS_NAMES, FORMAT_NAMES } = require('../utils/constants');
 
 class MediaInfoBase {
 	constructor(media = {}) {
@@ -21,10 +21,10 @@ class MediaInfoBase {
 		this.englishTitle = title.english || '';
 		this.romajiTitle = title.romaji || '';
 		this.nativeTitle = title.native || '';
-		this.status = statusMap[status] || status || 'Unknown';
-		this.format = formatMap[format] || format || 'Unknown';
+		this.status = STATUS_NAMES[status] || status || 'Unknown';
+		this.format = FORMAT_NAMES[format] || format || 'Unknown';
 		this.averageScore = typeof averageScore === 'number' ? averageScore : 'Unknown';
-		this.genres = this.formatGenres(genres);
+		this.genres = this.formatGenres(media, genres);
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.description = this.formatDescription(description);
@@ -40,7 +40,7 @@ class MediaInfoBase {
 			.substring(0, 300) + '...';
 	}
 
-	formatGenres(genres) {
+	formatGenres(media, genres) {
 		if (Array.isArray(media.genres) && genres.length > 0) {
 			return genres.join(' | ');
 		}

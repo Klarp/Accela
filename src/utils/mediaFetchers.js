@@ -1,6 +1,6 @@
 const { MessageFlags } = require('discord.js');
 const { MediaPage } = require('../models/MediaPage');
-const { defaultQuery } = require('./constants');
+const { DEFAULT_QUERY } = require('./constants');
 const { formatSelectedOptions } = require('./formatters');
 const { messageHandler } = require('./messageHandler');
 const { transformData } = require('./transformData');
@@ -57,8 +57,8 @@ async function getMalPage(interaction, options) {
 }
 
 async function getAniPage(interaction, options) {
-	defaultQuery.arguments(options);
-	const fullPage = anilist.query.page({ perPage: 5 }).withMedia(defaultQuery);
+	DEFAULT_QUERY.arguments(options);
+	const fullPage = anilist.query.page({ perPage: 5 }).withMedia(DEFAULT_QUERY);
 
 	try {
 		const pageData = await fullPage.fetch();
