@@ -16,6 +16,7 @@ async function getMalPage(interaction, options) {
 		status: options.status,
 		type: options.format,
 		limit: 5,
+		sfw: true,
 	};
 
 	try {

@@ -1,10 +1,13 @@
 {
   "name": "accela",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Your new anime bot!",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node .",
+    "link": "eslint .",
+    "dev": "node . | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'"
   },
   "author": "Klarp",
   "license": "ISC",
@@ -12,7 +15,8 @@
     "@shineiichijo/marika": "^3.0.1",
     "anilist": "^0.12.4",
     "discord.js": "^14.19.3",
-    "dotenv": "^16.5.0"
+    "dotenv": "^16.5.0",
+    "pino": "^7.0.0-rc.9"
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",

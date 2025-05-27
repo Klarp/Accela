@@ -76,6 +76,7 @@ module.exports = {
 		const options = {
 			search: mediaName,
 			type: 'MANGA',
+			isAdult: false,
 		};
 
 		if (mediaStatus) options.status = mediaStatus;

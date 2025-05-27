@@ -80,6 +80,7 @@ module.exports = {
 		const options = {
 			search: mediaName,
 			type: 'ANIME',
+			isAdult: false,
 		};
 
 		if (mediaStatus) options.status = mediaStatus;
