@@ -1,6 +1,6 @@
 {
   "name": "accela",
-  "version": "4.1.0",
+  "version": "4.0.2",
   "description": "Your new anime bot!",
   "main": "src/index.js",
   "scripts": {

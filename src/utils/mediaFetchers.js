@@ -32,6 +32,8 @@ async function getMalPage(interaction, options) {
 			return;
 		}
 
+		// console.log(pageData.data[0]);
+
 		const page = new MediaPage(pageData, {
 			...options,
 			menuId: 'mal_menu',
@@ -76,6 +78,11 @@ async function getAniPage(interaction, options) {
 			...options,
 			menuId: 'ani_menu',
 		});
+
+		/*
+		console.log(pageData.media[0].studios.nodes);
+		console.log(pageData.media[0].staff.nodes);
+		*/
 
 		const content = await page.createMessage();
 

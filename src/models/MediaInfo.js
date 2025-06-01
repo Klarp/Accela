@@ -15,14 +15,14 @@ class AnimeInfo extends MediaInfoBase {
 				url: 'https://anilist.co',
 				iconURL: 'https://anilist.co/img/icons/android-chrome-512x512.png',
 			})
-			.setColor(this.coverImage.color)
+			.setColor(this.coverImage?.color || '#2e51a2')
 			.setTitle(`${this.romajiTitle} [${this.nativeTitle}]`)
 			.setURL(this.siteUrl)
 			.setThumbnail(this.coverImage.large)
 			.setDescription(`${this.englishTitle}
 
 			**Status:** ${this.status} | **Format:** ${this.format} | **Episodes:** ${this.episodes}
-			**Average Score:** ${this.averageScore}%
+			**Studio:** ${this.studios} **Average Score:** ${this.averageScore}%
 			
 			**Genres:** ${this.genres}
 
@@ -49,7 +49,7 @@ class AnimeInfo extends MediaInfoBase {
 			.setDescription(`${this.englishTitle}
 				
 			**Status:** ${this.status} | **Format:** ${this.format} | **Episodes:** ${this.episodes}
-			**Average Score:** ${this.averageScore}/10
+			**Studio:** ${this.studios} **Average Score:** ${this.averageScore}/10
 			
 			**Genres:** ${this.genres}
 			
@@ -73,7 +73,7 @@ class MangaInfo extends MediaInfoBase {
 	buildAniEmbed() {
 		return new EmbedBuilder()
 			.setAuthor({
-				name: 'AniList [Unoffical]',
+				name: 'AniList [Unofficial]',
 				url: 'https://anilist.co',
 				iconURL: 'https://anilist.co/img/icons/android-chrome-512x512.png',
 			 })
@@ -82,7 +82,9 @@ class MangaInfo extends MediaInfoBase {
 			.setURL(this.siteUrl)
 			.setThumbnail(this.coverImage.large)
 			.setDescription(`${this.englishTitle}
+
 			**Status:** ${this.status} | **Format:** ${this.format} | **Average Score:** ${this.averageScore}
+			**Staff:** ${this.staff}
 			**Genres:** ${this.genres}
 			
 			**Volumes:** ${this.volumes} | **Chapters:** ${this.chapters}
@@ -99,7 +101,7 @@ class MangaInfo extends MediaInfoBase {
 	buildMalEmbed() {
 		return new EmbedBuilder()
 			.setAuthor({
-				name: 'MyAnimeList [Unoffical]',
+				name: 'MyAnimeList [Unofficial]',
 				url: 'https://myanimelist.net',
 				iconURL: 'https://upload.wikimedia.org/wikipedia/commons/7/7a/MyAnimeList_Logo.png',
 			})
@@ -110,6 +112,7 @@ class MangaInfo extends MediaInfoBase {
 			.setDescription(`${this.englishTitle}
 				
 			**Status:** ${this.status} | **Format:** ${this.format} | **Average Score:** ${this.averageScore}/10
+			**Staff:** ${this.staff}
 			**Genres:** ${this.genres}
 
 			**Volumes:** ${this.volumes} | **Chapters:** ${this.chapters}

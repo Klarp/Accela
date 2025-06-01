@@ -51,6 +51,12 @@ async function transformData(data, type) {
 		startDate: startDate,
 		endDate: endDate,
 		description: data.synopsis,
+		studios: {
+			nodes: data.studios,
+		},
+		staff: {
+			nodes: data.authors,
+		},
 		id: data.mal_id,
 	};
 

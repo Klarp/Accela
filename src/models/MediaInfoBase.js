@@ -13,6 +13,8 @@ class MediaInfoBase {
 			startDate = {},
 			endDate = {},
 			description,
+			studios,
+			staff,
 			id,
 		} = media;
 
@@ -24,10 +26,12 @@ class MediaInfoBase {
 		this.status = STATUS_NAMES[status] || status || 'Unknown';
 		this.format = FORMAT_NAMES[format] || format || 'Unknown';
 		this.averageScore = typeof averageScore === 'number' ? averageScore : 'Unknown';
-		this.genres = this.formatGenres(media, genres);
+		this.genres = this.formatGenres(genres);
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.description = this.formatDescription(description);
+		this.studios = this.formatStudios(studios.nodes);
+		this.staff = this.formatStaff(staff.nodes);
 		this.id = id;
 	}
 
@@ -40,11 +44,34 @@ class MediaInfoBase {
 			.substring(0, 300) + '...';
 	}
 
-	formatGenres(media, genres) {
-		if (Array.isArray(media.genres) && genres.length > 0) {
-			return genres.join(' | ');
+	formatGenres(genres) {
+		return Array.isArray(genres) && genres.length ? genres.join(' | ') : 'None Available';
+	}
+
+	formatStudios(studios) {
+		let studioData;
+		if (Array.isArray(studios) && studios.length) {
+			studioData = studios.map(studio => {
+				const name = studio.name || 'Unknown';
+				const url = studio.siteUrl || studio.url;
+				return url ? `[${name}](${url})` : name;
+			})
+				.join(', ');
 		}
-		return 'None Available';
+		return studioData || 'None Available';
+	}
+
+	formatStaff(staff) {
+		let staffData;
+		if (Array.isArray(staff) && staff.length) {
+			staffData = staff.map(person => {
+				const name = person.name.full || person.name || 'Unknown';
+				const url = person.siteUrl || person.url;
+				return url ? `[${name}](${url})` : name;
+			})
+				.join(', ');
+		}
+		return staffData || 'None Available';
 	}
 }
 

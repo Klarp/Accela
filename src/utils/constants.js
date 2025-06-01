@@ -38,7 +38,11 @@ const DEFAULT_QUERY = anilist.query.media()
 	.withStudios({
 		nodes: (node) => node
 			.withName()
-			.isAnimationStudio()
+			.withSiteUrl(),
+	})
+	.withStaff({
+		nodes: (node) => node
+			.withName()
 			.withSiteUrl(),
 	})
 	.isAdult();
