@@ -20,7 +20,7 @@ module.exports = {
             value !== '' &&
             !['menuId', 'transform', 'search', 'type'].includes(key),
 			)
-			.map(([key, value]) => `${key}: ${value.toLowerCase()}`)
+			.map(([key, value]) => `${key}: ${String(value).toLowerCase()}`)
 			.join('\n');
 		return shown || 'None';
 	},
