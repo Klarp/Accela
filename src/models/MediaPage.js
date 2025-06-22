@@ -42,7 +42,6 @@ class MediaPage {
 			const truncatedLabel = label.length > 100 ? `${label.substring(0, 97)}...` : label;
 			const description = item.title_english || item.title_japanese || title.english || title.native || 'No alternative title';
 			const truncatedDescription = description.length > 100 ? `${description.substring(0, 97)}...` : description;
-			console.log(truncatedDescription);
 			return new StringSelectMenuOptionBuilder()
 				.setLabel(truncatedLabel)
 				.setValue(index.toString())
