@@ -16,7 +16,7 @@ class AnimeInfo extends MediaInfoBase {
 				iconURL: 'https://anilist.co/img/icons/android-chrome-512x512.png',
 			})
 			.setColor(this.coverImage?.color || '#2e51a2')
-			.setTitle(`${truncatedRomajiTitle} [${this.nativeTitle}]`)
+			.setTitle(`${this.romajiTitle} [${this.nativeTitle}]`)
 			.setURL(this.siteUrl)
 			.setThumbnail(this.coverImage.large)
 			.setDescription(`${this.englishTitle}
