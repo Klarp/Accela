@@ -31,6 +31,18 @@ const wiki_links = {
 		appeal_review: 'https://osu.ppy.sh/wiki/en/Help_centre/Account_restrictions#appeal-review',
 		reasons: 'https://osu.ppy.sh/wiki/en/Help_centre/Account_restrictions#reasons',
 	},
+	mapping: {
+		beatmap_stable: 'https://osu.ppy.sh/wiki/en/Beatmapping/Beatmap_submission',
+		beatmap_lazer: 'https://osu.ppy.sh/wiki/en/Beatmapping/Beatmap_submission_%28lazer%29',
+		modding: 'https://osu.ppy.sh/wiki/en/Modding',
+		rank_procedure: 'https://osu.ppy.sh/wiki/en/Beatmap_ranking_procedure',
+		rank_criteria: 'https://osu.ppy.sh/wiki/en/Ranking_criteria',
+		simple_criteria: 'https://osu.ppy.sh/wiki/en/Ranking_criteria/Simplified_ranking_criteria',
+		std_criteria: 'https://osu.ppy.sh/wiki/en/Ranking_criteria/osu!',
+		mania_criteria: 'https://osu.ppy.sh/wiki/en/Ranking_criteria/osu!mania',
+		taiko_criteria: 'https://osu.ppy.sh/wiki/en/Ranking_criteria/osu!taiko',
+		catch_criteria: 'https://osu.ppy.sh/wiki/en/Ranking_criteria/osu!catch',
+	}
 };
 
 module.exports = { wiki_links };
