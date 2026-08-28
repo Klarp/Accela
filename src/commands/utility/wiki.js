@@ -84,7 +84,7 @@ module.exports = {
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName('mapping')
-				.setDescription()
+				.setDescription('Choose a wiki page')
 				.setRequired(true)
 				.addChoices(
 					{ name: 'How to submit a beatmap (stable)', value: 'beatmap_stable' }, 
