@@ -84,20 +84,25 @@ module.exports = {
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName('mapping')
-				.setDescription('Choose a wiki page')
-				.setRequired(true)
-				.addChoices(
-					{ name: 'How to submit a beatmap (stable)', value: 'beatmap_stable' }, 
-					{ name: 'How to submit a beatmap (lazer)', value: 'beatmap_lazer' },
-					{ name: 'Beatmap Modding', value: 'modding' },
-					{ name: 'Beatmap ranking procecure', value: 'rank_procedure' },
-					{ name: 'General ranking criteria', value: 'rank_criteria' },
-					{ name: 'Simplified ranking criteria', value: 'simple_criteria' },
-					{ name: 'osu!std ranking criteria', value: 'std_criteria' },
-					{ name: 'osu!mania ranking criteria', value: 'mania_criteria' },
-					{ name: 'osu!taiko ranking criteria', value: 'taiko_criteria' },
-					{ name: 'osu!catch ranking criteria', value: 'catch_criteria' },
-				)
+				.setDescription('Help with osu! mapping')
+				.addStringOption((option) => 
+					option
+						.setName('page')
+						.setDescription('Choose a wiki page')
+						.setRequired(true)
+						.addChoices(
+							{ name: 'How to submit a beatmap (stable)', value: 'beatmap_stable' }, 
+							{ name: 'How to submit a beatmap (lazer)', value: 'beatmap_lazer' },
+							{ name: 'Beatmap Modding', value: 'modding' },
+							{ name: 'Beatmap ranking procecure', value: 'rank_procedure' },
+							{ name: 'General ranking criteria', value: 'rank_criteria' },
+							{ name: 'Simplified ranking criteria', value: 'simple_criteria' },
+							{ name: 'osu!std ranking criteria', value: 'std_criteria' },
+							{ name: 'osu!mania ranking criteria', value: 'mania_criteria' },
+							{ name: 'osu!taiko ranking criteria', value: 'taiko_criteria' },
+							{ name: 'osu!catch ranking criteria', value: 'catch_criteria' },
+						),
+				),
 		),
 	async execute(interaction) {
 		const subcommand = interaction.options.getSubcommand();
