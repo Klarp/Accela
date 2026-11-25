@@ -1,1 +1,141 @@
-WIP
+<h1 align="center">Accela</h1>
+
+<div align="center">
+
+  ![Status](https://img.shields.io/badge/status-in%20development-yellow)
+  [![Platform](https://img.shields.io/badge/platform-Discord-5865F2?logo=discord&logoColor=white)](https://discord.gg/g95mFH3h9u)
+  [![GitHub Issues](https://img.shields.io/github/issues/Klarp/Accela)](https://github.com/Klarp/Accela/issues)
+  [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/Klarp/Accela)](https://github.com/Klarp/Accela/pulls)
+  [![License](https://img.shields.io/badge/license-GPL--3.0--or--later-blue)](./LICENSE)
+
+</div>
+
+---
+
+<p align="center"> Accela acts as a bridge between AniList and Discord allowing query searches and future features integrating AniList accounts.
+    <br> 
+</p>
+
+## 📝 Table of Contents
++ [About](#about)
++ [How it works](#working)
++ [Usage](#usage)
++ [Getting Started](#getting_started)
++ [Deploying your own bot](#deployment)
++ [Built Using](#built_using)
++ [Contributing](../CONTRIBUTING.md)
++ [Authors](#authors)
++ [Acknowledgments](#acknowledgement)
+
+## About <a name = "about"></a>
+Accela is a Discord bot for searching AniList. Use slash commands to find
+anime and manga, then browse the results in Discord.
+
+Currently in development.
+
+## How it works <a name = "working"></a>
+
+Accela uses AniList wrappers to build queries and fetch the requests through the AniList API. Requests are displayed in embeds with a page system allowing multiple results.
+
+Accela is currently under development in Node.JS V24.19.0
+
+## Usage <a name = "usage"></a>
+
+To use Accela, use one of the slash commands such as:
+```
+/anime [Anime]
+```
+> All commands in Accela are slash commands and no chat commands are included. Several commands have optional or mandatory parameters that can be used to refine the search.
+
+Accela will then display an embed with all information made in the request it found on the anime with 4 additional choices in a selectable menu.
+
+### Example:
+
+```
+/anime name:Kino no Tabi format:OVA status:Finished
+```
+
+## Getting Started <a name = "getting_started"></a>
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
+
+### Prerequisites
+
+What things you need to install the software and how to install them.
+
+- Node.js 22 or newer and npm.
+- A Discord application and bot 
+
+### Installing
+
+1. Clone the repository and install dependencies:
+
+   ```sh
+   git clone https://github.com/Klarp/Accela.git
+   cd Accela
+   npm install
+   ```
+
+2. Create a `.env` file in the project root:
+
+   ```env
+   DISCORD_TOKEN=your_bot_token
+   CLIENT_ID=your_application_id
+   GUILD_ID=your_server_id
+   ```
+
+   `GUILD_ID` is only required when deploying commands to one server.
+
+   **Keep your bot token private.** Never commit your `.env` file or share
+   your token. If it is exposed, reset it in the Discord Developer Portal.
+
+3. Add the bot to your server through the Developer Portal using the
+   `bot` and `applications.commands` scopes.
+
+4. Deploy the slash commands using one of the methods below, then start
+   the bot:
+
+   ```sh
+   npm start
+   ```
+
+## Deploying slash commands <a name="deployment"></a>
+
+Deploy commands to a single server for development:
+
+```sh
+node src/guild_deploy.js
+```
+
+Or deploy them globally:
+
+```sh
+node src/global_deploy.js
+```
+
+Run the appropriate deployment command again whenever you change a slash
+command's name, description, or options. Global command updates may take
+some time to appear.
+
+
+## Built Using <a name = "built_using"></a>
++ [discord.js](https://github.com/discordjs/discord.js) - Discord.js
++ [anilist-wrapper](https://github.com/Didas-git/anilist-wrapper) - AniList Wrapper
++ [p-queue](https://github.com/sindresorhus/p-queue) - p-queue
+
+## Authors <a name = "authors"></a>
++ [@Klarp](https://github.com/Klarp)
+
+See also the list of [contributors](https://github.com/Klarp/Accela/contributors) who participated in this project.
+
+## Acknowledgements <a name = "acknowledgement"></a>
++ Phil
+
+Copyright (C) 2020 Brody Jagoe
+
+Accela is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+Accela is distributed without any warranty; without even the implied warranty
+of merchantability or fitness for a particular purpose. See LICENSE for details.

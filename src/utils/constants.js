@@ -1,6 +1,6 @@
-const { anilist } = require('anilist');
+import { anilist } from 'anilist';
 
-const STATUS_NAMES = {
+export const STATUS_NAMES = {
 	'FINISHED': 'Finished',
 	'RELEASING': 'Releasing',
 	'NOT_YET_RELEASED': 'Not Yet Released',
@@ -8,7 +8,7 @@ const STATUS_NAMES = {
 	'HIATUS': 'Hiatus',
 };
 
-const FORMAT_NAMES = {
+export const FORMAT_NAMES = {
 	'TV_SHORT': 'TV Short',
 	'MOVIE': 'Movie',
 	'SPECIAL': 'Special',
@@ -19,7 +19,7 @@ const FORMAT_NAMES = {
 	'TV_SPECIAL': 'TV Special',
 };
 
-const DEFAULT_QUERY = anilist.query.media()
+export const createMediaQuery = () => anilist.query.media()
 	.withCoverImage()
 	.withSiteUrl()
 	.withTitles('romaji', 'native', 'english')
@@ -33,7 +33,6 @@ const DEFAULT_QUERY = anilist.query.media()
 	.withStartDate()
 	.withEndDate()
 	.withDescription()
-	.withMalId()
 	.withId()
 	.withStudios({
 		nodes: (node) => node
@@ -46,9 +45,3 @@ const DEFAULT_QUERY = anilist.query.media()
 			.withSiteUrl(),
 	})
 	.isAdult();
-
-module.exports = {
-	STATUS_NAMES,
-	FORMAT_NAMES,
-	DEFAULT_QUERY,
-};

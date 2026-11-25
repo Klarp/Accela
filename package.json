@@ -2,21 +2,21 @@
   "name": "accela",
   "version": "4.1.0",
   "description": "Your new anime bot!",
+  "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test tests/*.test.js",
     "start": "node .",
     "link": "eslint .",
-    "dev": "node . | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'"
+    "dev": "nodemon ."
   },
   "author": "Klarp",
-  "license": "ISC",
+  "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@shineiichijo/marika": "^3.0.1",
     "anilist": "^0.12.4",
     "discord.js": "^14.19.3",
     "dotenv": "^16.5.0",
-    "pino": "^7.0.0-rc.9"
+    "p-queue": "^10.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",

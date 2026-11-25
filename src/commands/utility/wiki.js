@@ -1,7 +1,7 @@
-const { SlashCommandBuilder } = require('discord.js');
-const { wiki_links } = require('./constants');
+import { SlashCommandBuilder } from 'discord.js';
+import { wiki_links } from '../../utils/wiki_constants.js';
 
-module.exports = {
+export default {
 	data: new SlashCommandBuilder()
 		.setName('wiki')
 		.setDescription('Search common topics on the osu! wiki')
@@ -85,13 +85,13 @@ module.exports = {
 			subcommand
 				.setName('mapping')
 				.setDescription('Help with osu! mapping')
-				.addStringOption((option) => 
+				.addStringOption((option) =>
 					option
 						.setName('page')
 						.setDescription('Choose a wiki page')
 						.setRequired(true)
 						.addChoices(
-							{ name: 'How to submit a beatmap (stable)', value: 'beatmap_stable' }, 
+							{ name: 'How to submit a beatmap (stable)', value: 'beatmap_stable' },
 							{ name: 'How to submit a beatmap (lazer)', value: 'beatmap_lazer' },
 							{ name: 'Beatmap Modding', value: 'modding' },
 							{ name: 'Beatmap ranking procecure', value: 'rank_procedure' },

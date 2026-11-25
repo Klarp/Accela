@@ -1,6 +1,6 @@
-const { STATUS_NAMES, FORMAT_NAMES } = require('../utils/constants');
+import { STATUS_NAMES, FORMAT_NAMES } from '../utils/constants.js';
 
-class MediaInfoBase {
+export class MediaInfoBase {
 	constructor(media = {}) {
 		const {
 			coverImage,
@@ -20,18 +20,18 @@ class MediaInfoBase {
 
 		this.coverImage = coverImage || null;
 		this.siteUrl = siteUrl || null;
-		this.englishTitle = title.english || '';
-		this.romajiTitle = title.romaji || '';
-		this.nativeTitle = title.native || '';
+		this.englishTitle = title?.english || '';
+		this.romajiTitle = title?.romaji || '';
+		this.nativeTitle = title?.native || '';
 		this.status = STATUS_NAMES[status] || status || 'Unknown';
 		this.format = FORMAT_NAMES[format] || format || 'Unknown';
 		this.averageScore = typeof averageScore === 'number' ? averageScore : 'Unknown';
 		this.genres = this.formatGenres(genres);
-		this.startDate = startDate;
-		this.endDate = endDate;
+		this.startDate = startDate ?? {};
+		this.endDate = endDate ?? {};
 		this.description = this.formatDescription(description);
-		this.studios = this.formatStudios(studios.nodes);
-		this.staff = this.formatStaff(staff.nodes);
+		this.studios = this.formatStudios(studios?.nodes);
+		this.staff = this.formatStaff(staff?.nodes);
 		this.id = id;
 	}
 
@@ -48,31 +48,22 @@ class MediaInfoBase {
 		return Array.isArray(genres) && genres.length ? genres.join(' | ') : 'None Available';
 	}
 
-	formatStudios(studios) {
-		let studioData;
-		if (Array.isArray(studios) && studios.length) {
-			studioData = studios.map(studio => {
-				const name = studio.name || 'Unknown';
-				const url = studio.siteUrl || studio.url;
-				return url ? `[${name}](${url})` : name;
-			})
-				.join(', ');
+	formatLinks(items, getName) {
+		if (!Array.isArray(items) || items.length === 0) {
+			return 'None Available';
 		}
-		return studioData || 'None Available';
+
+		return items.map(item => {
+			const name = getName(item) || 'Unknown';
+			return item?.siteUrl ? `[${name}](${item.siteUrl})` : name;
+		}).join(', ');
+	}
+
+	formatStudios(studios) {
+		return this.formatLinks(studios, studio => studio?.name);
 	}
 
 	formatStaff(staff) {
-		let staffData;
-		if (Array.isArray(staff) && staff.length) {
-			staffData = staff.map(person => {
-				const name = person.name.full || person.name || 'Unknown';
-				const url = person.siteUrl || person.url;
-				return url ? `[${name}](${url})` : name;
-			})
-				.join(', ');
-		}
-		return staffData || 'None Available';
+		return this.formatLinks(staff, person => person?.name?.full);
 	}
 }
-
-module.exports = { MediaInfoBase };

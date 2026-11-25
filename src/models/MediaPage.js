@@ -1,29 +1,20 @@
-const { StringSelectMenuOptionBuilder, StringSelectMenuBuilder, ActionRowBuilder } = require('discord.js');
-const { createMediaInfo } = require('../utils/createMediaInfo');
+import { StringSelectMenuOptionBuilder, StringSelectMenuBuilder, ActionRowBuilder } from 'discord.js';
+import { createMediaInfo } from '../utils/createMediaInfo.js';
 
-class MediaPage {
+export class MediaPage {
 	constructor(data, options) {
 		if (!data) {
 			throw new Error('Media data is required');
 		}
 
-		if (!options?.menuId) {
-			throw new Error('menuId is required in options');
-		}
-
-		this.data = data?.media || data?.data || [];
+		this.data = data?.media || [];
 		this.options = options;
-		this.menuId = options.menuId;
 	}
 
 	async createMessage(pageNumber) {
 		try {
-			let embed;
 			const media = await this.getMedia(pageNumber);
-
-			this.menuId === 'ani_menu'
-				? embed = await media.buildAniEmbed()
-				: embed = await media.buildMalEmbed();
+			const embed = await media.buildEmbed();
 			const menu = this.buildMenu();
 			return { embeds: [embed], components: [menu] };
 		} catch (err) {
@@ -38,9 +29,9 @@ class MediaPage {
 
 		const mediaMenu = this.data.map((item, index) => {
 			const title = item?.title || {};
-			const label = title.romaji || title || 'No title';
+			const label = title.romaji || title.english || title.native || 'No title';
 			const truncatedLabel = label.length > 100 ? `${label.substring(0, 97)}...` : label;
-			const description = item.title_english || item.title_japanese || title.english || title.native || 'No alternative title';
+			const description = title.english || title.native || 'No alternative title';
 			const truncatedDescription = description.length > 100 ? `${description.substring(0, 97)}...` : description;
 			return new StringSelectMenuOptionBuilder()
 				.setLabel(truncatedLabel)
@@ -49,7 +40,7 @@ class MediaPage {
 		});
 
 		const selectMenu = new StringSelectMenuBuilder()
-			.setCustomId(this.menuId)
+			.setCustomId('ani_menu')
 			.setPlaceholder('More Results')
 			.addOptions(mediaMenu);
 
@@ -67,12 +58,6 @@ class MediaPage {
 			throw new Error('Invalid media data: missing title');
 		}
 
-		const dataObject = this.options.transform
-			? await this.options.transform(selectedMedia)
-			: selectedMedia;
-
-		return createMediaInfo(dataObject, this.options.type);
+		return createMediaInfo(selectedMedia, this.options.type);
 	}
 }
-
-module.exports = { MediaPage };

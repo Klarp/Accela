@@ -1,10 +1,13 @@
-const fs = require('node:fs');
-const path = require('node:path');
-const { REST, Routes } = require('discord.js');
-require('dotenv').config();
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { REST, Routes } from 'discord.js';
+import 'dotenv/config';
 const token = process.env.DISCORD_TOKEN;
 const clientId = process.env.CLIENT_ID;
 const guildId = process.env.GUILD_ID;
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const commands = [];
 const foldersPath = path.join(__dirname, 'commands');
@@ -15,11 +18,11 @@ for (const folder of commandFolders) {
 	const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 	for (const file of commandFiles) {
 		const filePath = path.join(commandsPath, file);
-		const command = require(filePath);
+		const { default: command } = await import(pathToFileURL(filePath).href);
 		if ('data' in command && 'execute' in command) {
 			commands.push(command.data.toJSON());
 		} else {
-			console.warn(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+			console.warn(`The command at ${filePath} is missing a required "data" or "execute" property.`);
 		}
 	}
 }
@@ -37,6 +40,7 @@ const rest = new REST().setToken(token);
 
 		console.log(`Successfully reloaded ${data.length} application (/) commands.`);
 	} catch (error) {
-		console.error('[ERROR] Error reloading application (/) commands:', error);
+		console.error('Error reloading application (/) commands:', error);
+		process.exitCode = 1;
 	}
 })();

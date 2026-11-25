@@ -1,4 +1,4 @@
-const wiki_links = {
+export const wiki_links = {
 	common: {
 		main: 'https://osu.ppy.sh/wiki/en/Main_page',
 		rules: 'https://osu.ppy.sh/wiki/en/Rules',
@@ -42,7 +42,5 @@ const wiki_links = {
 		mania_criteria: 'https://osu.ppy.sh/wiki/en/Ranking_criteria/osu!mania',
 		taiko_criteria: 'https://osu.ppy.sh/wiki/en/Ranking_criteria/osu!taiko',
 		catch_criteria: 'https://osu.ppy.sh/wiki/en/Ranking_criteria/osu!catch',
-	}
+	},
 };
-
-module.exports = { wiki_links };
