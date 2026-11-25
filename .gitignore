@@ -2,6 +2,3 @@ node_modules
 .env
 config.json
 /tests
-!/tests/
-/tests/*
-!/tests/*.test.js
